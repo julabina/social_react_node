@@ -1,0 +1,16 @@
+@mixin btn {
+    background: map-get($colors, secondary);
+    border: none;
+    padding: 5px 10px;
+    color: map-get($map: $colors, $key: tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    height: 35px;
+    border-radius: 35px;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    &:hover {
+        background: darken(map-get($colors, secondary), 5);
+        transition: all 150ms ease-in-out;
+    }
+}

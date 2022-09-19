@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const postRoute = require('./routes/post');
 
 const app = express();
 
@@ -13,5 +14,7 @@ app.use((req, res, next) => {
 });
 
 app.use(morgan('dev'));
+
+app.use('/api/posts', postRoute);
 
 module.exports = app;
