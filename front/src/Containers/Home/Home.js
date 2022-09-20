@@ -1,15 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import PostCard from '../../Components/PostCard/PostCard';
 import ImageUploading from 'react-images-uploading';
+import { decodeToken, isExpired } from 'react-jwt';
+import { useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
 
-    const [newPost, setNewPost] = useState({title: "", text:"", file:""});
+    const navigate = useNavigate();
+
+    const [newPost, setNewPost] = useState({title: "", text:""});
     const [postData, setPostData] = useState([]);
-    const [image, setImage] = React.useState();
+    const [image, setImage] = React.useState([]);
+    const [user, setUser] = useState({token : "", id : ""})
 
     useEffect(() => {
-        getAllPosts();
+
+        if (localStorage.getItem('token') !== null) {
+            let getToken = localStorage.getItem('token');
+            let token = JSON.parse(getToken);
+            if (token !== null) {
+                let decodedToken = decodeToken(token.version);
+                let isTokenExpired = isExpired(token.version);
+                if (decodedToken.userId !== token.content || isTokenExpired === true) {
+                    // DISCONNECT
+                    localStorage.removeItem('token');
+                    return navigate('/connexion', { replace: true });
+                };
+                const newUserObj = {
+                    id: decodedToken.userId,
+                    token: token.version
+                };
+                setUser(newUserObj);
+                getAllPosts();
+            } else {
+                // DISCONNECT
+                localStorage.removeItem('token');
+                navigate('/connexion', { replace: true });
+            };
+        } else {
+            // DISCONNECT
+            navigate('/connexion', { replace: true });
+        }; 
+
     }, []);
 
     /**
@@ -51,17 +84,28 @@ const Home = () => {
      * @param {*} text 
      */
     const tryToCreateNew = (title, text) => {
+        const formData = new FormData();
+        
+        formData.append('title', JSON.stringify(title));
+        formData.append('text', JSON.stringify(text));
+        if (image.length !== 0) {
+            console.log('1');
+            const img = image[0].file;
+            formData.append('image', img, img.name);
+        }
+
         fetch('http://localhost:3000/api/posts/new', {
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                "Authorization": "Bearer " + user.token
             },
             method: 'POST',
-            body: JSON.stringify({title: title, text: text})
+            body: formData
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                if (data.success) {
+                    getAllPosts();
+                }
             })
     };
 
@@ -72,7 +116,6 @@ const Home = () => {
         fetch('http://localhost:3000/api/posts/findAll')
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 let newArr = [];
                 for (let i = 0; i < data.data.length; i++) {
                     if (data.data[i] !== undefined) {
@@ -87,13 +130,15 @@ const Home = () => {
                         newArr.push(item); 
                     }
                 }
+                console.log(newArr);
+                newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+                console.log(newArr);
 
                 setPostData(newArr);
             })
     };
 
     const imgChange = (imageList, addUpdateIndex) => {
-        console.log(imageList, addUpdateIndex);
         setImage(imageList);
     }
 
@@ -112,8 +157,6 @@ const Home = () => {
                         {({
                             imageList,
                             onImageUpload,
-                            onImageRemoveAll,
-                            onImageUpdate,
                             onImageRemove,
                             isDragging,
                             dragProps,

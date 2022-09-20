@@ -22,13 +22,14 @@ exports.createPost = (req, res, next) => {
         id: v4(),
         title: req.body.title,
         content: req.body.text,
-        userId: 'jean-luc'
+        picture: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
+        userId: 'Paul'
     });
    
     post.save()
         .then(() => {
             const message = 'Post bien créé."';
-            res.status(201).json({ message });
+            res.status(201).json({ message, success: true });
         })
         .catch(error => res.status(401).json({ error }));
 
