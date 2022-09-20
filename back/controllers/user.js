@@ -54,5 +54,29 @@ exports.sign = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-
+    
+    User.findOne({ where: {email: req.body.email} })
+        .then(user => {
+            if(user === null) {
+                const message = "Aucun utilisateur trouvé.";
+                return res.status(404).json({ message });
+            }
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if(!valid) {
+                        const message = "Le mot de passe est incorrect.";
+                        return res.status(401).json({ message });
+                    }
+                    res.status(200).json({
+                        userId: user.userId,
+                        token: jwt.sign(
+                            {userId: user.userId},
+                            '' + process.env.REACT_APP_JWT_PRIVATE_KEY + '',
+                            { expiresIn: '24h' }
+                        )
+                    })
+                })
+                .catch(error => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };

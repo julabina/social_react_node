@@ -105,7 +105,6 @@ const Sign = () => {
         })
                 .then(res => res.json())
                 .then(data => {
-                    errorCont.innerHTML = '';
                     if(data.error) {
                         let err = "";
                         data.error.errors.forEach(el => {

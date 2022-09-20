@@ -228,6 +228,11 @@ main {
   margin-bottom: 40px;
   margin-left: 7px;
 }
+.sign__form__errorCont {
+  margin-bottom: 22px;
+  line-height: 1.2;
+  color: #dd0000;
+}
 .sign__form__cont {
   display: flex;
 }
@@ -278,6 +283,92 @@ main {
 .sign__form__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+
+.login {
+  min-height: 90vh;
+  position: relative;
+}
+.login__form {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+}
+.login__form h1 {
+  font-weight: 600;
+  font-size: 1.3em;
+  color: #4e5166;
+  margin-bottom: 40px;
+  margin-left: 7px;
+}
+.login__form__errorCont {
+  margin-bottom: 22px;
+  line-height: 1.2;
+  color: #dd0000;
+}
+.login__form__cont {
+  display: flex;
+}
+.login__form__cont__inputCont {
+  display: flex;
+  flex-direction: column;
+  margin: 0 7px 30px;
+}
+.login__form__cont__inputCont input {
+  background-color: #fff1f1;
+  border: none;
+  border-radius: 30px;
+  height: 35px;
+  padding-left: 25px;
+  font-size: 1.1em;
+}
+.login__form__checkCont {
+  display: flex;
+  align-items: center;
+  margin-left: 7px;
+  color: #4e5166;
+}
+.login__form__checkCont input {
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
+.login__form__checkCont label {
+  cursor: pointer;
+}
+.login__form__btnCont {
+  margin: 20px 0 0 7px;
+}
+.login__form__btnCont button {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  width: 100px;
+}
+.login__form__btnCont button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
+.login__form {
+  width: 350px;
+}
+.login__form__cont {
+  flex-direction: column;
+}
+.login button {
+  width: 170px;
 }
 
 /*# sourceMappingURL=style.css.map */
