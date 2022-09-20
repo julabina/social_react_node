@@ -27,5 +27,17 @@ module.exports = (sequelize, DataTypes) => {
                 is: {args: /^[a-zA-Zé èà]*$/, msg: "le nom ne doit contenir que des lettres"}
             }
         },
+        userId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "L'id ne doit pas être vide." },
+                notNull: { msg: "L'id est une propriété requise." },
+            }
+        }
+    },{
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
     })
 };

@@ -14,3 +14,12 @@
         transition: all 150ms ease-in-out;
     }
 }
+
+@mixin inputField {
+    background-color: lighten(map-get($map: $colors, $key:secondary ), 5);
+    border: none;
+    border-radius: 30px;
+    height: 35px;
+    padding-left: 25px;
+    font-size: 1.1em;
+}

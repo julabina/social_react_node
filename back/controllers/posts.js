@@ -14,7 +14,7 @@ exports.findAllPosts = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 
-}
+};
 
 exports.createPost = (req, res, next) => {
 
@@ -32,4 +32,4 @@ exports.createPost = (req, res, next) => {
         })
         .catch(error => res.status(401).json({ error }));
 
-}
+};

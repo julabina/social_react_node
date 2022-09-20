@@ -57,9 +57,10 @@ body {
 }
 
 .postArticle {
-  width: 500px;
-  border: 1px solid black;
-  padding: 50px;
+  background: white;
+  box-shadow: 1px 0 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .header {
@@ -80,6 +81,7 @@ body {
 .header__menu img {
   height: 30px;
   margin-left: 15px;
+  cursor: pointer;
 }
 .header__btns {
   display: flex;
@@ -194,6 +196,86 @@ main {
   margin-top: 30px;
 }
 .home__newContent__new__addBtn:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
+.home__mainContent {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+}
+.home__mainContent article {
+  margin-top: 20px;
+}
+
+.sign {
+  min-height: 90vh;
+  position: relative;
+}
+.sign__form {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+}
+.sign__form h1 {
+  font-weight: 600;
+  font-size: 1.3em;
+  color: #4e5166;
+  margin-bottom: 40px;
+  margin-left: 7px;
+}
+.sign__form__cont {
+  display: flex;
+}
+.sign__form__cont__inputCont {
+  display: flex;
+  flex-direction: column;
+  margin: 0 7px 30px;
+}
+.sign__form__cont__inputCont input {
+  background-color: #fff1f1;
+  border: none;
+  border-radius: 30px;
+  height: 35px;
+  padding-left: 25px;
+  font-size: 1.1em;
+}
+.sign__form__checkCont {
+  display: flex;
+  align-items: center;
+  margin-left: 7px;
+  color: #4e5166;
+}
+.sign__form__checkCont input {
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+}
+.sign__form__checkCont label {
+  cursor: pointer;
+}
+.sign__form__btnCont {
+  margin: 20px 0 0 7px;
+}
+.sign__form__btnCont button {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  width: 100px;
+}
+.sign__form__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }

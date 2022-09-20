@@ -5,10 +5,10 @@ import logo from '../../assets/icon-left-font.png';
 
 const Header = () => {
     return (
-        <header class="header">
+        <header className="header">
             <div className="header__menu">
                 <NavMenu />
-                <img class="header__menu__logo" src={logo} alt="logo de groupomania" />
+                <a href="/"><img className="header__menu__logo" src={logo} alt="logo de groupomania" /></a>
             </div>
             <SearchModul />
             <div className="header__btns">

@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const UserModel = require('../models/user');
+const UserInfoModel = require('../models/user_info');
 const PostModel = require('../models/post');
 
 const sequelize = new Sequelize(
@@ -19,8 +20,9 @@ const sequelize = new Sequelize(
 )
 
 const User = UserModel(sequelize, DataTypes);
+const UserInfo = UserInfoModel(sequelize, DataTypes);
 const Post = PostModel(sequelize, DataTypes);
 
 module.exports = {
-    User, Post
+    User, Post, UserInfo
 };
