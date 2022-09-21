@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis, faThumbsUp, faComments, faShare } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 const PostCard = (props) => {
 
     const [timeBetween, setTimeBetween] = useState("");
+    const [toggleMenu, setToggleMenu] = useState(false);
 
     useEffect(() => {
         const currentDate = new Date();
@@ -55,6 +56,10 @@ const PostCard = (props) => {
         setTimeBetween(diffDisplay);
     },[])
 
+    const menuToggle = () => {
+        setToggleMenu(!toggleMenu);
+    }
+
     return (
         <article className="postArticle">
             <div className="postArticle__top">
@@ -67,7 +72,24 @@ const PostCard = (props) => {
                         <p className='postArticle__top__infos__nameCont__time'>{timeBetween}</p>
                     </div>
                 </div>
-                <FontAwesomeIcon icon={faEllipsis} className="postArticle__top__menu" />
+                <FontAwesomeIcon onClick={menuToggle} icon={faEllipsis} className="postArticle__top__menu" />
+                {
+                    toggleMenu &&
+                    <div className="postArticle__top__menu__cont">
+                        <ul>
+                            {
+                                props.userId === props.user.id
+                                &&
+                                <>
+                                    <li>Modifier la publication</li>
+                                    <li>Supprimer la publication</li>
+                                    <li className="postArticle__top__menu__cont__separator"></li>
+                                </>
+                            }
+                            <li>Signaler la publication</li>
+                        </ul>
+                    </div>
+                }
             </div>
             <div className="postArticle__content">
                 <p>{props.content}</p>

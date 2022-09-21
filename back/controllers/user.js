@@ -80,3 +80,18 @@ exports.login = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+exports.findUserInfos = (req, res, next) => {
+    console.log(req.params.id);
+    console.log('zaezaea');
+    UserInfo.findOne({ where: { userId: req.params.id } })
+        .then(user => {
+            if (user === null) {
+                const message = "Aucun utilisateur trouvé.";
+                res.status(404).json({ message });
+            }
+            const message = "Un utilisateur a bien été trouvé.";
+            res.status(200).json({ message, data: user });
+        })
+        .catch(error => res.status(500).json({ error }))
+};

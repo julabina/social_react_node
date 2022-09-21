@@ -187,7 +187,7 @@ const Home = () => {
             <section className="home__mainContent">
                 {
                     postData.map(el => {
-                        return <PostCard content={el.content} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg}/>
+                        return <PostCard content={el.content} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user}/>
                     })
                 }
             </section>

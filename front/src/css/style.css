@@ -71,6 +71,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   padding: 0 20px;
   margin-bottom: 20px;
 }
@@ -99,6 +100,12 @@ body {
   font-weight: 600;
   text-transform: capitalize;
   color: #4e5166;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+}
+.postArticle__top__infos__nameCont__name:hover {
+  color: #fd2d01;
+  transition: all 150ms ease-in-out;
 }
 .postArticle__top__infos__nameCont__time {
   font-weight: 300;
@@ -107,6 +114,35 @@ body {
 .postArticle__top__menu {
   height: 16px;
   cursor: pointer;
+  color: #4e5166;
+  transition: all 150ms ease-in-out;
+}
+.postArticle__top__menu:hover {
+  color: #fd2d01;
+  transition: all 150ms ease-in-out;
+}
+.postArticle__top__menu__cont {
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  padding: 15px;
+  background: white;
+  box-shadow: 2px 0 18px rgba(0, 0, 0, 0.205);
+  border-radius: 8px;
+  line-height: 1.3;
+}
+.postArticle__top__menu__cont li {
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 110ms ease-in-out;
+}
+.postArticle__top__menu__cont li:hover {
+  color: #fd2d01;
+  transition: all 110ms ease-in-out;
+}
+.postArticle__top__menu__cont__separator {
+  border-top: 1px solid #e3e3e3;
+  margin: 15px 0;
 }
 .postArticle__content p {
   padding: 5px 20px 25px;
@@ -164,10 +200,27 @@ body {
   display: flex;
 }
 .header__btns__btn {
-  height: 20px;
-  width: 20px;
-  border: 1px solid black;
+  height: 35px;
+  width: 35px;
+  margin-left: 10px;
   border-radius: 50%;
+  background: red;
+  cursor: pointer;
+}
+.header__btns__btn--profil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eeeeee;
+  margin-right: 15px;
+}
+.header__btns__btn--profil:hover {
+  box-sizing: border-box;
+  border: 2px solid #fd2d01;
+}
+.header__btns__btn__user {
+  height: 22px;
+  color: #c8c8c8;
 }
 
 main {

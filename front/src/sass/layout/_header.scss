@@ -20,9 +20,26 @@
     &__btns {
         display: flex;
         &__btn {
-            height: 20px;width: 20px;
-            border: 1px solid black;
+            height: 35px;width: 35px;
+            margin-left: 10px;
             border-radius: 50%;
+            background: red;
+            cursor: pointer;
+            &--profil {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: map-get($map: $colors, $key:light-white );
+                margin-right: 15px;
+                &:hover {
+                    box-sizing: border-box;
+                    border: 2px solid map-get($map: $colors, $key:primary );
+                }
+            }
+            &__user {
+                height: 22px;
+                color: darken($color: map-get($map: $colors, $key:light-white ), $amount: 15);
+            }
         }
     }
 }
