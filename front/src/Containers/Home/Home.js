@@ -9,7 +9,7 @@ const Home = () => {
 
     const navigate = useNavigate();
 
-    const [newPost, setNewPost] = useState({title: "", text:""});
+    const [newPost, setNewPost] = useState({text:""});
     const [postData, setPostData] = useState([]);
     const [image, setImage] = React.useState([]);
     const [user, setUser] = useState({token : "", id : ""})
@@ -28,8 +28,8 @@ const Home = () => {
                     return navigate('/connexion', { replace: true });
                 };
                 const newUserObj = {
+                    token: token.version,
                     id: decodedToken.userId,
-                    token: token.version
                 };
                 setUser(newUserObj);
                 getAllPosts();
@@ -52,13 +52,8 @@ const Home = () => {
      * @param {*} value 
      */
     const handleNewPostInput = (action, value) => {
-        if(action === 'title') {
-            const newObj = {
-                ...newPost,
-                title : value 
-            };
-            setNewPost(newObj);
-        } else if(action === 'content') {
+
+        if(action === 'content') {
             const newObj = {
                 ...newPost,
                 text : value 
@@ -80,16 +75,14 @@ const Home = () => {
     /**
      * try to create new post
      * 
-     * @param {*} title 
      * @param {*} text 
      */
     const tryToCreateNew = (title, text) => {
         const formData = new FormData();
-        
-        formData.append('title', JSON.stringify(title));
+
         formData.append('text', JSON.stringify(text));
+        formData.append('userId', JSON.stringify(user.id));
         if (image.length !== 0) {
-            console.log('1');
             const img = image[0].file;
             formData.append('image', img, img.name);
         }
@@ -116,24 +109,31 @@ const Home = () => {
         fetch('http://localhost:3000/api/posts/findAll')
             .then(res => res.json())
             .then(data => {
+                const usersData = data.users;
                 let newArr = [];
-                for (let i = 0; i < data.data.length; i++) {
-                    if (data.data[i] !== undefined) {
-                        let item = {
-                            title: data.data[i].title,
-                            content: data.data[i].content,
-                            picture: data.data[i].picture,
-                            id: data.data[i].id,
-                            created: data.data[i].createdAt,
-                            updated: data.data[i].updatedAt,
-                        };  
-                        newArr.push(item); 
-                    }
-                }
-                console.log(newArr);
-                newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
-                console.log(newArr);
+                if(data.data !== undefined) {
+                    for (let i = 0; i < data.data.length; i++) {
+                        const dataUser = usersData.find(el => el.userId === data.data[i].userId);
 
+                        if (data.data[i] !== undefined) {
+                            let item = {
+                                content: data.data[i].content,
+                                picture: data.data[i].picture,
+                                firstname: dataUser.firstname,
+                                lastname: dataUser.lastname,
+                                profilImg: dataUser.profilImg,
+                                id: data.data[i].id,
+                                userId: data.data[i].userId,
+                                created: data.data[i].createdAt,
+                                updated: data.data[i].updatedAt,
+                            };  
+                            newArr.push(item); 
+                        }
+                    }
+                    
+                    newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+                    
+                }
                 setPostData(newArr);
             })
     };
@@ -148,7 +148,6 @@ const Home = () => {
             <section className="home__newContent">
                 <div className="home__newContent__new">
                     <h2>Créer un nouveau sujet</h2>
-                    <input className="home__newContent__new__title" onInput={(e) => handleNewPostInput("title", e.target.value)} value={newPost.title} type="text" id="homeNewTitle" placeholder='Titre' />
                     <textarea onInput={(e) => handleNewPostInput("content", e.target.value)} id="homeNewText" value={newPost.text} placeholder="Exprimez-vous !"></textarea>
                     <ImageUploading
                         value={image}
@@ -188,7 +187,7 @@ const Home = () => {
             <section className="home__mainContent">
                 {
                     postData.map(el => {
-                        return <PostCard title={el.title} content={el.content} key={el.id} picture={el.picture} created={el.created} updated={el.updated} />
+                        return <PostCard content={el.content} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg}/>
                     })
                 }
             </section>

@@ -7,10 +7,6 @@ module.exports = (sequelize, DataTypes) => {
                 msg: 'L\'id est deja utilisé.'
             }
         },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         content: {
             type: DataTypes.TEXT,
             allowNull: false

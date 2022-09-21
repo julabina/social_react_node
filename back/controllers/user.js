@@ -68,9 +68,9 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ message });
                     }
                     res.status(200).json({
-                        userId: user.userId,
+                        userId: user.id,
                         token: jwt.sign(
-                            {userId: user.userId},
+                            {userId: user.id},
                             '' + process.env.REACT_APP_JWT_PRIVATE_KEY + '',
                             { expiresIn: '24h' }
                         )

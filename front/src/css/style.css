@@ -2,6 +2,7 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap");
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -56,11 +57,87 @@ body {
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Barlow", sans-serif;
+}
+
 .postArticle {
   background: white;
   box-shadow: 1px 0 20px rgba(0, 0, 0, 0.2);
-  padding: 20px;
+  padding: 20px 0;
   border-radius: 8px;
+}
+.postArticle__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+.postArticle__top__infos {
+  display: flex;
+  align-items: center;
+}
+.postArticle__top__infos__imgCont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eeeeee;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.postArticle__top__infos__imgCont__user {
+  height: 22px;
+  color: #c8c8c8;
+}
+.postArticle__top__infos__nameCont {
+  line-height: 1.3;
+}
+.postArticle__top__infos__nameCont__name {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #4e5166;
+}
+.postArticle__top__infos__nameCont__time {
+  font-weight: 300;
+  color: #8f8f8f;
+}
+.postArticle__top__menu {
+  height: 16px;
+  cursor: pointer;
+}
+.postArticle__content p {
+  padding: 5px 20px 25px;
+  line-height: 1.3;
+  color: #080808;
+}
+.postArticle__content img {
+  width: 100%;
+}
+.postArticle__btns {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.postArticle__btns__cont {
+  color: #4e5166;
+  display: flex;
+  transition: all 150ms ease-in-out;
+  cursor: pointer;
+}
+.postArticle__btns__cont__iconCont__icon {
+  height: 16px;
+  margin-right: 5px;
+}
+.postArticle__btns__cont:hover {
+  color: #fd2d01;
+  transition: all 150ms ease-in-out;
+}
+.postArticle__separator {
+  border-top: 1px solid #e3e3e3;
+  margin: 0 20px;
 }
 
 .header {

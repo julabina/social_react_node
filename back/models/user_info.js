@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
                 is: {args: /^[a-zA-Zé èà]*$/, msg: "le nom ne doit contenir que des lettres"}
             }
         },
+        profilImg: {
+            type: DataTypes.TEXT, 
+            allowNull: true
+        },
         userId: {
             type: DataTypes.STRING,
             allowNull: false,
