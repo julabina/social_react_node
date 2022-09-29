@@ -43,7 +43,7 @@ const Home = () => {
             navigate('/connexion', { replace: true });
         }; 
 
-    }, []);
+    },[]);
 
     /**
      * controll newPost inputs
@@ -66,10 +66,28 @@ const Home = () => {
      * check input before create new post
      */
     const checkNewPost = () => {
+        const errorCont = document.querySelector('.home__newContent__new__errorCont');
+        errorCont.innerHTML = "";
+        let errorP = document.createElement('p');
+        errorP.textContent = "";
 
+        if (newPost.text === "" && image.length === 0) {
+            errorP.textContent = '- Impossible de créer un post, aucun contenu ajouté.'; 
+            return errorCont.append(errorP);
+        }
+        
+        if (newPost.text !== "") {   
+            if (newPost.text.length < 10 || newPost.text.length > 500) {
+                errorP.textContent = '- La longueur du contenu doit être compris entre 10 et 500 caractères.'; 
+                return errorCont.append(errorP);
+            }
+        }
+        
+        errorCont.append(errorP);
 
+        const textWithoutTag = newPost.text.replace(/<\/?[^>]+>/g,'');
 
-        tryToCreateNew(newPost.title, newPost.text)
+        tryToCreateNew(textWithoutTag);
     };
 
     /**
@@ -77,7 +95,7 @@ const Home = () => {
      * 
      * @param {*} text 
      */
-    const tryToCreateNew = (title, text) => {
+    const tryToCreateNew = (text) => {
         const formData = new FormData();
 
         formData.append('text', JSON.stringify(text));
@@ -98,6 +116,9 @@ const Home = () => {
             .then(data => {
                 if (data.success) {
                     getAllPosts();
+                    setNewPost({text: ''});
+                    setImage([]);
+                    window.scrollTo(0, 0);
                 }
             })
     };
@@ -148,6 +169,7 @@ const Home = () => {
             <section className="home__newContent">
                 <div className="home__newContent__new">
                     <h2>Créer un nouveau sujet</h2>
+                    <div className="home__newContent__new__errorCont"></div>
                     <textarea onInput={(e) => handleNewPostInput("content", e.target.value)} id="homeNewText" value={newPost.text} placeholder="Exprimez-vous !"></textarea>
                     <ImageUploading
                         value={image}
@@ -187,7 +209,7 @@ const Home = () => {
             <section className="home__mainContent">
                 {
                     postData.map(el => {
-                        return <PostCard content={el.content} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user}/>
+                        return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()}/>
                     })
                 }
             </section>
