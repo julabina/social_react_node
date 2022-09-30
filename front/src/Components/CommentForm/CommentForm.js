@@ -4,10 +4,18 @@ const CommentForm = (props) => {
 
     const [comment, setComment] = useState("");
     
+    /**
+     * control add comment form input
+     * 
+     * @param {*} value 
+     */
     const ctrlInput = (value) => {
         setComment(value);
     }
 
+    /**
+     * add new comment for one post
+     */
     const sendComment = () => {
         if (comment !== "" && comment.length < 300) {
             const commentWithoutTag = comment.replace(/<\/?[^>]+>/g,'');

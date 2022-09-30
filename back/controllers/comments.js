@@ -1,6 +1,13 @@
 const { v4 } = require('uuid');
 const { Comment, User, UserInfo } = require('../db/sequelize');
 
+/**
+ * find all comments for one post
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.findAllComments = (req, res, next) => {
 
     User.hasOne(UserInfo);
@@ -32,6 +39,13 @@ exports.findAllComments = (req, res, next) => {
 
 };
 
+/**
+ * create new comment
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.createComment = (req, res, next) => {
 
     if (req.body.content !== "" || req.body.content !== undefined) {     
@@ -54,6 +68,13 @@ exports.createComment = (req, res, next) => {
     }
 };
 
+/**
+ * get all responses for one comment
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.findResponse = (req, res, next) => {
     
     User.hasOne(UserInfo);
@@ -82,5 +103,47 @@ exports.findResponse = (req, res, next) => {
             res.status(200).json({ message, data: rows, count });
         })
         .catch(error => res.status(500).json({ error })); 
+
+};
+
+/**
+ * delete one comment
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+exports.deleteComment = (req, res, next) => {
+
+    Comment.findByPk(req.params.id)
+        .then(comment => {
+            if (!comment) {
+                return res.status(404).json({ error: new error('Aucun commentaire trouvé.') });
+            }
+            if (comment.userId !== req.auth.userId) {
+                return res.status(403).json({ error: new error('Requete non authorisée.') });
+            }
+
+            Comment.destroy({
+                where: {
+                    commentId: req.params.id
+                }
+            })
+                .then(() => {
+
+                    Comment.destroy({
+                        where: {
+                            id: req.params.id
+                        }
+                    })
+                        .then(() => {  
+                            const message = "Message bien supprimé.";
+                            res.status(200).json({ message, success: true });
+                        })
+                        .catch(error => res.status(500).json({ error }));
+                })
+                .catch(error => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 
 };

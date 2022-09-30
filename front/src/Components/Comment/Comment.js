@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import Response from '../Response/Response';
 
@@ -7,6 +8,8 @@ const Comment = (props) => {
 
     const [toggleResponse, setToggleResponse] = useState(false);
     const [toggleResponses, setToggleResponses] = useState(false);
+    const [toggleCommentMenu, setToggleCommentMenu] = useState(false);
+    const [toggleDeleteCommentModal, setToggleDeleteCommentModal] = useState(false);
     const [responseText, setResponseText] = useState("");
     const [responseCount, setResponseCount] = useState(0);
     const [responses, setResponses] = useState([]);
@@ -15,10 +18,19 @@ const Comment = (props) => {
         getAllResponse();
     },[])
 
+    /**
+     * toggle display form for adding new response
+     */
     const responseToggle = () => {
         setToggleResponse(!toggleResponse);
     }
 
+    /**
+     * calcul time between created and current time
+     * 
+     * @param {*} date 
+     * @returns 
+     */
     const calculTimeBetween = (date) => {
         const currentDate = new Date();
         const createdDate = new Date(date);
@@ -67,6 +79,9 @@ const Comment = (props) => {
         return diffDisplay;
     }
 
+    /**
+     * get all response for one comment
+     */
     const getAllResponse = () => {
         fetch('http://localhost:3000/api/comments/findResponse/' + props.id)
             .then(res => res.json())
@@ -99,10 +114,18 @@ const Comment = (props) => {
             })
     }
 
+    /**
+     * control add comment input
+     * 
+     * @param {*} value 
+     */
     const ctrlResponse = (value) => {
         setResponseText(value);
     }
 
+    /**
+     * try to add new response to one comment
+     */
     const sendResponse = () => {
         if (responseText !== "" && responseText.length < 300) {
             const responseWithoutTag = responseText.replace(/<\/?[^>]+>/g,'');
@@ -114,7 +137,7 @@ const Comment = (props) => {
                     "Authorization": "Bearer " + props.user.token
                 },
                 method: 'POST', 
-                body: JSON.stringify({content: responseWithoutTag, postId: props.id, commentId: props.id})
+                body: JSON.stringify({content: responseWithoutTag, postId: props.postId, commentId: props.id})
             })
                 .then(res => res.json())
                 .then(data => {
@@ -129,6 +152,12 @@ const Comment = (props) => {
         }
     }
 
+    /**
+     * toggle display all responses for one comment
+     * 
+     * @param {*} isNew 
+     * @returns 
+     */
     const respToggle = (isNew = false) => {
         if (isNew === true) {
             return setToggleResponses(true);
@@ -136,7 +165,46 @@ const Comment = (props) => {
         setToggleResponses(!toggleResponses);
     }
 
+    /**
+     * toggle the comment menu
+     * 
+     * @param {*} close 
+     * @returns 
+     */
+    const commentMenuToggle = (close = false) => {
+        if(close === true) {
+            return setToggleCommentMenu(false);
+        }
+        setToggleCommentMenu(!toggleCommentMenu);
+    }
+
+    /**
+     * toggle the confirmation modal for deleting comment
+     */
+    const deleteCommentModalToggle = () => {
+        commentMenuToggle(true);
+        setToggleDeleteCommentModal(!toggleDeleteCommentModal);
+    }
+
+    /**
+     * try to delete one comment and responses
+     */
+    const tryToDeleteComment = () => {
+        console.log(props);
+        fetch('http://localhost:3000/api/comments/delete/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(data => {
+                props.getCommentsFunc();
+            })
+    }
+
     return (
+        <>
         <article className='comment'>
             <div className="comment__top">
                 <div className="comment__top__profilCont">
@@ -144,6 +212,25 @@ const Comment = (props) => {
                 </div>
                 <div className={props.userId === props.user.id ? "comment__top__bubble comment__top__bubble--me" : "comment__top__bubble"}></div>
                 <p className={props.userId === props.user.id ? "comment__top__content comment__top__content--me" : "comment__top__content"}>{props.content}</p>
+                <div className="comment__top__menuCont">
+                    <FontAwesomeIcon onClick={commentMenuToggle} icon={faEllipsis} className="comment__top__menuCont__menuBtn" />
+                    {
+                        toggleCommentMenu &&
+                        <div className="comment__top__menuCont__menu">
+                            <ul>
+                                {
+                                    props.userId === props.user.id &&
+                                    <>
+                                        <li className='comment__top__menuCont__menu__link'>Modifier le commentaire</li>
+                                        <li onClick={deleteCommentModalToggle} className='comment__top__menuCont__menu__link'>Supprimer le commentaire</li>
+                                        <li className="comment__top__menuCont__menu__separator"></li>
+                                    </>
+                                }
+                                <li className='comment__top__menuCont__menu__link'>Signaler le commentaire</li>
+                            </ul>
+                        </div>
+                    }
+                </div>
             </div>
             <div className="comment__bot">
                 <p className='comment__bot__link'>Like</p>
@@ -164,7 +251,7 @@ const Comment = (props) => {
                     {
                         toggleResponses && 
                             responses.map(el => {
-                                return <Response id={el.id} key={el.id} content={el.content} user={props.user} userId={el.userId} time={el.time} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} created={el.created} updated={el.updated}/>
+                                return <Response id={el.id} key={el.id} content={el.content} user={props.user} userId={el.userId} time={el.time} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} created={el.created} updated={el.updated} getAllRespFunc={getAllResponse}/>
                             })
                     }
                     {
@@ -174,6 +261,19 @@ const Comment = (props) => {
                 </>
             }
         </article>
+        {
+            toggleDeleteCommentModal &&
+            <div className="comment__deleteModal">
+                <div className="comment__deleteModal__modal">
+                    <h2>Voulez vous supprimer ce commentaire ?</h2>
+                    <div className="comment__deleteModal__modal__btnCont">
+                        <button onClick={tryToDeleteComment}>Supprimer</button>
+                        <button onClick={deleteCommentModalToggle}>Annuler</button>
+                    </div>
+                </div>
+            </div>
+        }
+        </>
     );
 };
 

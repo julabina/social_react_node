@@ -124,9 +124,49 @@
             border-radius: 5px;
             line-height: 1.4;
             letter-spacing: 0.3px;
-            max-width: 85%;
+            max-width: 81%;
             &--me {
                 background: darken(map-get($map: $colors, $key: secondary), 15);
+            }
+        }
+        &__menuCont {
+            position: relative;
+            &__menuBtn {
+                width: 16px;
+                margin: 2px 0 0 10px;
+                color: map-get($map: $colors, $key: tertiary);
+                cursor: pointer;
+                transition: all 110ms ease-in-out;
+                &:hover {
+                    color: map-get($map: $colors, $key: primary);
+                    transition: all 110ms ease-in-out;
+                }
+            }
+            &__menu {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                z-index: 100;
+                right: 0;
+                padding: 10px 15px;
+                width: 185px;
+                background: white;   
+                border-radius: 6px;
+                line-height: 1.4;
+                box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
+                &__separator {
+                    border-bottom: 1px solid lighten(map-get($map: $colors, $key:tertiary ), 56);
+                    margin: 5px 0;
+                }
+                &__link {
+                    color: map-get($map: $colors, $key: tertiary);
+                    cursor: pointer;
+                    transition: all 140ms ease-in-out;
+                    &:hover {
+                        color: map-get($map: $colors, $key: primary);
+                        transition: all 140ms ease-in-out;
+                    }
+                }
             }
         }
     }
@@ -148,6 +188,35 @@
         }
         &__time {
             color: map-get($map: $colors, $key:light-gray );
+        }
+    }
+    &__deleteModal {
+        position: fixed;
+        z-index: 100;
+        top: 0;bottom: 0;
+        left: 0;right: 0;
+        background: rgba(0, 0, 0, 0.719);
+        &__modal {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            top: 45%;left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 5px;
+            h2 {
+                font-size: 1.2em;
+                font-weight: 600;
+                margin-bottom: 50px;
+            }
+            &__btnCont {
+                button {
+                    @include btn;
+                    margin: 0 10px;
+                }
+            }
         }
     }
 }

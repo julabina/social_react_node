@@ -2,8 +2,15 @@ const { v4 } = require('uuid');
 const { User, UserInfo } = require('../db/sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { ValidationError, UniqueConstraintError } = require('sequelize');
 
+/**
+ * create an user account
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 exports.sign = (req, res, next) => {
 
     if(req.body.email === undefined || req.body.password === undefined || req.body.firstname === undefined || req.body.lastname === undefined) {
@@ -53,6 +60,13 @@ exports.sign = (req, res, next) => {
     }
 };
 
+/**
+ * log one user
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.login = (req, res, next) => {
     
     User.findOne({ where: {email: req.body.email} })
@@ -81,9 +95,13 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.findUserInfos = (req, res, next) => {
-    console.log(req.params.id);
-    console.log('zaezaea');
     UserInfo.findOne({ where: { userId: req.params.id } })
         .then(user => {
             if (user === null) {

@@ -26,6 +26,12 @@ const PostCard = (props) => {
         getAllComments();
     },[])
 
+    /**
+     * calcul time between created date and current date
+     * 
+     * @param {*} date 
+     * @returns 
+     */
     const calculTimeBetween = (date) => {
         const currentDate = new Date();
         const createdDate = new Date(date);
@@ -74,10 +80,16 @@ const PostCard = (props) => {
         return diffDisplay;
     }
 
+    /**
+     * toggle the post menu
+     */
     const menuToggle = () => {
         setToggleMenu(!toggleMenu);
     }
     
+    /**
+     * toggle content and modify form for modify one post
+     */
     const modifyToggle = () => {
         if(toggleMenu) {
             menuToggle();
@@ -86,6 +98,9 @@ const PostCard = (props) => {
         setToggleModify(!toggleModify);
     }
 
+    /**
+     * toggle delete modal
+     */
     const toggleDelete = () => {
         if(toggleMenu) {
             menuToggle();
@@ -93,6 +108,9 @@ const PostCard = (props) => {
         setToggleDeleteModal(!toggleDeleteModal);
     }
 
+    /**
+     * try to delete one post
+     */
     const tryToDeletePost = () => {
         fetch('http://localhost:3000/api/posts/delete/' + props.id, {
             headers: {
@@ -108,14 +126,30 @@ const PostCard = (props) => {
     
     }
 
+    /**
+     * control adding content form input for creating post
+     * 
+     * @param {*} value 
+     */
     const ctrlText = (value) => {
         setTextArticle(value);
     }
 
+    /**
+     * adding image to image state
+     * 
+     * @param {*} imageList 
+     * @param {*} addUpdateIndex 
+     */
     const imgChange = (imageList, addUpdateIndex) => {
         setImage(imageList);
     }
 
+    /**
+     * check if form is ok
+     * 
+     * @returns 
+     */
     const checkModifiedPost = () => {
         const errorCont = document.querySelector('.postArticle__content__errorEdit');
         errorCont.innerHTML = "";
@@ -141,6 +175,11 @@ const PostCard = (props) => {
         tryToModifyPost(textWithoutTag);
     }
 
+    /**
+     * try to modify one post
+     * 
+     * @param {*} text 
+     */
     const tryToModifyPost = (text) => {
 
         let formData = new FormData();
@@ -170,6 +209,9 @@ const PostCard = (props) => {
         })
     }
     
+    /**
+     * delete current post image
+     */
     const deleteCurrentImg = () => {
             
         fetch('http://localhost:3000/api/posts/deleteImg/' + props.id, {
@@ -185,6 +227,9 @@ const PostCard = (props) => {
         })
     }
 
+    /**
+     * get current image
+     */
     const getCurrentImg = () => {
         fetch('http://localhost:3000/api/posts/picture/' + props.id, {
             headers: {
@@ -198,6 +243,9 @@ const PostCard = (props) => {
             })
     }
 
+    /**
+     * get all comments for one post
+     */
     const getAllComments = () => {
         fetch('http://localhost:3000/api/comments/findAll/' + props.id, {
             headers: {
@@ -207,6 +255,7 @@ const PostCard = (props) => {
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 if (data.data) {  
                     let newArr = [];
                     for (let i = 0; i < data.data.length; i++) {
@@ -214,6 +263,7 @@ const PostCard = (props) => {
                             let item = {
                                 id: data.data[i].id,
                                 content: data.data[i].content,
+                                postId: data.data[i].postId,
                                 userId: data.data[i].userId,
                                 firstname: data.data[i].User.User_info.firstname,
                                 lastname: data.data[i].User.User_info.lastname,
@@ -233,6 +283,12 @@ const PostCard = (props) => {
             })
     }
 
+    /**
+     * toggle display comments
+     * 
+     * @param {*} isNews 
+     * @returns 
+     */
     const toggleCommentShow = (isNews) => {
 
         if (isNews) {
@@ -367,7 +423,7 @@ const PostCard = (props) => {
                         {
                             comments.length !== 0 ?
                             comments.map(el => {
-                                return <Comment id={el.id} key={el.id} content={el.content} user={props.user} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />;
+                                return <Comment id={el.id} key={el.id} content={el.content} postId={el.postId} user={props.user} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />;
                             })
                             :
                             <p>Aucun commentaires</p>

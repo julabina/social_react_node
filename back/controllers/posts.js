@@ -2,6 +2,13 @@ const { v4 } = require('uuid');
 const { Post, UserInfo } = require('../db/sequelize');
 const fs = require('fs');
 
+/**
+ * get all posts
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.findAllPosts = (req, res, next) => {
 
     Post.findAll()
@@ -33,6 +40,14 @@ exports.findAllPosts = (req, res, next) => {
 
 };
 
+/**
+ * create new post
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 exports.createPost = (req, res, next) => {
 
     if (req.file !== undefined || JSON.parse(req.body.text) !== "") {
@@ -67,6 +82,13 @@ exports.createPost = (req, res, next) => {
     }
 };
 
+/**
+ * delete one post
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.deletePost = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
@@ -97,7 +119,15 @@ exports.deletePost = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
     };
-    
+       
+/**
+ * modify one post
+ *  
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 exports.modifyPost = (req, res, next) => {
 
     if (req.file !== undefined || JSON.parse(req.body.text) !== "") {
@@ -163,6 +193,13 @@ exports.modifyPost = (req, res, next) => {
     }
 };
 
+/**
+ * delete post picture
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.deleteCurrentImg = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
@@ -190,6 +227,13 @@ exports.deleteCurrentImg = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+/**
+ * get post picture
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getPicture = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {

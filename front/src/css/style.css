@@ -419,10 +419,50 @@ body {
   border-radius: 5px;
   line-height: 1.4;
   letter-spacing: 0.3px;
-  max-width: 85%;
+  max-width: 81%;
 }
 .comment__top__content--me {
   background: #ff8b8b;
+}
+.comment__top__menuCont {
+  position: relative;
+}
+.comment__top__menuCont__menuBtn {
+  width: 16px;
+  margin: 2px 0 0 10px;
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 110ms ease-in-out;
+}
+.comment__top__menuCont__menuBtn:hover {
+  color: #fd2d01;
+  transition: all 110ms ease-in-out;
+}
+.comment__top__menuCont__menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  padding: 10px 15px;
+  width: 185px;
+  background: white;
+  border-radius: 6px;
+  line-height: 1.4;
+  box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
+}
+.comment__top__menuCont__menu__separator {
+  border-bottom: 1px solid #e6e7ec;
+  margin: 5px 0;
+}
+.comment__top__menuCont__menu__link {
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 140ms ease-in-out;
+}
+.comment__top__menuCont__menu__link:hover {
+  color: #fd2d01;
+  transition: all 140ms ease-in-out;
 }
 .comment__bot {
   display: flex;
@@ -443,6 +483,49 @@ body {
 }
 .comment__bot__time {
   color: #8f8f8f;
+}
+.comment__deleteModal {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.719);
+}
+.comment__deleteModal__modal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px;
+  border-radius: 5px;
+}
+.comment__deleteModal__modal h2 {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+.comment__deleteModal__modal__btnCont button {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  margin: 0 10px;
+}
+.comment__deleteModal__modal__btnCont button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
 }
 .comment__responseCount {
   color: #4e5166;
@@ -535,10 +618,50 @@ body {
   border-radius: 5px;
   line-height: 1.4;
   letter-spacing: 0.3px;
-  max-width: 85%;
+  max-width: 81%;
 }
 .response__top__content--me {
   background: #ff8b8b;
+}
+.response__top__menuCont {
+  position: relative;
+}
+.response__top__menuCont__menuBtn {
+  width: 16px;
+  margin: 2px 0 0 10px;
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 110ms ease-in-out;
+}
+.response__top__menuCont__menuBtn:hover {
+  color: #fd2d01;
+  transition: all 110ms ease-in-out;
+}
+.response__top__menuCont__menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  padding: 10px 15px;
+  width: 185px;
+  background: white;
+  border-radius: 6px;
+  line-height: 1.4;
+  box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
+}
+.response__top__menuCont__menu__separator {
+  border-bottom: 1px solid #e6e7ec;
+  margin: 5px 0;
+}
+.response__top__menuCont__menu__link {
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 140ms ease-in-out;
+}
+.response__top__menuCont__menu__link:hover {
+  color: #fd2d01;
+  transition: all 140ms ease-in-out;
 }
 .response__bot {
   display: flex;
@@ -559,6 +682,49 @@ body {
 }
 .response__bot__time {
   color: #8f8f8f;
+}
+.response__deleteModal {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.719);
+}
+.response__deleteModal__modal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px;
+  border-radius: 5px;
+}
+.response__deleteModal__modal h2 {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+.response__deleteModal__modal__btnCont button {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  margin: 0 10px;
+}
+.response__deleteModal__modal__btnCont button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
 }
 
 .header {
