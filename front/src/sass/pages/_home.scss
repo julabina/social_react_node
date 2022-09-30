@@ -24,11 +24,13 @@
                 padding: 25px;
                 background-color: lighten(map-get($map: $colors, $key:secondary ), 5);
                 border: none;
+                box-shadow: 0px 0 2px rgba(0, 0, 0, 0.300);
             }
             &__addImg {
                 width: 100%;
                 border-radius: 30px;
                 background-color: lighten(map-get($map: $colors, $key:secondary ), 5);
+                box-shadow: 0px 0 2px rgba(0, 0, 0, 0.300);
                 &__topBtn {
                     background-color: lighten(map-get($map: $colors, $key:secondary ), 5);
                     border-radius: 30px;

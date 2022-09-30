@@ -2,6 +2,7 @@ const { DataTypes, Sequelize } = require('sequelize');
 const UserModel = require('../models/user');
 const UserInfoModel = require('../models/user_info');
 const PostModel = require('../models/post');
+const CommentModel = require('../models/comment');
 
 const sequelize = new Sequelize(
     'groupomania',
@@ -22,7 +23,8 @@ const sequelize = new Sequelize(
 const User = UserModel(sequelize, DataTypes);
 const UserInfo = UserInfoModel(sequelize, DataTypes);
 const Post = PostModel(sequelize, DataTypes);
+const Comment = CommentModel(sequelize, DataTypes);
 
 module.exports = {
-    User, Post, UserInfo
+    User, Post, UserInfo, Comment
 };

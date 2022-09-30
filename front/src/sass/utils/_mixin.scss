@@ -81,3 +81,73 @@
         }
     }
 }
+
+@mixin noImgUserCont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: map-get($map: $colors, $key:light-white );
+    height: 40px;width: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    &__user {
+        height: 22px;
+        color: darken($color: map-get($map: $colors, $key:light-white ), $amount: 15);
+    }
+}
+
+@mixin comment {
+    padding: 10px 25px;
+    &__top {
+        display: flex;
+        position: relative;
+        color: darken(map-get($map: $colors, $key:tertiary ), 20);
+        &__profilCont {
+            @include noImgUserCont;
+        }
+        &__bubble {
+            position: absolute;
+            z-index: 1;
+            top: 12px;
+            left: 50px;
+            height: 15px;width: 15px;
+            background: map-get($map: $colors, $key: secondary);
+            transform: rotate(45deg);
+            &--me {
+                background: darken(map-get($map: $colors, $key: secondary), 15);
+            }
+        }
+        &__content {
+            z-index: 10;
+            background: map-get($map: $colors, $key: secondary);
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+            max-width: 85%;
+            &--me {
+                background: darken(map-get($map: $colors, $key: secondary), 15);
+            }
+        }
+    }
+    &__bot {
+        display: flex;
+        margin-top: 8px;
+        padding-left: 55px;
+        p{
+            margin-right: 12px;
+        }
+        &__link {
+            color: map-get($map: $colors, $key:tertiary );
+            cursor: pointer;
+            transition: all 150ms ease-in-out;
+            &:hover {
+                color: map-get($map: $colors, $key: primary);
+                transition: all 150ms ease-in-out;
+            }
+        }
+        &__time {
+            color: map-get($map: $colors, $key:light-gray );
+        }
+    }
+}

@@ -1,0 +1,32 @@
+.comment {
+    @include comment;
+    &__responseCount {
+        color: map-get($map: $colors, $key: tertiary);
+        margin: 15px 0 0 55px;
+        cursor: pointer;
+        transition: all 110ms ease-in-out;
+        &:hover {
+            color: map-get($map: $colors, $key: primary);
+            transition: all 110ms ease-in-out;
+        }
+    }
+    &__form {
+        display: flex;
+        margin: 10px 0 0 55px;
+        input {
+            @include inputField;
+            font-size: 0.8em;
+            border-radius: 30px 0 0 30px;
+            padding-right: 10px;
+            box-shadow: 1px 0 2px rgba(0, 0, 0, 0.19);
+        }
+        button {
+            @include btn; 
+            border-radius: 0 30px 30px 0;
+            height: 37px;
+            font-size: 0.7em;
+            padding-right: 15px;
+            box-shadow: 1px 0 2px rgba(0, 0, 0, 0.19);
+        }
+    }
+}

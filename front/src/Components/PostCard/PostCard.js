@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis, faThumbsUp, faComments, faShare } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import ImageUploading from 'react-images-uploading';
+import CommentForm from '../CommentForm/CommentForm';
+import Comment from '../Comment/Comment';
 
 const PostCard = (props) => {
 
@@ -13,10 +15,20 @@ const PostCard = (props) => {
     const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
     const [toggleModify, setToggleModify] = useState(false);
     const [image, setImage] = React.useState([]);
+    const [commentShowToggle, setCommentShowToggle] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [commentCount, setCommentCount] = useState(0);
 
     useEffect(() => {
+        const timeBetween = calculTimeBetween(props.created);
+
+        setTimeBetween(timeBetween);
+        getAllComments();
+    },[])
+
+    const calculTimeBetween = (date) => {
         const currentDate = new Date();
-        const createdDate = new Date(props.created);
+        const createdDate = new Date(date);
         
         const diff = currentDate.getTime() - createdDate.getTime();
 
@@ -59,8 +71,8 @@ const PostCard = (props) => {
             diffDisplay = second + ' sec';
         }
 
-        setTimeBetween(diffDisplay);
-    },[])
+        return diffDisplay;
+    }
 
     const menuToggle = () => {
         setToggleMenu(!toggleMenu);
@@ -185,6 +197,53 @@ const PostCard = (props) => {
                 setCurrentImage(data.data);
             })
     }
+
+    const getAllComments = () => {
+        fetch('http://localhost:3000/api/comments/findAll/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.data) {  
+                    let newArr = [];
+                    for (let i = 0; i < data.data.length; i++) {
+                        if (data.data[i].commentId === null) {
+                            let item = {
+                                id: data.data[i].id,
+                                content: data.data[i].content,
+                                userId: data.data[i].userId,
+                                firstname: data.data[i].User.User_info.firstname,
+                                lastname: data.data[i].User.User_info.lastname,
+                                profilImg: data.data[i].User.User_info.profilImg,
+                                time: calculTimeBetween(data.data[i].createdAt),
+                                created: data.data[i].createdAt,
+                                updated: data.data[i].updatedAt,
+                            };
+                            newArr.push(item);
+                        }
+                    }
+                    newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+                    
+                    setComments(newArr);
+                    setCommentCount(data.count);
+                }
+            })
+    }
+
+    const toggleCommentShow = (isNews) => {
+
+        if (isNews) {
+            return setCommentShowToggle(true);
+        }
+
+        if (comments.length === 0) {
+            getAllComments();
+        }
+        setCommentShowToggle(!commentShowToggle);
+    }
     
     return (
         <>
@@ -291,7 +350,7 @@ const PostCard = (props) => {
                     <div className="postArticle__btns__cont__icon">
                         <FontAwesomeIcon icon={faComments} className="postArticle__btns__cont__iconCont__icon" />
                     </div>
-                    <p>Commentaires</p>
+                    <p onClick={() => toggleCommentShow(false)}>{commentCount} commentaires</p>
                 </div>
                 <div className="postArticle__btns__cont">
                     <div className="postArticle__btns__cont__icon">
@@ -302,13 +361,27 @@ const PostCard = (props) => {
             </div>
             <div className="postArticle__likes"></div>
             <div className="postArticle__comments">
-                <div className="postArticle__comments__commentsContainer">
-
-                </div>
-                <p className='postArticle__comments__loadAll'></p>
-                <div className="postArticl__comments__createForm">
-                    <input type="text" placeholder="Ajouter un commentaire" />
-                </div>
+                {
+                    commentShowToggle &&
+                    <div className="postArticle__comments__commentsContainer">
+                        {
+                            comments.length !== 0 ?
+                            comments.map(el => {
+                                return <Comment id={el.id} key={el.id} content={el.content} user={props.user} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />;
+                            })
+                            :
+                            <p>Aucun commentaires</p>
+                        }
+                    </div>
+                }
+                {
+                    comments.length !== 0 &&
+                    
+                    commentShowToggle &&
+                        <p onClick={() => toggleCommentShow(false)} className='postArticle__comments__loadAll'>Masquer les Commentaires.</p>
+                    
+                }
+                <CommentForm postId={props.id} user={props.user} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />
             </div>
         </article>
         {
