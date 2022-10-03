@@ -128,6 +128,23 @@
             &--me {
                 background: darken(map-get($map: $colors, $key: secondary), 15);
             }
+            &--ctrl {
+                width: 81%;
+                resize: vertical;
+                border: none;
+                textarea {
+                    background: darken(map-get($map: $colors, $key: secondary), 15);
+                    resize: vertical;
+                    border: none;
+                    width: 100%;
+                }
+                button {
+                    @include btn;
+                    font-size: 0.7em;
+                    height: 25px;
+                    margin-right: 10px;
+                }
+            }
         }
         &__menuCont {
             position: relative;

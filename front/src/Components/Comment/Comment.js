@@ -10,9 +10,11 @@ const Comment = (props) => {
     const [toggleResponses, setToggleResponses] = useState(false);
     const [toggleCommentMenu, setToggleCommentMenu] = useState(false);
     const [toggleDeleteCommentModal, setToggleDeleteCommentModal] = useState(false);
+    const [toggleModifyComment, setToggleModifyComment] = useState(false);
     const [responseText, setResponseText] = useState("");
     const [responseCount, setResponseCount] = useState(0);
     const [responses, setResponses] = useState([]);
+    const [comment, setComment] = useState(props.content);
 
     useEffect(() => {
         getAllResponse();
@@ -203,6 +205,50 @@ const Comment = (props) => {
             })
     }
 
+    /**
+     * toggle textarea for modify one comment
+     */
+    const modifyCommentToggle = () => {
+        const textarea = document.querySelector('.comment__top__content--ctrl');
+        commentMenuToggle(true);
+        setToggleModifyComment(!toggleModifyComment);
+    }
+
+    /**
+     * control textarea for modifying comment
+     * 
+     * @param {*} value 
+     */
+    const ctrlModifyComment = (value) => {
+        setComment(value);
+    }
+
+    /**
+     * modify one comment
+     */
+    const tryToModifyComment = () => {
+        if (comment !== "" && comment.length < 300) {
+            const commentWithoutTag = comment.replace(/<\/?[^>]+>/g,'');
+
+            fetch('http://localhost:3000/api/comments/edit/' + props.id, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer " + props.user.token
+                },
+                method: 'PUT', 
+                body: JSON.stringify({content: commentWithoutTag})
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === true) {
+                        modifyCommentToggle();
+                        props.getCommentsFunc();
+                    }
+                })
+        }
+    }
+
     return (
         <>
         <article className='comment'>
@@ -211,7 +257,18 @@ const Comment = (props) => {
                     { props.profilImg !== null ? <img src="" alt="" /> : <FontAwesomeIcon icon={faUser} className="comment__top__profilCont__user" />}
                 </div>
                 <div className={props.userId === props.user.id ? "comment__top__bubble comment__top__bubble--me" : "comment__top__bubble"}></div>
-                <p className={props.userId === props.user.id ? "comment__top__content comment__top__content--me" : "comment__top__content"}>{props.content}</p>
+                {
+                    toggleModifyComment ?
+                    <div className={props.userId === props.user.id ? "comment__top__content comment__top__content--me comment__top__content--ctrl" : "comment__top__content comment__top__content--ctrl"}>
+                        <textarea autoFocus onInput={(e) => ctrlModifyComment(e.target.value)} value={comment}  ></textarea>
+                        <div className="comment__top__modifyBtn">
+                            <button onClick={tryToModifyComment}>Modifier</button>
+                            <button onClick={modifyCommentToggle}>Annuler</button>
+                        </div>
+                    </div>
+                    :
+                    <p className={props.userId === props.user.id ? "comment__top__content comment__top__content--me" : "comment__top__content"}>{props.content}</p>
+                }
                 <div className="comment__top__menuCont">
                     <FontAwesomeIcon onClick={commentMenuToggle} icon={faEllipsis} className="comment__top__menuCont__menuBtn" />
                     {
@@ -221,7 +278,7 @@ const Comment = (props) => {
                                 {
                                     props.userId === props.user.id &&
                                     <>
-                                        <li className='comment__top__menuCont__menu__link'>Modifier le commentaire</li>
+                                        <li onClick={modifyCommentToggle} className='comment__top__menuCont__menu__link'>Modifier le commentaire</li>
                                         <li onClick={deleteCommentModalToggle} className='comment__top__menuCont__menu__link'>Supprimer le commentaire</li>
                                         <li className="comment__top__menuCont__menu__separator"></li>
                                     </>

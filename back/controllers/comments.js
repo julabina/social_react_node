@@ -147,3 +147,32 @@ exports.deleteComment = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 
 };
+
+exports.modifyComment = (req, res, next) => {
+
+    if (req.body.content !== "" || req.body.content !== undefined) {     
+        textWithoutTag = req.body.content.replace(/<\/?[^>]+>/g,'');
+
+        Comment.findByPk(req.params.id)
+            .then(comment => {
+                if(!comment) {
+                    return res.status(404).json({ error : new error('Commentaire non trouvée.') });
+                }
+                if(comment.userId !== req.auth.userId) {
+                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                }
+
+                comment.update({
+                    content: textWithoutTag,
+                });
+
+                comment.save()
+                    .then(() => {
+                        const message = "Commentaire bien modifié.";
+                        res.status(201).json({ message, success : true });
+                    })  
+                    .catch(error => res.status(500).json({ error }));  
+            })
+            .catch(error => res.status(500).json({ error }));
+    }
+};
