@@ -66,11 +66,11 @@ const Header = () => {
             <SearchModul />
             <div className="header__btns">
                 <div className="header__btns__btn"></div>
-                <div className="header__btns__btn header__btns__btn--profil">
+                <a href={"/profil_=" + user.id}><div className="header__btns__btn header__btns__btn--profil">
                     {
                         userData.profilImg !== null ? <img src="" alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" /> 
                     }
-                </div>
+                </div></a>
             </div>
         </header>
     );

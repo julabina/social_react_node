@@ -90,9 +90,14 @@
     height: 40px;width: 40px;
     border-radius: 50%;
     margin-right: 15px;
+    overflow: hidden;
     &__user {
         height: 22px;
         color: darken($color: map-get($map: $colors, $key:light-white ), $amount: 15);
+    }
+    img {
+        height: 40px;
+        width: 40px;
     }
 }
 

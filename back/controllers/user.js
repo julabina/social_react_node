@@ -2,6 +2,7 @@ const { v4 } = require('uuid');
 const { User, UserInfo } = require('../db/sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 /**
  * create an user account
@@ -112,4 +113,123 @@ exports.findUserInfos = (req, res, next) => {
             res.status(200).json({ message, data: user });
         })
         .catch(error => res.status(500).json({ error }))
+};
+
+exports.changeBaneer = (req, res, next) => {
+    if(req.file!== undefined) {
+
+        UserInfo.findOne({
+            where: {
+                userId: req.params.id
+            }
+        })
+        .then(userInfo => {
+            if(!userInfo) {
+                return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+            }
+            if(userInfo.userId !== req.auth.userId) {
+                return res.status(403).json({ error : new error('Requete non authorisée.') });
+            }
+            
+            userInfo.update({
+                profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
+            })
+            
+            userInfo.save()
+            .then(() => {
+                const message = "Bannière bien modifié.";
+                res.status(201).json({ message, success: true });
+            })
+            .catch(error => res.status(501).json({ error }));
+        })
+        .catch(error => res.status(503).json({ error }));
+    } else {
+        const message = 'Aucune image importé.';
+        res.status(400).json({ message });
+    }
+};
+
+exports.editNames = (req, res, next) => {
+
+    if((req.body.firstname !== undefined && req.body.firstname.match(/^[a-zA-Zé èà]*$/)) && (req.body.lastname !== undefined && req.body.lastname.match(/^[a-zA-Zé èà]*$/))) {
+
+        UserInfo.findOne({
+            where: {
+                userId: req.params.id
+            }
+        })
+            .then(userInfo => {
+                if(!userInfo) {
+                    return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+                }
+                if(userInfo.userId !== req.auth.userId) {
+                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                }
+
+                userInfo.update({
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                });
+
+                userInfo.save()
+                    .then(() => {
+                        const message = "Informations bien modifiés.";
+                        res.status(200).json({ message, success: true })
+                    })
+                    .catch(error => res.status(500).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+            
+    } else {
+        const error = "Une erreur s'est produite.";
+        res.status(400).json({ error });
+    }
+};
+
+exports.editEmail = (req, res, next) => {
+
+    if((req.body.email !== undefined && req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.new !== undefined && req.body.new.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.password !== undefined && req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/))) {
+
+        User.findByPk(req.params.id)
+            .then(user => {
+                if(!user) {
+                    return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+                }
+                if(user.id !== req.auth.userId) {
+                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                }
+
+                if(user.email !== req.body.email) {
+                    const message = "L'email ne correspond pas à celui du compte.";
+                    return res.status(401).json({ message, error: "email" });
+                }
+
+                bcrypt.compare(req.body.password, user.password)
+                    .then(valid => {
+                        if (!valid) {
+                            const message = "Le mot de passe ne correspond pas.";
+                            return res.status(401).json({ message, error: "pwd" });
+                        }
+
+                        user.update({
+                            email: req.body.new
+                        });
+
+                        user.save()
+                            .then(() => {
+                                const message = "Email bien modifié.";
+                                res.status(201).json({ message, success: true });
+                            })
+                            .catch(error => res.status(500).json({ error }));
+                    })
+                    .catch(error => res.status(500).json({ error }));
+
+            })
+            .catch(error => res.status(500).json({ error }));
+
+    } else {
+        const error = "Une erreur s'est produite.";
+        res.status(400).json({ error });
+    }
+
 };

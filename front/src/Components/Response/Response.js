@@ -97,7 +97,7 @@ const Response = (props) => {
         <article className='response'>
             <div className="response__top">
                 <div className="response__top__profilCont">
-                    { props.profilImg !== null ? <img src="" alt="" /> : <FontAwesomeIcon icon={faUser} className="response__top__profilCont__user" />}
+                    { props.profilImg !== null ? <img src={"http://localhost:3000/images/" + props.profilImg} alt={"Photo de profil"} /> : <FontAwesomeIcon icon={faUser} className="response__top__profilCont__user" />}
                 </div>
                 <div className={props.userId === props.user.id ? "response__top__bubble response__top__bubble--me" : "response__top__bubble"}></div>
                 {

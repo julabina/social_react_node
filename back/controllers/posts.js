@@ -249,3 +249,20 @@ exports.getPicture = (req, res, next) => {
             res.status(200).json({ message, data: image })
         })
 };
+
+exports.findAllPostForUser = (req, res, next) => {
+    Post.findAll({
+        where: {
+            userId: req.params.id
+        }
+    })
+        .then(posts => {
+            if(!posts) {
+                return res.status(404).json({ error : new error('Aucun post de trouvée.') });
+            }
+
+            const message = "Des posts ont bien été trouvé..";
+            res.status(200).json({ message , data: posts });
+        })
+        .catch(error => res.status(500).json({ error }));
+};

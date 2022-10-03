@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT, 
             allowNull: true
         },
+        profilBaneer: {
+            type: DataTypes.TEXT, 
+            allowNull: true
+        },
         userId: {
             type: DataTypes.STRING,
             allowNull: false,
