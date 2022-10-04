@@ -207,6 +207,10 @@
                 color: map-get($map: $colors, $key: primary);
                 transition: all 150ms ease-in-out;
             }
+            &--liked {
+                cursor: pointer;
+                color: map-get($map: $colors, $key: primary);
+            }
         }
         &__time {
             color: map-get($map: $colors, $key:light-gray );

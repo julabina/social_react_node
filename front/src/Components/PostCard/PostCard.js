@@ -19,12 +19,17 @@ const PostCard = (props) => {
     const [comments, setComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
     const [isLiked, setIsLiked] = useState(props.likedByUser);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const timeBetween = calculTimeBetween(props.created);
 
         setTimeBetween(timeBetween);
         getAllComments();
+
+        if(props.isAdmin && (typeof props.isAdmin === "boolean")) {
+            setIsAdmin(props.isAdmin);
+        }
     },[])
 
     /**
@@ -201,14 +206,14 @@ const PostCard = (props) => {
             method: 'PUT',
             body: formData
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            modifyToggle();
-            setImage([]);
-            getCurrentImg();
-            props.loadAfterFunc();
-        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                modifyToggle();
+                setImage([]);
+                getCurrentImg();
+                props.loadAfterFunc();
+            })
     }
     
     /**
@@ -262,12 +267,20 @@ const PostCard = (props) => {
                 if (data.data) {  
                     let newArr = [];
                     for (let i = 0; i < data.data.length; i++) {
+                        let liked = false;
+
+                        if(data.data[i].usersLiked.includes(props.user.id)) {
+                            liked = true;
+                        }
+
                         if (data.data[i].commentId === null) {
                             let item = {
                                 id: data.data[i].id,
                                 content: data.data[i].content,
                                 postId: data.data[i].postId,
                                 userId: data.data[i].userId,
+                                likedByUser: liked,
+                                likes: data.data[i].likes,
                                 firstname: data.data[i].User.User_info.firstname,
                                 lastname: data.data[i].User.User_info.lastname,
                                 profilImg: data.data[i].User.User_info.profilImg,
@@ -341,7 +354,7 @@ const PostCard = (props) => {
                     <div className="postArticle__top__menu__cont">
                         <ul>
                             {
-                                (props.isAdmin === true || props.userId === props.user.id)
+                                (isAdmin === true || props.userId === props.user.id)
                                 &&
                                 <>
                                     <li onClick={modifyToggle}>Modifier la publication</li>
@@ -444,7 +457,7 @@ const PostCard = (props) => {
                         {
                             comments.length !== 0 ?
                             comments.map(el => {
-                                return <Comment id={el.id} key={el.id} content={el.content} postId={el.postId} user={props.user} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />;
+                                return <Comment id={el.id} key={el.id} content={el.content} postId={el.postId} user={props.user} isAdmin={isAdmin} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} likes={el.likes} isLiked={el.likedByUser} />;
                             })
                             :
                             <p className="postArticle__comments__commentsContainer__nothing">Aucun commentaires</p>

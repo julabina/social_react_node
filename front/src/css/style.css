@@ -536,6 +536,10 @@ body {
   color: #fd2d01;
   transition: all 150ms ease-in-out;
 }
+.comment__bot__link--liked {
+  cursor: pointer;
+  color: #fd2d01;
+}
 .comment__bot__time {
   color: #8f8f8f;
 }
@@ -630,6 +634,7 @@ body {
   transition: all 150ms ease-in-out;
 }
 .comment__backBtn {
+  margin-top: 8px;
   padding-left: 70px;
   color: #4e5166;
   cursor: pointer;
@@ -779,6 +784,10 @@ body {
 .response__bot__link:hover {
   color: #fd2d01;
   transition: all 150ms ease-in-out;
+}
+.response__bot__link--liked {
+  cursor: pointer;
+  color: #fd2d01;
 }
 .response__bot__time {
   color: #8f8f8f;

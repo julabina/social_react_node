@@ -120,7 +120,7 @@ exports.deleteComment = (req, res, next) => {
             if (!comment) {
                 return res.status(404).json({ error: new error('Aucun commentaire trouvé.') });
             }
-            if (comment.userId !== req.auth.userId) {
+            if ((comment.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
                 return res.status(403).json({ error: new error('Requete non authorisée.') });
             }
 
@@ -158,7 +158,7 @@ exports.modifyComment = (req, res, next) => {
                 if(!comment) {
                     return res.status(404).json({ error : new error('Commentaire non trouvée.') });
                 }
-                if(comment.userId !== req.auth.userId) {
+                if((comment.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
                     return res.status(403).json({ error : new error('Requete non authorisée.') });
                 }
 
@@ -174,4 +174,51 @@ exports.modifyComment = (req, res, next) => {
             })
             .catch(error => res.status(500).json({ error }));
     }
+};
+
+exports.handleLike = (req, res, next) => {
+
+    Comment.findByPk(req.params.id)
+        .then(comment => {
+            if(!comment) {
+                return res.status(404).json({ error : 'Commentaire non trouvée.' });
+            }
+           
+            let usersArr = comment.usersLiked;
+            let likeNum = comment.liked;
+
+            if(usersArr.length === 1 && usersArr[0] === "") {
+                usersArr = [req.auth.userId];
+                likeNum = 1;
+            } else if (usersArr.length === 1 && usersArr[0] === req.auth.userId) {
+                usersArr = [""];
+                likeNum = 0;
+            } else {
+
+                if (usersArr.includes(req.auth.userId)) {
+                    usersFiltered = usersArr.filter(el => {
+                        return el !== req.auth.userId
+                    });
+                    usersArr = usersFiltered;
+                } else {
+                    usersArr.push(req.auth.userId);
+                }
+
+                likeNum = usersArr.length;
+
+            }
+
+            comment.update({
+                usersLiked : usersArr,
+                likes: likeNum,
+            }, {silent: true})
+                .then(() => {
+                    const message = "Like pris en compte.";
+                    res.status(200).json({ message, success: true });
+                })
+                .catch(error => res.status(500).json({ error }));
+            
+        })
+        .catch(error => res.status(500).json({ error }));
+
 };

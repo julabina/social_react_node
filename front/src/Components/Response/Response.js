@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
@@ -9,6 +9,14 @@ const Response = (props) => {
     const [toggleDeleteResponseModal, setToggleDeleteResponseModal] = useState(false);
     const [toggleModifyResponse, setToggleModifyResponse] = useState(false);
     const [response, setResponse] = useState(props.content);
+    const [isLiked, setIsLiked] = useState(props.likedByUser);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        if(props.isAdmin && (typeof props.isAdmin === "boolean")) {
+            setIsAdmin(props.isAdmin);
+        }
+    },[])
 
     /**
      * toggle menu display for one response
@@ -92,6 +100,24 @@ const Response = (props) => {
         }
     }
 
+    const handleLike = () => {
+
+        fetch('http://localhost:3000/api/comments/addLike/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    setIsLiked(!isLiked);
+                    props.getAllRespFunc();
+                }
+            })
+
+    }
+
     return (
         <>
         <article className='response'>
@@ -119,7 +145,8 @@ const Response = (props) => {
                         <div className="response__top__menuCont__menu">
                             <ul>
                                 {
-                                    props.userId === props.user.id &&
+                                    (isAdmin === true || props.userId === props.user.id) 
+                                    &&
                                     <>
                                         <li onClick={modifyResponseToggle} className='response__top__menuCont__menu__link'>Modifier le commentaire</li>
                                         <li onClick={deleteResponseModalToggle} className='response__top__menuCont__menu__link'>Supprimer le commentaire</li>
@@ -133,7 +160,7 @@ const Response = (props) => {
                 </div>
             </div>
             <div className="response__bot">
-                <p className='response__bot__link'>Like</p>
+                <p onClick={handleLike} className={isLiked === true ? "response__bot__link--liked" : 'response__bot__link'}>Like {props.likes !== 0 && "(" + props.likes + ")"}</p>
                 <p className='response__bot__time'>{props.time}</p>
             </div>
         </article>

@@ -15,9 +15,16 @@ const Comment = (props) => {
     const [responseCount, setResponseCount] = useState(0);
     const [responses, setResponses] = useState([]);
     const [comment, setComment] = useState(props.content);
+    const [isLiked, setIsLiked] = useState(props.likedByUser);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         getAllResponse();
+
+        if(props.isAdmin && (typeof props.isAdmin === "boolean")) {
+            setIsAdmin(props.isAdmin);
+        }
+
     },[])
 
     /**
@@ -93,10 +100,18 @@ const Comment = (props) => {
                     let newArr = [];
 
                     for (let i = 0; i < data.data.length; i++) {
+                        let liked = false;
+
+                        if(data.data[i].usersLiked.includes(props.user.id)) {
+                            liked = true;
+                        }
+
                         let item = {
                             id: data.data[i].id,
                             content: data.data[i].content,
                             userId: data.data[i].userId,
+                            likedByUser: liked,
+                            likes: data.data[i].likes,
                             firstname: data.data[i].User.User_info.firstname,
                             lastname: data.data[i].User.User_info.lastname,
                             profilImg: data.data[i].User.User_info.profilImg,
@@ -249,6 +264,24 @@ const Comment = (props) => {
         }
     }
 
+    const handleLike = () => {
+
+        fetch('http://localhost:3000/api/comments/addLike/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    setIsLiked(!isLiked);
+                    props.getCommentsFunc();
+                }
+            })
+
+    }
+
     return (
         <>
         <article className='comment'>
@@ -276,7 +309,8 @@ const Comment = (props) => {
                         <div className="comment__top__menuCont__menu">
                             <ul>
                                 {
-                                    props.userId === props.user.id &&
+                                    (isAdmin === true || props.userId === props.user.id) 
+                                    &&
                                     <>
                                         <li onClick={modifyCommentToggle} className='comment__top__menuCont__menu__link'>Modifier le commentaire</li>
                                         <li onClick={deleteCommentModalToggle} className='comment__top__menuCont__menu__link'>Supprimer le commentaire</li>
@@ -290,7 +324,7 @@ const Comment = (props) => {
                 </div>
             </div>
             <div className="comment__bot">
-                <p className='comment__bot__link'>Like</p>
+                <p onClick={handleLike} className={isLiked === true ? "comment__bot__link comment__bot__link--liked" : 'comment__bot__link'}>Like {props.likes !== 0 && "(" + props.likes + ")"}</p>
                 <p onClick={responseToggle} className='comment__bot__link'>Repondre</p>
                 <p className='comment__bot__time'>{props.timeBetween}</p>
             </div>
@@ -308,7 +342,7 @@ const Comment = (props) => {
                     {
                         toggleResponses && 
                             responses.map(el => {
-                                return <Response id={el.id} key={el.id} content={el.content} user={props.user} userId={el.userId} time={el.time} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} created={el.created} updated={el.updated} getAllRespFunc={getAllResponse}/>
+                                return <Response id={el.id} key={el.id} content={el.content} user={props.user} isAdmin={isAdmin} userId={el.userId} time={el.time} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} created={el.created} updated={el.updated} getAllRespFunc={getAllResponse} likes={el.likes} isLiked={el.likedByUser} />
                             })
                     }
                     {

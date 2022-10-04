@@ -9,5 +9,6 @@ router.post('/new', auth, commentController.createComment);
 router.get('/findResponse/:id', commentController.findResponse);
 router.delete('/delete/:id', auth, commentController.deleteComment);
 router.put('/edit/:id', auth, commentController.modifyComment);
+router.get('/addLike/:id', auth, commentController.handleLike);
 
 module.exports = router;
