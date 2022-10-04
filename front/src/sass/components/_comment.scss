@@ -29,4 +29,14 @@
             box-shadow: 1px 0 2px rgba(0, 0, 0, 0.19);
         }
     }
+    &__backBtn {
+        padding-left: 70px;
+        color: map-get($map: $colors, $key:tertiary );
+        cursor: pointer;
+        transition: all 120ms ease-in-out;
+        &:hover {
+            color: map-get($map: $colors, $key:primary );
+            transition: all 120ms ease-in-out;
+        }
+    }
 }

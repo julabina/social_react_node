@@ -313,7 +313,7 @@ const Comment = (props) => {
                     }
                     {
                         toggleResponses && 
-                        <p onClick={respToggle}>Voir moins</p>                            
+                        <p className='comment__backBtn' onClick={respToggle}>Voir moins</p>                            
                     }
                 </>
             }

@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-const { Post, UserInfo } = require('../db/sequelize');
+const { Post, UserInfo, User } = require('../db/sequelize');
 const fs = require('fs');
 
 /**
@@ -67,7 +67,7 @@ exports.createPost = (req, res, next) => {
             id: v4(),
             content: textWithoutTag,
             picture: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
-            userId: JSON.parse(req.body.userId)
+            userId: JSON.parse(req.body.userId),
         });
         
         post.save()
@@ -89,15 +89,18 @@ exports.createPost = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.deletePost = (req, res, next) => {
+ exports.deletePost = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
+
             if (!post) {
-                return res.status(404).json({ error: new error('Post non trouvé.') });
+                return res.status(404).json({ error: 'Post non trouvé.' });
             }
-            if (post.userId !== req.auth.userId) {
-                return res.status(403).json({ error: new error('Requete non authorisée.') });
-            }
+            
+            if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
+                return res.status(401).json({ error: 'Requete non authorisée.' });
+            } 
+
             if (post.picture) {
                 const filename = post.picture.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
@@ -136,13 +139,14 @@ exports.modifyPost = (req, res, next) => {
             .then(post => {
 
                 if(!post) {
-                    return res.status(404).json({ error : new error('Post non trouvée.') });
+                    return res.status(404).json({ error : 'Post non trouvée.' });
                 }
-                if(post.userId !== req.auth.userId) {
-                    return res.status(403).json({ error : new error('Requete non authorisée.') });
-                }
+                
+                if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
+                    return res.status(401).json({ error: 'Requete non authorisée.' });
+                } 
 
-                let textWithoutTag = "";
+                let textWithoutTag = ""
 
                 if (JSON.parse(req.body.text) !== "") {  
                     if(JSON.parse(req.body.text).length < 10 || JSON.parse(req.body.text).length > 500) {
@@ -161,30 +165,23 @@ exports.modifyPost = (req, res, next) => {
                             content: textWithoutTag,
                             picture: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${filename}` : null
                         }
-                    );
-                    console.log(post);
-                        
-                    post.save()
+                    )
                         .then(() => {
                             const message = "Post mis à jour.";
                             res.status(200).json({ message });   
                         })
-                        .catch(error => res.status(500).json({ error }));
-                    
+                        .catch(error => res.status(500).json({ error }));                       
                 } else {
                     post.update(
                         {
                             content: textWithoutTag
                         }
-                    );
-
-                    post.save()
+                    )
                         .then(() => {
                             const message = "Post mis à jour.";
                             res.status(200).json({ message });   
                         })
                         .catch(error => res.status(500).json({ error }));
-
                 }
             })
             .catch(error => res.status(500).json({ error }));
@@ -204,18 +201,19 @@ exports.deleteCurrentImg = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
             if(!post) {
-                return res.status(404).json({ error : new error('Post non trouvée.') });
+                return res.status(404).json({ error : 'Post non trouvée.' });
             }
-            if(post.userId !== req.auth.userId) {
-                return res.status(403).json({ error : new error('Requete non authorisée.') });
-            }
+            
+            if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
+                return res.status(401).json({ error: 'Requete non authorisée.' });
+            }   
 
             const filename = post.picture.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 post.update(
-                    {
-                        picture: null
-                    }
+                {
+                    picture: null
+                }
                 )
                     .then(() => {
                         const message = "Image bien supprimé.";
@@ -238,16 +236,18 @@ exports.getPicture = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
             if(!post) {
-                return res.status(404).json({ error : new error('Post non trouvée.') });
+                return res.status(404).json({ error : 'Post non trouvée.' });
             }
-            if(post.userId !== req.auth.userId) {
-                return res.status(403).json({ error : new error('Requete non authorisée.') });
-            }
+            
+            if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
+                return res.status(401).json({ error: 'Requete non authorisée.' });
+            } 
 
             const image = post.picture;
             const message = "Une image a bien été trouvé.";
             res.status(200).json({ message, data: image })
         })
+        .catch(error => res.status(500).json({ error }));
 };
 
 exports.findAllPostForUser = (req, res, next) => {
@@ -265,4 +265,51 @@ exports.findAllPostForUser = (req, res, next) => {
             res.status(200).json({ message , data: posts });
         })
         .catch(error => res.status(500).json({ error }));
+};
+
+exports.handleLike = (req, res, next) => {
+
+    Post.findByPk(req.params.id)
+        .then(post => {
+            if(!post) {
+                return res.status(404).json({ error : 'Post non trouvée.' });
+            }
+           
+            let usersArr = post.usersLiked;
+            let likeNum = post.liked;
+
+            if(usersArr.length === 1 && usersArr[0] === "") {
+                usersArr = [req.auth.userId];
+                likeNum = 1;
+            } else if (usersArr.length === 1 && usersArr[0] === req.auth.userId) {
+                usersArr = [""];
+                likeNum = 0;
+            } else {
+
+                if (usersArr.includes(req.auth.userId)) {
+                    usersFiltered = usersArr.filter(el => {
+                        return el !== req.auth.userId
+                    });
+                    usersArr = usersFiltered;
+                } else {
+                    usersArr.push(req.auth.userId);
+                }
+
+                likeNum = usersArr.length;
+
+            }
+
+            post.update({
+                usersLiked : usersArr,
+                likes: likeNum,
+            }, {silent: true})
+                .then(() => {
+                    const message = "Like pris en compte.";
+                    res.status(200).json({ message, success: true });
+                })
+                .catch(error => res.status(500).json({ error }));
+            
+        })
+        .catch(error => res.status(500).json({ error }));
+
 };

@@ -18,6 +18,22 @@ module.exports = (sequelize, DataTypes) => {
         userId: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        likes: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        usersLiked: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            get() {
+                return this.getDataValue('usersLiked').split(',')
+            },
+            set(usersLiked) {
+                this.setDataValue('usersLiked', usersLiked.join())
+            },
+            defaultValue: ""
         }
     }, {
         timestamps: true,

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../db/sequelize');
 
 module.exports = (req, res, next) => {
 
@@ -7,13 +8,19 @@ module.exports = (req, res, next) => {
         const decodeToken = jwt.verify(token, '' + process.env.REACT_APP_JWT_PRIVATE_KEY + '');
         const userId = decodeToken.userId;
 
-        req.auth = { userId : userId };
+        User.findByPk(userId)
+            .then(user => {
 
-        if(req.body.userId && req.body.userId !== userId) {
-            throw 'User id non valable.';
-        } else {
-            next();
-        }
+                const admin = user.isAdmin;
+                
+                req.auth = { userId : userId, isAdmin: admin };
+                
+                if(req.body.userId && req.body.userId !== userId) {
+                    throw 'User id non valable.';
+                } else {
+                    next();
+                }
+            })
 
     } catch (error) {
         res.status(401).json({ message: 'Requête non authentifié.' });

@@ -134,13 +134,12 @@ exports.changeBaneer = (req, res, next) => {
             userInfo.update({
                 profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
             })
+                .then(() => {
+                    const message = "Bannière bien modifié.";
+                    res.status(201).json({ message, success: true });
+                })
+                .catch(error => res.status(501).json({ error }));
             
-            userInfo.save()
-            .then(() => {
-                const message = "Bannière bien modifié.";
-                res.status(201).json({ message, success: true });
-            })
-            .catch(error => res.status(501).json({ error }));
         })
         .catch(error => res.status(503).json({ error }));
     } else {
@@ -169,14 +168,13 @@ exports.editNames = (req, res, next) => {
                 userInfo.update({
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
-                });
-
-                userInfo.save()
+                })
                     .then(() => {
                         const message = "Informations bien modifiés.";
                         res.status(200).json({ message, success: true })
                     })
                     .catch(error => res.status(500).json({ error }));
+
             })
             .catch(error => res.status(500).json({ error }));
             
@@ -213,14 +211,13 @@ exports.editEmail = (req, res, next) => {
 
                         user.update({
                             email: req.body.new
-                        });
-
-                        user.save()
+                        })
                             .then(() => {
                                 const message = "Email bien modifié.";
                                 res.status(201).json({ message, success: true });
                             })
                             .catch(error => res.status(500).json({ error }));
+
                     })
                     .catch(error => res.status(500).json({ error }));
 
@@ -230,6 +227,20 @@ exports.editEmail = (req, res, next) => {
     } else {
         const error = "Une erreur s'est produite.";
         res.status(400).json({ error });
+    }
+
+};
+
+exports.isAdmin = (req, res, next) => {
+
+    if(req.auth) {
+        if (req.auth.isAdmin === true) {
+            res.status(200).json({ isAdmin: true });
+        } else {
+            res.status(200).json({ isAdmin: false });
+        }
+    } else {
+        res.status(500).json({ error: "Une erreur est survenu." });
     }
 
 };

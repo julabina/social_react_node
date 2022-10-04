@@ -189,6 +189,9 @@
                 color: map-get($map: $colors, $key:primary );
                 transition: all 150ms ease-in-out;
             }
+            &--liked {
+                color: map-get($map: $colors, $key: primary );
+            }
         }
     }
     &__separator {
@@ -261,6 +264,15 @@
                 border-radius: 0 30px 30px 0;
                 padding-right: 15px;
                 box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
+            }
+        }
+        &__commentsContainer {
+            &__nothing {
+                text-align: center;
+                margin: 20px 0;
+                font-size: 1.1em;
+                font-weight: 500;
+                color: map-get($map: $colors, $key:tertiary );
             }
         }
     }

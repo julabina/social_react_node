@@ -164,14 +164,13 @@ exports.modifyComment = (req, res, next) => {
 
                 comment.update({
                     content: textWithoutTag,
-                });
-
-                comment.save()
+                })
                     .then(() => {
                         const message = "Commentaire bien modifié.";
                         res.status(201).json({ message, success : true });
                     })  
                     .catch(error => res.status(500).json({ error }));  
+
             })
             .catch(error => res.status(500).json({ error }));
     }

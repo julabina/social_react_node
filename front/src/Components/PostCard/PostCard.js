@@ -18,6 +18,7 @@ const PostCard = (props) => {
     const [commentShowToggle, setCommentShowToggle] = useState(false);
     const [comments, setComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
+    const [isLiked, setIsLiked] = useState(props.likedByUser);
 
     useEffect(() => {
         const timeBetween = calculTimeBetween(props.created);
@@ -120,7 +121,7 @@ const PostCard = (props) => {
         })
             .then(res => {
                 if (res.status === 200) {
-                    props.loadAfterFunc();
+                    props.loadAfterFunc(props.user.id);
                 }
             })
     
@@ -206,6 +207,7 @@ const PostCard = (props) => {
             modifyToggle();
             setImage([]);
             getCurrentImg();
+            props.loadAfterFunc();
         })
     }
     
@@ -239,6 +241,7 @@ const PostCard = (props) => {
         })
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 setCurrentImage(data.data);
             })
     }
@@ -301,6 +304,24 @@ const PostCard = (props) => {
         setCommentShowToggle(!commentShowToggle);
     }
     
+    const handleLike = () => {
+
+        fetch('http://localhost:3000/api/posts/addLike/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    setIsLiked(!isLiked);
+                    props.loadAfterFunc();
+                }
+            })
+
+    }
+
     return (
         <>
         <article className="postArticle">
@@ -320,7 +341,7 @@ const PostCard = (props) => {
                     <div className="postArticle__top__menu__cont">
                         <ul>
                             {
-                                props.userId === props.user.id
+                                (props.isAdmin === true || props.userId === props.user.id)
                                 &&
                                 <>
                                     <li onClick={modifyToggle}>Modifier la publication</li>
@@ -396,11 +417,11 @@ const PostCard = (props) => {
                 <div className="postArticle__separator"></div>
             </div>
             <div className="postArticle__btns">
-                <div className="postArticle__btns__cont">
+                <div onClick={handleLike} className={ isLiked === true ? "postArticle__btns__cont postArticle__btns__cont--liked" : "postArticle__btns__cont"}>
                     <div className="postArticle__btns__cont__iconCont">
                         <FontAwesomeIcon icon={faThumbsUp} className="postArticle__btns__cont__iconCont__icon" />
                     </div>
-                    <p>Like</p>
+                    <p>Like { props.likes !== 0 && "(" + props.likes + ")" }</p>
                 </div>
                 <div className="postArticle__btns__cont">
                     <div className="postArticle__btns__cont__icon">
@@ -426,7 +447,7 @@ const PostCard = (props) => {
                                 return <Comment id={el.id} key={el.id} content={el.content} postId={el.postId} user={props.user} userId={el.userId} commentId={el.commentId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} timeBetween={el.time} created={el.created} updated={el.updated} getCommentsFunc={getAllComments} toggleCommentFunc={toggleCommentShow} />;
                             })
                             :
-                            <p>Aucun commentaires</p>
+                            <p className="postArticle__comments__commentsContainer__nothing">Aucun commentaires</p>
                         }
                     </div>
                 }

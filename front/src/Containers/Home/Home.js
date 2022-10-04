@@ -13,6 +13,7 @@ const Home = () => {
     const [postData, setPostData] = useState([]);
     const [image, setImage] = React.useState([]);
     const [user, setUser] = useState({token : "", id : ""})
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
 
@@ -32,7 +33,8 @@ const Home = () => {
                     id: decodedToken.userId,
                 };
                 setUser(newUserObj);
-                getAllPosts();
+                getRole(newUserObj.id, newUserObj.token);
+                getAllPosts(newUserObj.id);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -44,6 +46,25 @@ const Home = () => {
         }; 
 
     },[]);
+
+    /**
+     * check if current user is an admin
+     */
+    const getRole = (id, token) => {
+        fetch('http://localhost:3000/api/users/isAdmin/' + id ,{
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if(data.isAdmin === true) {
+                    setIsAdmin(true);
+                }
+            })
+    }
 
     /**
      * controll newPost inputs
@@ -115,7 +136,7 @@ const Home = () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    getAllPosts();
+                    getAllPosts(user.id);
                     setNewPost({text: ''});
                     setImage([]);
                     window.scrollTo(0, 0);
@@ -126,7 +147,7 @@ const Home = () => {
     /**
      * get all posts
      */
-    const getAllPosts = () => {
+    const getAllPosts = (id) => {
         fetch('http://localhost:3000/api/posts/findAll')
             .then(res => res.json())
             .then(data => {
@@ -135,6 +156,12 @@ const Home = () => {
                 if(data.data !== undefined) {
                     for (let i = 0; i < data.data.length; i++) {
                         const dataUser = usersData.find(el => el.userId === data.data[i].userId);
+                        let liked = false;
+
+                        if(data.data[i].usersLiked.includes(id)) {
+                            liked = true;
+                        }
+                        console.log(liked);
 
                         if (data.data[i] !== undefined) {
                             let item = {
@@ -145,6 +172,8 @@ const Home = () => {
                                 profilImg: dataUser.profilImg,
                                 id: data.data[i].id,
                                 userId: data.data[i].userId,
+                                likedByUser: liked,
+                                likes: data.data[i].likes,
                                 created: data.data[i].createdAt,
                                 updated: data.data[i].updatedAt,
                             };  
@@ -209,7 +238,7 @@ const Home = () => {
             <section className="home__mainContent">
                 {
                     postData.map(el => {
-                        return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()}/>
+                        return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
                     })
                 }
             </section>

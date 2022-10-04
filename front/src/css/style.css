@@ -257,7 +257,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin: 0 10px;
@@ -284,6 +284,9 @@ body {
 .postArticle__btns__cont:hover {
   color: #fd2d01;
   transition: all 150ms ease-in-out;
+}
+.postArticle__btns__cont--liked {
+  color: #fd2d01;
 }
 .postArticle__separator {
   border-top: 1px solid #e3e3e3;
@@ -326,7 +329,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin: 0 5px;
@@ -374,7 +377,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   height: 57px;
@@ -385,6 +388,13 @@ body {
 .postArticle__comments__createForm button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+.postArticle__comments__commentsContainer__nothing {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #4e5166;
 }
 
 .comment {
@@ -458,7 +468,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   font-size: 0.7em;
@@ -563,7 +573,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin: 0 10px;
@@ -606,7 +616,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   border-radius: 0 30px 30px 0;
@@ -618,6 +628,16 @@ body {
 .comment__form button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+.comment__backBtn {
+  padding-left: 70px;
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 120ms ease-in-out;
+}
+.comment__backBtn:hover {
+  color: #fd2d01;
+  transition: all 120ms ease-in-out;
 }
 
 .response {
@@ -692,7 +712,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   font-size: 0.7em;
@@ -797,7 +817,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin: 0 10px;
@@ -952,7 +972,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   width: 90px;
@@ -1038,7 +1058,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   width: 100px;
@@ -1115,7 +1135,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   width: 100px;
@@ -1194,7 +1214,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
 }
@@ -1241,7 +1261,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
 }
@@ -1273,7 +1293,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin-left: 10px;
@@ -1392,7 +1412,7 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   height: 35px;
-  border-radius: 35px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
 }

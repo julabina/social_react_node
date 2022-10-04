@@ -12,5 +12,6 @@ router.delete('/delete/:id', auth, postController.deletePost);
 router.put('/modify/:id', auth, multer, postController.modifyPost);
 router.put('/deleteImg/:id', auth, multer, postController.deleteCurrentImg);
 router.get('/picture/:id', auth, postController.getPicture);
+router.get('/addLike/:id', auth, postController.handleLike);
 
 module.exports = router;
