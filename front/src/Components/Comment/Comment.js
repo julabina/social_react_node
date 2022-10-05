@@ -287,7 +287,7 @@ const Comment = (props) => {
         <article className='comment'>
             <div className="comment__top">
                 <div className="comment__top__profilCont">
-                    { props.profilImg !== null ? <img src={"http://localhost:3000/images/" + props.profilImg} alt={"Photo de profil"} /> : <FontAwesomeIcon icon={faUser} className="comment__top__profilCont__user" />}
+                    { props.profilImg !== null ? <img src={props.profilImg} alt={"Photo de profil"} /> : <FontAwesomeIcon icon={faUser} className="comment__top__profilCont__user" />}
                 </div>
                 <div className={props.userId === props.user.id ? "comment__top__bubble comment__top__bubble--me" : "comment__top__bubble"}></div>
                 {

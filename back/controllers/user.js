@@ -131,14 +131,41 @@ exports.changeBaneer = (req, res, next) => {
                 return res.status(403).json({ error : new error('Requete non authorisée.') });
             }
             
-            userInfo.update({
+            /* userInfo.update({
                 profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
             })
                 .then(() => {
                     const message = "Bannière bien modifié.";
                     res.status(201).json({ message, success: true });
                 })
+                .catch(error => res.status(501).json({ error })); */
+
+            if (!userInfo.profilBaneer) {
+                
+                userInfo.update({
+                    profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
+                })
+                .then(() => {
+                    const message = "Bannière bien modifié.";
+                    res.status(201).json({ message, success: true });
+                })
                 .catch(error => res.status(501).json({ error }));
+            } else {
+                    
+                const filename = userInfo.profilBaneer.split('/images/')[1];
+                
+                fs.unlink(`images/${filename}`, () => {
+                    userInfo.update({
+                        profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
+                    })
+                    .then(() => {
+                        const message = "Bannière bien modifié.";
+                        res.status(201).json({ message, success: true });
+                    })
+                    .catch(error => res.status(501).json({ error }));
+                })
+                
+            }
             
         })
         .catch(error => res.status(503).json({ error }));
@@ -241,6 +268,58 @@ exports.isAdmin = (req, res, next) => {
         }
     } else {
         res.status(500).json({ error: "Une erreur est survenu." });
+    }
+
+};
+
+exports.changeProfilImg = (req, res, next) => {
+
+    if(req.file!== undefined) {
+
+        UserInfo.findOne({
+            where: {
+                userId: req.params.id
+            }
+        })
+        .then(userInfo => {
+            if(!userInfo) {
+                return res.status(404).json({ error :'Utilisateur non trouvée.' });
+            }
+            if(userInfo.userId !== req.auth.userId) {
+                return res.status(401).json({ error : 'Requete non authorisée.' });
+            }
+
+            if (!userInfo.profilImg) {
+                    
+                 userInfo.update({
+                    profilImg: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
+                })
+                .then(() => {
+                    const message = "Bannière bien modifié.";
+                    res.status(201).json({ message, success: true });
+                })
+                .catch(error => res.status(501).json({ error }));
+            } else {
+
+                const filename = userInfo.profilImg.split('/images/')[1];
+                
+                fs.unlink(`images/${filename}`, () => {
+                    userInfo.update({
+                        profilImg: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
+                    })
+                    .then(() => {
+                        const message = "Bannière bien modifié.";
+                        res.status(201).json({ message, success: true });
+                    })
+                    .catch(error => res.status(501).json({ error }));
+                })
+                
+            }
+        })
+        .catch(error => res.status(503).json({ error }));
+    } else {
+        const message = 'Aucune image importé.';
+        res.status(400).json({ message });
     }
 
 };

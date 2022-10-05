@@ -341,7 +341,7 @@ const PostCard = (props) => {
             <div className="postArticle__top">
                 <div className='postArticle__top__infos'>
                     <div className="postArticle__top__infos__imgCont">
-                        { props.profilImg !== null ? <img src={"http://localhost:3000/images/" + props.profilImg} alt={"Photo de profil de " + props.firstname + props.lastname} /> : <FontAwesomeIcon icon={faUser} className="postArticle__top__infos__imgCont__user" />}
+                        { props.profilImg !== null ? <img src={props.profilImg} alt={"Photo de profil de " + props.firstname + props.lastname} /> : <FontAwesomeIcon icon={faUser} className="postArticle__top__infos__imgCont__user" />}
                     </div>
                     <div className='postArticle__top__infos__nameCont'>
                         <a href={"/profil_=" + props.userId}><p className='postArticle__top__infos__nameCont__name'>{props.firstname} {props.lastname}</p></a>

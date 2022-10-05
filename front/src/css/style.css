@@ -872,11 +872,16 @@ body {
   justify-content: center;
   align-items: center;
   background: #eeeeee;
+  overflow: hidden;
   margin-right: 15px;
 }
 .header__btns__btn--profil:hover {
   box-sizing: border-box;
   border: 2px solid #fd2d01;
+}
+.header__btns__btn--profil img {
+  height: 35px;
+  width: 35px;
 }
 .header__btns__btn__user {
   height: 22px;
@@ -1259,6 +1264,27 @@ main {
   height: 160px;
   object-fit: cover;
 }
+.profil__top__pictures__profilImg button {
+  position: absolute;
+  bottom: 25px;
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  box-shadow: 1px 0 15px rgba(0, 0, 0, 0.267);
+  font-size: 0.7em;
+  height: 25px;
+}
+.profil__top__pictures__profilImg button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
 .profil__top__pictures__changeBaneer {
   position: absolute;
   bottom: 20px;
@@ -1436,6 +1462,52 @@ main {
   width: 800px;
   margin-bottom: 15px;
   color: #dd0000;
+}
+.profil__changeProfilImg {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.705);
+}
+.profil__changeProfilImg__modal {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px 35px;
+  border-radius: 7px;
+  width: 400px;
+}
+.profil__changeProfilImg__modal h2 {
+  font-size: 1.4em;
+  font-weight: 600;
+  color: #4e5166;
+  text-align: center;
+  margin-bottom: 25px;
+}
+.profil__changeProfilImg__modal__btnCont {
+  display: flex;
+  justify-content: center;
+}
+.profil__changeProfilImg__modal__btnCont button {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  margin: 0 7px;
+}
+.profil__changeProfilImg__modal__btnCont button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -68,7 +68,7 @@ const Header = () => {
                 <div className="header__btns__btn"></div>
                 <a href={"/profil_=" + user.id}><div className="header__btns__btn header__btns__btn--profil">
                     {
-                        userData.profilImg !== null ? <img src="" alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" /> 
+                        userData.profilImg !== null ? <img src={userData.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" /> 
                     }
                 </div></a>
             </div>

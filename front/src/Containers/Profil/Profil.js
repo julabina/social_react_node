@@ -14,10 +14,12 @@ const Profil = () => {
 
     const [toggleBaneerForm, setToggleBaneerForm] = useState(false);
     const [toggleEditprofil, setToggleEditProfil] = useState(false);
+    const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [userInfos, setUserInfos] = useState({ firstname: "", lastname: "", profilImg : null, profilBaneer: null })
     const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({token : "", id : ""});
     const [image, setImage] = React.useState([]);
+    const [imageProfil, setImageProfil] = React.useState([]);
     const [editName, setEditName] = useState({ firstname: "", lastname: "" });
     const [editEmail, setEditEmail] = useState({ email: "", newEmail: "", password: "" });
     const [editPassword, setEditPassword] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
@@ -108,11 +110,14 @@ const Profil = () => {
         setImage(imageList);
     }
 
+    const profilImgChange = (imageList, addUpdateIndex) => {
+        setImageProfil(imageList);
+    }
+
     const changeBaneer = () => {
         console.log(image);
         if (image.length !== 0) {
             let formData = new FormData();
-            formData.append('test', JSON.stringify('tetetetst'));
 
             const img = image[0].file;
             formData.append('image', img, img.name);
@@ -310,7 +315,37 @@ const Profil = () => {
             })
     }
 
+    const handleProfilImgModal = () => {
+        setToggleProfilImgModal(!toggleProfilImgModal);
+    }
+
+    const changeProfilImg = () => {
+        if (imageProfil.length !== 0) {
+            let formData = new FormData();
+
+            const img = imageProfil[0].file;
+            formData.append('image', img, img.name);
+            console.log(formData);
+            
+            fetch('http://localhost:3000/api/users/changeProfilImg/' + user.id, {
+                headers: {
+                    "Authorization": "Bearer " + user.token
+                },
+                method: 'PUT',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success === true) {
+                        handleProfilImgModal();
+                        getUserInfo();
+                    }
+                })
+        }
+    }
+
     return (
+        <>
         <main className='profil'>
 
             <section className='profil__top'>
@@ -359,20 +394,28 @@ const Profil = () => {
                     </div>
                     {
                         user.id === params.id &&
-                            toggleBaneerForm ?
-                            <>
+                        <>
+                            {
+                                toggleBaneerForm ?
+                                <>
                                 <button onClick={baneerFormToggle} className='profil__top__pictures__changeBaneer'>Annuler</button>
                                 <button onClick={changeBaneer} className='profil__top__pictures__changeBaneer profil__top__pictures__changeBaneer--valid'>Ok</button>
-                            </>
-                            :
-                            <button onClick={baneerFormToggle} className='profil__top__pictures__changeBaneer'>Changer</button> 
+                                </>
+                                :
+                                <button onClick={baneerFormToggle} className='profil__top__pictures__changeBaneer'>Changer</button> 
+                            }
+                        </>
                     }
                     <div className="profil__top__pictures__profilImg">
                         {
                             userInfos.profilImg !== null ?
-                            <img src={"http://localhost:3000/images/" + userInfos.profilImg} alt={"photo de profil de " + userInfos.firstname + userInfos.lastname} />
+                            <img src={userInfos.profilImg} alt={"photo de profil de " + userInfos.firstname + userInfos.lastname} />
                             :
                             <FontAwesomeIcon icon={faUser} className="profil__top__pictures__profilImg__icon" />
+                        }
+                        {
+                            user.id === params.id &&
+                            <button onClick={handleProfilImgModal}>{userInfos.profilImg !== null ? "Modifier" : "Ajouter"}</button>
                         }
                     </div>
                 </div>
@@ -443,8 +486,52 @@ const Profil = () => {
                     </div>
                 </section>
             }
-            
         </main>
+        {
+            toggleProfilImgModal &&
+            <div className="profil__changeProfilImg">
+                <div className="profil__changeProfilImg__modal">
+                    <h2>Modifier votre photo de profil</h2>
+                    <ImageUploading
+                        value={imageProfil}
+                        onChange={profilImgChange}
+                    >
+                        {({
+                            imageList,
+                            onImageUpload,
+                            onImageRemove,
+                            isDragging,
+                            dragProps,
+                        }) => (
+                            <div className="upload__image-wrapper profil__top__pictures__baneer__new">
+                                <button
+                                className='upload__image-wrapper profil__top__pictures__baneer__new__btn'
+                                style={isDragging ? { color: '#fd2d01' } : undefined}
+                                onClick={onImageUpload}
+                                {...dragProps}
+                                >
+                                Cliquer ou Glisser une image ici
+                                </button>
+                                &nbsp;
+                                {imageList.map((image, index) => (
+                                    <div key={index} className="image-item profil__top__pictures__baneer__new__overview">
+                                        <img src={image.dataURL} alt="" />
+                                        <div className="image-item__btn-wrapper profil__top__pictures__baneer__new__overview__btnCont">
+                                            <button className='profil__top__pictures__baneer__new__overview__btnCont__deleteBtn' onClick={() => onImageRemove(index)}>Supprimer l'image</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </ImageUploading>
+                    <div className="profil__changeProfilImg__modal__btnCont">
+                        <button onClick={handleProfilImgModal}>Annuler</button>
+                        <button onClick={changeProfilImg}>{userInfos.profilImg !== null ? "Modifier" : "Ajouter"}</button>
+                    </div>
+                </div>
+            </div>
+        }
+        </>
     );
 };
 

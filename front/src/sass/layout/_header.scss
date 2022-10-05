@@ -30,10 +30,14 @@
                 justify-content: center;
                 align-items: center;
                 background: map-get($map: $colors, $key:light-white );
+                overflow: hidden;
                 margin-right: 15px;
                 &:hover {
                     box-sizing: border-box;
                     border: 2px solid map-get($map: $colors, $key:primary );
+                }
+                img {
+                    height: 35px;width: 35px;
                 }
             }
             &__user {
