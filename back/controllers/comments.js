@@ -148,6 +148,13 @@ exports.deleteComment = (req, res, next) => {
 
 };
 
+/**
+ * edit one comment
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.modifyComment = (req, res, next) => {
 
     if (req.body.content !== "" || req.body.content !== undefined) {     
@@ -176,6 +183,13 @@ exports.modifyComment = (req, res, next) => {
     }
 };
 
+/**
+ * handle comment likes
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.handleLike = (req, res, next) => {
 
     Comment.findByPk(req.params.id)

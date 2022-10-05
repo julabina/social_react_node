@@ -115,6 +115,13 @@ exports.findUserInfos = (req, res, next) => {
         .catch(error => res.status(500).json({ error }))
 };
 
+/**
+ * change the banneer image
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.changeBaneer = (req, res, next) => {
     if(req.file!== undefined) {
 
@@ -130,15 +137,6 @@ exports.changeBaneer = (req, res, next) => {
             if(userInfo.userId !== req.auth.userId) {
                 return res.status(403).json({ error : new error('Requete non authorisée.') });
             }
-            
-            /* userInfo.update({
-                profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
-            })
-                .then(() => {
-                    const message = "Bannière bien modifié.";
-                    res.status(201).json({ message, success: true });
-                })
-                .catch(error => res.status(501).json({ error })); */
 
             if (!userInfo.profilBaneer) {
                 
@@ -175,6 +173,13 @@ exports.changeBaneer = (req, res, next) => {
     }
 };
 
+/**
+ * edit user fisrtname and lastname
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.editNames = (req, res, next) => {
 
     if((req.body.firstname !== undefined && req.body.firstname.match(/^[a-zA-Zé èà]*$/)) && (req.body.lastname !== undefined && req.body.lastname.match(/^[a-zA-Zé èà]*$/))) {
@@ -211,6 +216,13 @@ exports.editNames = (req, res, next) => {
     }
 };
 
+/**
+ * edit user email
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.editEmail = (req, res, next) => {
 
     if((req.body.email !== undefined && req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.new !== undefined && req.body.new.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.password !== undefined && req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/))) {
@@ -258,6 +270,13 @@ exports.editEmail = (req, res, next) => {
 
 };
 
+/**
+ * check if user is an admin
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.isAdmin = (req, res, next) => {
 
     if(req.auth) {
@@ -272,6 +291,13 @@ exports.isAdmin = (req, res, next) => {
 
 };
 
+/**
+ * edit profil picture
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.changeProfilImg = (req, res, next) => {
 
     if(req.file!== undefined) {

@@ -250,6 +250,13 @@ exports.getPicture = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+/**
+ * find all user post
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.findAllPostForUser = (req, res, next) => {
     Post.findAll({
         where: {
@@ -267,6 +274,13 @@ exports.findAllPostForUser = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+/**
+ * handle post likes 
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.handleLike = (req, res, next) => {
 
     Post.findByPk(req.params.id)

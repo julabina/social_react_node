@@ -1,5 +1,12 @@
 const { Friend, User } = require('../db/sequelize');
 
+/**
+ * create friends relation with pending status
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.createFriendQuery = (req, res, next) => {
 
     Friend.findOne({
@@ -44,6 +51,13 @@ exports.createFriendQuery = (req, res, next) => {
 
 };
 
+/**
+ * check is users are friends
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.checkIfFriend = (req, res, next) => {
 
     Friend.findOne({
@@ -65,6 +79,13 @@ exports.checkIfFriend = (req, res, next) => {
 
 };
 
+/**
+ * cancel a relation pending query 
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.cancelFriendQuery = (req, res, next) => {
 
     Friend.findOne({
@@ -113,6 +134,13 @@ exports.cancelFriendQuery = (req, res, next) => {
 
 };
 
+/**
+ * accept a relation query and change the relation status to friend
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.acceptFriendQuery = (req, res, next) => {
 
     Friend.findOne({
@@ -171,6 +199,13 @@ exports.acceptFriendQuery = (req, res, next) => {
 
 };
 
+/**
+ * delete users relation
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.cancelRelation = (req, res, next) => {
 
     Friend.findOne({

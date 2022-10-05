@@ -1,0 +1,28 @@
+.notFound {
+    height: 100vh;
+    position: relative;
+    background: white;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: map-get($map: $colors, $key:tertiary );
+        h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-top: 50px;
+        }
+        h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 10px 0 40px;
+        }
+        button {
+            @include btn;
+        }
+    }
+}
