@@ -25,58 +25,70 @@
 }
 
 @mixin registUserForm {
-    min-height: 90vh;
+    height: 100vh;
     position: relative;
-    &__form {
+    &__section {
         position: absolute;
         top: 42%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 25px;
-        border-radius: 8px;
-        h1 {
-            font-weight: 600;
-            font-size: 1.3em;
-            color: map-get($map: $colors, $key:tertiary );
-            margin-bottom: 40px;
-            margin-left: 7px;
-        }
-        &__errorCont {
-            margin-bottom: 22px;
-            line-height: 1.2;
-            color: map-get($map: $colors, $key:light-red );
-        }
-        &__cont {
-            display: flex;
-            &__inputCont {
+        &__form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            h1 {
+                font-weight: 600;
+                font-size: 1.3em;
+                color: map-get($map: $colors, $key:tertiary );
+                margin-bottom: 40px;
+                margin-left: 7px;
+            }
+            &__errorCont {
+                margin-bottom: 22px;
+                line-height: 1.2;
+                color: map-get($map: $colors, $key:light-red );
+            }
+            &__cont {
                 display: flex;
-                flex-direction: column;
-                margin: 0 7px 30px;
+                &__inputCont {
+                    display: flex;
+                    flex-direction: column;
+                    margin: 0 7px 30px;
+                    input {
+                        @include inputField;
+                    }
+                }
+            }
+            &__checkCont {
+                display: flex;
+                align-items: center;
+                margin-left: 7px;
+                color: map-get($map: $colors, $key:tertiary );
                 input {
-                    @include inputField;
+                    cursor: pointer;
+                    height: 20px;width: 20px;
+                    margin-right: 10px;
+                }
+                label {
+                    cursor: pointer;
+                }
+            }
+            &__btnCont {
+                margin: 20px 0 0 7px;
+                button {
+                    @include btn;
+                    width: 100px;
                 }
             }
         }
-        &__checkCont {
-            display: flex;
-            align-items: center;
-            margin-left: 7px;
-            color: map-get($map: $colors, $key:tertiary );
-            input {
-                cursor: pointer;
-                height: 20px;width: 20px;
-                margin-right: 10px;
-            }
-            label {
-                cursor: pointer;
-            }
-        }
-        &__btnCont {
-            margin: 20px 0 0 7px;
-            button {
-                @include btn;
-                width: 100px;
+        &__link {
+            color: blue;
+            margin-left: 10px;
+            transition: all 100ms ease-in-out;
+            &:hover {
+                color: map-get($map: $colors, $key: primary);
+                transition: all 100ms ease-in-out;
             }
         }
     }

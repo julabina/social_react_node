@@ -225,7 +225,8 @@
             color: map-get($map: $colors, $key:light-red );
         }
     }
-    &__changeProfilImg {
+    &__changeProfilImg, &__confirmCancelRelation {
+        z-index: 1000;
         position: fixed;
         top: 0;bottom: 0;
         left: 0;right: 0;

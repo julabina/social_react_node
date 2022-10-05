@@ -1,12 +1,14 @@
 .login {
     @include registUserForm;
-    &__form {
-        width: 350px;
-        &__cont {
-            flex-direction: column;
+    &__section {
+        &__form {
+            width: 350px;
+            &__cont {
+                flex-direction: column;
+            }
         }
-    }
-    button {
-        width: 170px;
+        button {
+            width: 170px;
+        }
     }
 }

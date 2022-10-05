@@ -10,12 +10,12 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 const Header = () => {
 
     const [user, setUser] = useState({ token: "", id: "" });
+    const [hideHeader, setHideHeader] = useState(true);
     const [userData, setUserData] = useState({ userId: "", firstname: "", lastname: "", profilImg: "" });
 
     useEffect(() => {
         
         getUserInfos();
-
     },[]);
     
     const getUserId = () => {
@@ -32,11 +32,14 @@ const Header = () => {
                     };
                     setUser(newUserObj);
                 }
+            } else {
+                setHideHeader(false);
             }
         }
     };
     
     const getUserInfos = () => {
+        console.log('2');
         
         if(user.id !== "" && user.id !== undefined) {
             const url = 'http://localhost:3000/api/users/getUserInfos/' + user.id;
@@ -60,13 +63,13 @@ const Header = () => {
     return (
         <header className="header">
             <div className="header__menu">
-                <NavMenu />
+                <NavMenu userId={user.id} />
                 <a href="/"><img className="header__menu__logo" src={logo} alt="logo de groupomania" /></a>
             </div>
             <SearchModul />
             <div className="header__btns">
                 <div className="header__btns__btn"></div>
-                <a href={"/profil_=" + user.id}><div className="header__btns__btn header__btns__btn--profil">
+                    <a href={"/profil_=" + user.id}><div className="header__btns__btn header__btns__btn--profil">
                     {
                         userData.profilImg !== null ? <img src={userData.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" /> 
                     }

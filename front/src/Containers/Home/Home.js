@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Header from "../../Components/Header/Header";
 import PostCard from '../../Components/PostCard/PostCard';
 import ImageUploading from 'react-images-uploading';
 import { decodeToken, isExpired } from 'react-jwt';
@@ -193,11 +194,12 @@ const Home = () => {
     }
 
     return (
+        <>
+        <Header />
         <main className="home">
-            <h1>Bienvenue sur Groupomania</h1>
             <section className="home__newContent">
                 <div className="home__newContent__new">
-                    <h2>Créer un nouveau sujet</h2>
+                    <h1>Créer un nouveau sujet</h1>
                     <div className="home__newContent__new__errorCont"></div>
                     <textarea onInput={(e) => handleNewPostInput("content", e.target.value)} id="homeNewText" value={newPost.text} placeholder="Exprimez-vous !"></textarea>
                     <ImageUploading
@@ -243,6 +245,7 @@ const Home = () => {
                 }
             </section>
         </main>
+        </>
     );
 };
 

@@ -840,16 +840,69 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 100;
   padding: 0 20px;
+  position: sticky;
+  background: white;
+  top: 0;
   height: 60px;
   border-bottom: 1px solid rgba(211, 211, 211, 0.568);
 }
 .header__menu {
+  position: relative;
   display: flex;
 }
 .header__menu__hamburger {
   height: 30px;
   color: #fd2d01;
+  cursor: pointer;
+  transition: all 120ms ease-in-out;
+}
+.header__menu__hamburger:hover {
+  color: #ffd7d7;
+  transition: all 120ms ease-in-out;
+}
+.header__menu__nav {
+  position: fixed;
+  background: white;
+  z-index: 10;
+  box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.103);
+  width: 80px;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+}
+.header__menu__nav ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header__menu__nav li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  width: 60px;
+  height: 50px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: all 120ms ease-in-out;
+}
+.header__menu__nav li:hover {
+  background: #ffd7d7;
+  transition: all 120ms ease-in-out;
+}
+.header__menu__nav__icon {
+  height: 18px;
+}
+.header__menu__nav__icon--home {
+  color: #fd2d01;
+}
+.header__menu__nav__icon--logout {
+  color: #4e5166;
+}
+.header__menu__nav__icon--users {
+  color: purple;
 }
 .header__menu img {
   height: 30px;
@@ -905,8 +958,9 @@ main {
   box-shadow: 1px 0 20px rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 8px;
+  margin-top: 25px;
 }
-.home__newContent__new h2 {
+.home__newContent__new h1 {
   font-weight: 600;
   font-size: 1.3em;
   color: #4e5166;
@@ -1006,39 +1060,42 @@ main {
 }
 
 .sign {
-  min-height: 90vh;
+  height: 100vh;
   position: relative;
 }
-.sign__form {
+.sign__section {
   position: absolute;
   top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.sign__section__form {
   background-color: white;
   padding: 25px;
   border-radius: 8px;
+  margin-bottom: 15px;
 }
-.sign__form h1 {
+.sign__section__form h1 {
   font-weight: 600;
   font-size: 1.3em;
   color: #4e5166;
   margin-bottom: 40px;
   margin-left: 7px;
 }
-.sign__form__errorCont {
+.sign__section__form__errorCont {
   margin-bottom: 22px;
   line-height: 1.2;
   color: #dd0000;
 }
-.sign__form__cont {
+.sign__section__form__cont {
   display: flex;
 }
-.sign__form__cont__inputCont {
+.sign__section__form__cont__inputCont {
   display: flex;
   flex-direction: column;
   margin: 0 7px 30px;
 }
-.sign__form__cont__inputCont input {
+.sign__section__form__cont__inputCont input {
   background-color: #fff1f1;
   border: none;
   border-radius: 30px;
@@ -1046,25 +1103,25 @@ main {
   padding-left: 25px;
   font-size: 1.1em;
 }
-.sign__form__checkCont {
+.sign__section__form__checkCont {
   display: flex;
   align-items: center;
   margin-left: 7px;
   color: #4e5166;
 }
-.sign__form__checkCont input {
+.sign__section__form__checkCont input {
   cursor: pointer;
   height: 20px;
   width: 20px;
   margin-right: 10px;
 }
-.sign__form__checkCont label {
+.sign__section__form__checkCont label {
   cursor: pointer;
 }
-.sign__form__btnCont {
+.sign__section__form__btnCont {
   margin: 20px 0 0 7px;
 }
-.sign__form__btnCont button {
+.sign__section__form__btnCont button {
   background: #ffd7d7;
   border: none;
   padding: 5px 10px;
@@ -1077,45 +1134,57 @@ main {
   transition: all 150ms ease-in-out;
   width: 100px;
 }
-.sign__form__btnCont button:hover {
+.sign__section__form__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+.sign__section__link {
+  color: blue;
+  margin-left: 10px;
+  transition: all 100ms ease-in-out;
+}
+.sign__section__link:hover {
+  color: #fd2d01;
+  transition: all 100ms ease-in-out;
 }
 
 .login {
-  min-height: 90vh;
+  height: 100vh;
   position: relative;
 }
-.login__form {
+.login__section {
   position: absolute;
   top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.login__section__form {
   background-color: white;
   padding: 25px;
   border-radius: 8px;
+  margin-bottom: 15px;
 }
-.login__form h1 {
+.login__section__form h1 {
   font-weight: 600;
   font-size: 1.3em;
   color: #4e5166;
   margin-bottom: 40px;
   margin-left: 7px;
 }
-.login__form__errorCont {
+.login__section__form__errorCont {
   margin-bottom: 22px;
   line-height: 1.2;
   color: #dd0000;
 }
-.login__form__cont {
+.login__section__form__cont {
   display: flex;
 }
-.login__form__cont__inputCont {
+.login__section__form__cont__inputCont {
   display: flex;
   flex-direction: column;
   margin: 0 7px 30px;
 }
-.login__form__cont__inputCont input {
+.login__section__form__cont__inputCont input {
   background-color: #fff1f1;
   border: none;
   border-radius: 30px;
@@ -1123,25 +1192,25 @@ main {
   padding-left: 25px;
   font-size: 1.1em;
 }
-.login__form__checkCont {
+.login__section__form__checkCont {
   display: flex;
   align-items: center;
   margin-left: 7px;
   color: #4e5166;
 }
-.login__form__checkCont input {
+.login__section__form__checkCont input {
   cursor: pointer;
   height: 20px;
   width: 20px;
   margin-right: 10px;
 }
-.login__form__checkCont label {
+.login__section__form__checkCont label {
   cursor: pointer;
 }
-.login__form__btnCont {
+.login__section__form__btnCont {
   margin: 20px 0 0 7px;
 }
-.login__form__btnCont button {
+.login__section__form__btnCont button {
   background: #ffd7d7;
   border: none;
   padding: 5px 10px;
@@ -1154,17 +1223,26 @@ main {
   transition: all 150ms ease-in-out;
   width: 100px;
 }
-.login__form__btnCont button:hover {
+.login__section__form__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }
-.login__form {
+.login__section__link {
+  color: blue;
+  margin-left: 10px;
+  transition: all 100ms ease-in-out;
+}
+.login__section__link:hover {
+  color: #fd2d01;
+  transition: all 100ms ease-in-out;
+}
+.login__section__form {
   width: 350px;
 }
-.login__form__cont {
+.login__section__form__cont {
   flex-direction: column;
 }
-.login button {
+.login__section button {
   width: 170px;
 }
 
@@ -1463,7 +1541,8 @@ main {
   margin-bottom: 15px;
   color: #dd0000;
 }
-.profil__changeProfilImg {
+.profil__changeProfilImg, .profil__confirmCancelRelation {
+  z-index: 1000;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -1471,7 +1550,7 @@ main {
   right: 0;
   background: rgba(0, 0, 0, 0.705);
 }
-.profil__changeProfilImg__modal {
+.profil__changeProfilImg__modal, .profil__confirmCancelRelation__modal {
   position: absolute;
   top: 45%;
   left: 50%;
@@ -1481,18 +1560,18 @@ main {
   border-radius: 7px;
   width: 400px;
 }
-.profil__changeProfilImg__modal h2 {
+.profil__changeProfilImg__modal h2, .profil__confirmCancelRelation__modal h2 {
   font-size: 1.4em;
   font-weight: 600;
   color: #4e5166;
   text-align: center;
   margin-bottom: 25px;
 }
-.profil__changeProfilImg__modal__btnCont {
+.profil__changeProfilImg__modal__btnCont, .profil__confirmCancelRelation__modal__btnCont {
   display: flex;
   justify-content: center;
 }
-.profil__changeProfilImg__modal__btnCont button {
+.profil__changeProfilImg__modal__btnCont button, .profil__confirmCancelRelation__modal__btnCont button {
   background: #ffd7d7;
   border: none;
   padding: 5px 10px;
@@ -1505,7 +1584,7 @@ main {
   transition: all 150ms ease-in-out;
   margin: 0 7px;
 }
-.profil__changeProfilImg__modal__btnCont button:hover {
+.profil__changeProfilImg__modal__btnCont button:hover, .profil__confirmCancelRelation__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }

@@ -71,11 +71,11 @@ exports.createPost = (req, res, next) => {
         });
         
         post.save()
-        .then(() => {
-            const message = 'Post bien créé."';
-            res.status(201).json({ message, success: true });
-        })
-        .catch(error => res.status(401).json({ error }));
+            .then(() => {
+                const message = 'Post bien créé."';
+                res.status(201).json({ message, success: true });
+            })
+            .catch(error => res.status(401).json({ error }));
         
     } else {
         return res.status(401).json({ error: new error('Aucun contenu ajouté.') });

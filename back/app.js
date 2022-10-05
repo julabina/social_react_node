@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const postRoute = require('./routes/post');
 const userRoute = require('./routes/user');
 const commentRoute = require('./routes/comment');
+const friendRoute = require('./routes/friend');
 const path = require('path');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(morgan('dev'));
 app.use('/api/posts', postRoute);
 app.use('/api/users', userRoute);
 app.use('/api/comments', commentRoute);
+app.use('/api/friends', friendRoute);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

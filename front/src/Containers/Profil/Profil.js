@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Header from "../../Components/Header/Header";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
@@ -15,6 +16,8 @@ const Profil = () => {
     const [toggleBaneerForm, setToggleBaneerForm] = useState(false);
     const [toggleEditprofil, setToggleEditProfil] = useState(false);
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
+    const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
+    const [friendRelation, setFriendRelation] = useState("");
     const [userInfos, setUserInfos] = useState({ firstname: "", lastname: "", profilImg : null, profilBaneer: null })
     const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({token : "", id : ""});
@@ -42,7 +45,7 @@ const Profil = () => {
                     id: decodedToken.userId,
                 };
                 setUser(newUserObj);
-                getUserInfo();
+                getUserInfo(newUserObj);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -52,7 +55,7 @@ const Profil = () => {
 
     },[])
 
-    const getUserInfo = () => {
+    const getUserInfo = (userObj) => {
 
         fetch('http://localhost:3000/api/users/getUserInfos/' + params.id)
             .then(res => res.json())
@@ -71,6 +74,9 @@ const Profil = () => {
                 setUserInfos(newObj);
                 setEditName(newEditObj);
                 getUserPost();
+                if (userObj.id !== params.id) {   
+                    getIsFriend(userObj.token);
+                }
             });
     }
 
@@ -99,6 +105,21 @@ const Profil = () => {
                     
                 }
                 setPostData(newArr);
+            })
+    }
+
+    const getIsFriend = (token) => {
+        fetch('http://localhost:3000/api/friends/isFriend/' + params.id, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET',
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status) {
+                    setFriendRelation(data.status);
+                } 
             })
     }
 
@@ -134,7 +155,7 @@ const Profil = () => {
                 .then(data => {
                     if(data.success === true) {
                         baneerFormToggle();
-                        getUserInfo();
+                        getUserInfo(user);
                     }
                 })
         }
@@ -319,6 +340,10 @@ const Profil = () => {
         setToggleProfilImgModal(!toggleProfilImgModal);
     }
 
+    const handleFriendDeleteModal = () => {
+        setToggleFriendDeleteModal(!toggleFriendDeleteModal);
+    }
+
     const changeProfilImg = () => {
         if (imageProfil.length !== 0) {
             let formData = new FormData();
@@ -338,14 +363,76 @@ const Profil = () => {
                 .then(data => {
                     if(data.success === true) {
                         handleProfilImgModal();
-                        getUserInfo();
+                        getUserInfo(user);
                     }
                 })
         }
     }
 
+    const sendingFriendQuery = () => {
+        fetch('http://localhost:3000/api/friends/query/' + params.id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'POST'
+        })
+            .then(res => res.json())
+            .then(data => {
+                getIsFriend(user.token);
+            })
+    }
+
+    const cancelFriendQuery = () => {
+        fetch('http://localhost:3000/api/friends/cancelQuery/' + params.id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(data => {
+                getIsFriend(user.token);
+            })
+    }
+    
+    const cancelFriendRelation = () => {
+        fetch('http://localhost:3000/api/friends/cancelRelation/' + params.id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(data => {
+                handleFriendDeleteModal();
+                getIsFriend(user.token);
+            })
+    }
+
+    const acceptFriendQuery = () => {
+        fetch('http://localhost:3000/api/friends/acceptQuery/' + params.id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'PUT'
+        })
+            .then(res => res.json())
+            .then(data => {
+                getIsFriend(user.token);
+            })
+    }
+
     return (
         <>
+        <Header />
         <main className='profil'>
 
             <section className='profil__top'>
@@ -428,8 +515,22 @@ const Profil = () => {
                             <button onClick={editProfilToggle}>Modifier le profil</button>
                             :
                             <>
-                                <button>Message</button>
-                                <button>Ajouter</button>
+                                {
+                                    friendRelation === "friend" &&
+                                    <button>Message</button>
+                                }
+                                {
+                                    friendRelation === "pending" ?
+                                    <button onClick={cancelFriendQuery}>Demande envoyé</button>
+                                    :
+                                    friendRelation === "received" ?
+                                    <button onClick={acceptFriendQuery}>Accepter demande</button>
+                                    :
+                                    friendRelation === "friend" ?
+                                    <button onClick={handleFriendDeleteModal}>Supprimer des amis</button>
+                                    :
+                                    <button onClick={sendingFriendQuery}>Ajouter</button>
+                                }
                             </>
                         }
                     </div>
@@ -527,6 +628,18 @@ const Profil = () => {
                     <div className="profil__changeProfilImg__modal__btnCont">
                         <button onClick={handleProfilImgModal}>Annuler</button>
                         <button onClick={changeProfilImg}>{userInfos.profilImg !== null ? "Modifier" : "Ajouter"}</button>
+                    </div>
+                </div>
+            </div>
+        }
+        {
+            toggleFriendDeleteModal &&
+            <div className="profil__confirmCancelRelation">
+                <div className="profil__confirmCancelRelation__modal">
+                    <h2>Ne plus etre ami avec {userInfos.firstname}</h2>
+                    <div className="profil__confirmCancelRelation__modal__btnCont">
+                        <button onClick={handleFriendDeleteModal}>Annuler</button>
+                        <button onClick={cancelFriendRelation}>Ok</button>
                     </div>
                 </div>
             </div>

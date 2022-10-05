@@ -45,7 +45,7 @@ const Sign = () => {
 
     const checkInputs = (e) => {
         e.preventDefault();
-        const errorCont = document.querySelector('.sign__form__errorCont');
+        const errorCont = document.querySelector('.sign__section__form__errorCont');
         errorCont.innerHTML = '';
         let error = '';
 
@@ -93,7 +93,7 @@ const Sign = () => {
     };
 
     const tryToSign = (email, pwd, firstname, lastname) => {
-        const errorCont = document.querySelector('.sign__form__errorCont');
+        const errorCont = document.querySelector('.sign__section__form__errorCont');
 
         fetch('http://localhost:3000/api/users/sign', {
             headers: {
@@ -119,35 +119,38 @@ const Sign = () => {
 
     return (
         <main className='sign'>
-            <form className='sign__form'>
-                <h1>Créer un compte</h1>
-                <div className="sign__form__errorCont">
-                    
-                </div>
-                <div className="sign__form__cont">
-                    <div className="sign__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('email', e.target.value)} value={signForm.email} type="email" id="signEmail" placeholder='Email'/>
+            <section className='sign__section'>
+                <form className='sign__section__form'>
+                    <h1>Créer un compte</h1>
+                    <div className="sign__section__form__errorCont">
+                        
                     </div>
-                    <div className="sign__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('pwd', e.target.value)} value={signForm.pwd} type="password" id="signPassword" placeholder='Mot de passe'/>
+                    <div className="sign__section__form__cont">
+                        <div className="sign__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('email', e.target.value)} value={signForm.email} type="email" id="signEmail" placeholder='Email'/>
+                        </div>
+                        <div className="sign__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('pwd', e.target.value)} value={signForm.pwd} type="password" id="signPassword" placeholder='Mot de passe'/>
+                        </div>
                     </div>
-                </div>
-                <div className="sign__form__cont">
-                    <div className="sign__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('firstname', e.target.value)} value={signForm.firstname} type="text" id="signFirstname" placeholder='Prénom'/>
+                    <div className="sign__section__form__cont">
+                        <div className="sign__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('firstname', e.target.value)} value={signForm.firstname} type="text" id="signFirstname" placeholder='Prénom'/>
+                        </div>
+                        <div className="sign__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('lastname', e.target.value)} value={signForm.lastname} type="text" id="signLastname" placeholder='Nom'/>
+                        </div>
                     </div>
-                    <div className="sign__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('lastname', e.target.value)} value={signForm.lastname} type="text" id="signLastname" placeholder='Nom'/>
+                    <div className='sign__section__form__checkCont'>
+                            <input  onInput={(e) => controlInputs('check', e.target.value)} value={signForm.check} type="checkbox" id="signCheck" />
+                            <label htmlFor="signCheck">En cochant cette case blablabla</label>
                     </div>
-                </div>
-                <div className='sign__form__checkCont'>
-                        <input  onInput={(e) => controlInputs('check', e.target.value)} value={signForm.check} type="checkbox" id="signCheck" />
-                        <label htmlFor="signCheck">En cochant cette case blablabla</label>
-                </div>
-                <div className="sign__form__btnCont">
-                    <button onClick={checkInputs}>Créer</button>
-                </div>
-            </form>
+                    <div className="sign__section__form__btnCont">
+                        <button onClick={checkInputs}>Créer</button>
+                    </div>
+                </form>
+                <a className='login__section__link' href="/connexion">Vous avez deja un compte ?</a>
+            </section>
         </main>
     );
 };

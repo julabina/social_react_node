@@ -26,7 +26,7 @@ const Log = () => {
     const checkInputs = (e) => {
         e.preventDefault();
 
-        const errorCont = document.querySelector(".login__form__errorCont");
+        const errorCont = document.querySelector(".login__section__form__errorCont");
         let error = "";
         errorCont.innerHTML = "";
 
@@ -50,7 +50,7 @@ const Log = () => {
     }
 
     const tryToLog = (email, pwd) => {
-        const errorCont = document.querySelector(".login__form__errorCont");
+        const errorCont = document.querySelector(".login__section__form__errorCont");
 
         fetch('http://localhost:3000/api/users/login', {
             headers: {
@@ -77,23 +77,26 @@ const Log = () => {
 
     return (
         <main className='login'>
-            <form className="login__form">
-                <h1>Se connecter</h1>
-                <div className="login__form__errorCont">
-                    
-                </div>
-                <div className="login__form__cont">
-                    <div className="login__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('email', e.target.value)} value={logInputs.email} type="email" placeholder='Email'/>
+            <section className='login__section'>
+                <form className="login__section__form">
+                    <h1>Se connecter</h1>
+                    <div className="login__section__form__errorCont">
+                        
                     </div>
-                    <div className="login__form__cont__inputCont">
-                        <input onInput={(e) => controlInputs('password', e.target.value)} value={logInputs.password} type="password" placeholder='Mot de passe'/>
+                    <div className="login__section__form__cont">
+                        <div className="login__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('email', e.target.value)} value={logInputs.email} type="email" placeholder='Email'/>
+                        </div>
+                        <div className="login__section__form__cont__inputCont">
+                            <input onInput={(e) => controlInputs('password', e.target.value)} value={logInputs.password} type="password" placeholder='Mot de passe'/>
+                        </div>
                     </div>
-                </div>
-                <div className="login__form__btnCont">
-                    <button onClick={checkInputs}>Se connecter</button>
-                </div>
-            </form>
+                    <div className="login__section__form__btnCont">
+                        <button onClick={checkInputs}>Se connecter</button>
+                    </div>
+                </form>
+                <a className='login__section__link' href="/inscription">Vous n'avez pas encore de compte ?</a>
+            </section>
         </main>
     );
 };
