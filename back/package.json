@@ -16,6 +16,7 @@
     "mariadb": "^3.0.1",
     "multer": "^1.4.5-lts.1",
     "sequelize": "^6.21.4",
+    "socket.io": "^4.5.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

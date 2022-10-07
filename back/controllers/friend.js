@@ -231,12 +231,18 @@ exports.cancelRelation = (req, res, next) => {
                                 const message = "Relation bien supprimé.";
                                 return res.status(201).json({ message, success: true });
                             })
+                            .catch(error => {
+                                return res.status(500).json({ error })
+                            });
                     } else if(!secondRelation) {
                         firstRelation.destroy()
                         .then(() => {
                                 const message = "Relation bien supprimé.";
                                 return res.status(201).json({ message, success: true });
                             })
+                            .catch(error => {
+                                return res.status(500).json({ error })
+                            });
                     }
                         
                     firstRelation.destroy()
@@ -246,8 +252,34 @@ exports.cancelRelation = (req, res, next) => {
                                         const message = "Relations bien supprimés.";
                                         res.status(201).json({ message, success: true });
                                     })
+                                    .catch(error => res.status(500).json({ error }));
                             })
+                            .catch(error => res.status(500).json({ error }));
                 })
+                .catch(error => res.status(500).json({ error }));
         })
+        .catch(error => res.status(500).json({ error }));
+
+};
+
+
+exports.getFriends = (req, res, next) => {
+
+    Friend.findAll({
+        where: {
+            friendOne: req.params.id,
+            status: "friend"
+        }
+    })
+        .then(friends => {
+            if(!friends) {
+                const message = "Aucun ami trouvé.";
+                return res.status(404).json({ message })
+            }
+            
+            const message = "amis trouvé.";
+            res.status(200).json({ message, data: friends })
+        })
+        .catch(error => res.status(500).json({ error }));
 
 };

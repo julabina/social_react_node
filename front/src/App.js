@@ -1,6 +1,7 @@
 import {Routes, Route} from "react-router-dom";
 import Home from "./Containers/Home/Home";
 import Log from "./Containers/Log/Log";
+import Messenger from "./Containers/Messenger/Messenger";
 import NotFound from "./Containers/NotFound/NotFound";
 import Profil from "./Containers/Profil/Profil";
 import Sign from "./Containers/Sign/Sign";
@@ -12,6 +13,7 @@ function App() {
         <Route path="/profil_=:id" element={<Profil />} />
         <Route path="/connexion" element={<Log />} />
         <Route path="/inscription" element={<Sign />} />
+        <Route path="/messagerie" element={<Messenger />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
   );
