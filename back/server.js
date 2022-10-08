@@ -89,7 +89,7 @@ io.on('connection', socket => {
             content,
             from: socket.id
         })
-        console.log(socket.id);
+        console.log(content);
     }) 
 
     socket.on('newUser', data => {

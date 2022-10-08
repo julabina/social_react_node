@@ -12,42 +12,192 @@ const Messenger = () => {
     const [messages, setMessages] = useState([]);
     const [inputMsg, setInputMsg] = useState("");
     const [user, setUser] = useState({ id: '', token: '' });
-    const [selectedUser, setSelectedUser] = useState({ userId: "", socketId: "" });
+    const [justReceived, setJustReceived] = useState([]);
+    const [selectedUser, setSelectedUser] = useState({ userId: "", socketid: "", chatId : "" });
     const [users, setUsers] = useState([]);
     const [friends, setFriends] = useState([]);
     const [userInfos, setUserInfos] = useState({ firstname: '', lastname: '' });
     const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
     const [logged, setLogged] = useState(false);
+    const [reload, setReload] = useState(false);
 
-    useEffect(() => {
+   /*  useEffect(() => {
         
         if (logged !== true) {
-            console.log('111111111111111');
             checkIfLogged();
         }
 
+        let TETEST = test();
+        
         socket.on('SERVER_MSG', ({content, from}) => {
+
+            for (let i = 0; i < friends.length; i++) {
+                
+                const friend = friends[i];
+
+                console.log('//////////////////////////////////////');
+                console.log(selectedUser);
+                console.log(content);
+                console.log(friend);
+                console.log('//////////////////////////////////////');
+
+                if (friend.id === content.userId) {
+                    console.log('CESOKDECECOTE');
+                    if(content.userId === selectedUser.userId) {
+
+                        let newArr = [
+                            ...messages,
+                            content
+                        ];
+                        setMessages(newArr);
+                        break;
+                    }
+
+                     if(friend.userId !== selectedUser.userId) {
+                        console.log('OPTION2');
+                    } 
+                    break;
+                }
+                
+            } 
+            console.log(selectedUser);
+            console.log(TETEST);
+            console.log('------------------------------');
+
+            console.log('TESTESTESTESTE', content);
+  
+            let goodSocket = "";
+            if(selectedUser.userId === content.userId) {
+                goodSocket = selectedUser.socketid;
+            } else {
+                goodSocket = "";
+            }
+            console.log('//////////////////////////////////////');
+            console.log(selectedUser.userId);
+            console.log(selectedUser.socketid);
+            console.log(goodSocket);
             console.log(from);
-            console.log(selectedUser.socketId);
-            if(selectedUser.socketId === from) {
-   
+            console.log('//////////////////////////////////////');
+            console.log('----------------------------------------------');
+            console.log(selectedUser.userId);
+            console.log(content.userId);
+            console.log('----------------------------------------------');
+
+            console.log(messages);
+            
+            if(goodSocket === from) {
+                let newArr = [
+                    ...messages,
+                    content
+                ];
+                console.log('1');
+                setMessages(newArr);
+                
+            } else if ((content.userId === selectedUser.userId) && selectedUser.userId !== "") {
+                console.log('2');
+                const item = {
+                    ...selectedUser,
+                    socketid: from
+                }
+                setSelectedUser(item);
                 let newArr = [
                     ...messages,
                     content
                 ];
                 
                 setMessages(newArr);
-                console.log('OK');
+                
             } else {
-                console.log('NOP');
-            }
-        });
 
+                console.log('3');
+                if ((content.userId !== selectedUser.userId) && selectedUser.userId !== "") {
+                    const userIndex = users.findIndex(el => el.userId === content.userId);
+                    console.log('4');
+                    
+                    let arrUsers = users;
+                    arrUsers[userIndex] = {
+                        ...arrUsers[userIndex],
+                        newMessage: true
+                    }
+                    
+                    setUsers(arrUsers);
+                    reload();
+                }
+                console.log('3.1');
+            }
+            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'); 
+        }); 
+        
         socket.on('server_newUser_response', data => {
             setUsers(data);
         });
 
-    },[socket, users]);
+        console.log('7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777');
+    },[socket, selectedUser]);, users, selectedUser, messages */
+    
+    useEffect(() => {
+
+        if (logged !== true) {
+            checkIfLogged();
+        }
+        
+        socket.on('SERVER_MSG', ({content, from}) => {
+            let newArr = [];
+            newArr.push(content);
+            newArr.push(from);
+            setJustReceived(newArr);
+        })
+        
+        socket.on('server_newUser_response', data => {
+            setUsers(data);
+        });
+        
+    },[socket])
+    
+    useEffect(() => {
+
+        if(justReceived.length > 0) {
+            
+            let newArr = [
+                ...messages,
+                justReceived[0]
+            ];
+            
+            if(selectedUser.socketid === justReceived[1]) {
+                setMessages(newArr);
+                
+            } else if ((justReceived[0].userId === selectedUser.userId) && selectedUser.userId !== "") {
+                const item = {
+                    ...selectedUser,
+                    socketid: justReceived[1]
+                }
+                setSelectedUser(item);
+                
+                setMessages(newArr);
+                
+            } else {
+                
+                console.log('3');
+                if ((justReceived[0].userId !== selectedUser.userId)) {
+                    const userIndex = users.findIndex(el => el.userId === justReceived[0].userId);
+                    
+                    let arrUsers = users;
+                    arrUsers[userIndex] = {
+                        ...arrUsers[userIndex],
+                        newMessage: true
+                    }
+                    
+                    setUsers(arrUsers);
+                    reloading();
+                }
+            }
+        }
+        
+    },[justReceived])
+
+    const reloading = () => {
+        setReload(!reload);
+    }
 
     const checkIfLogged = () => {
         if (localStorage.getItem('token') !== null) {
@@ -117,7 +267,8 @@ const Messenger = () => {
                     let newArr = [];
                     for (let i = 0; i < data.data.length; i++) {
                         let item = {
-                            id: data.data[i].friendTwo
+                            id: data.data[i].friendTwo,
+                            chatId: data.data[i].chatId
                         }
                         newArr.push(item);
                     }
@@ -177,41 +328,106 @@ const Messenger = () => {
     }
 
     const sendMessage = (msg) => {
-console.log(selectedUser.socketId);
+
+        const fullname = userInfos.firstname + " " + userInfos.lastname;
+        const newDate = Math.floor((new Date()).getTime() / 1000);
+        console.log(newDate);
+        console.log(typeof newDate);
+        console.log(new Date())
+
         socket.emit('CLIENT_MSG', {
             content: {
-                username: userInfos.firstname + " " + userInfos.lastname,
+                username: fullname,
                 content: msg,
-                date: Math.floor((new Date()).getTime() / 1000),
+                userId: user.id,
+                date: newDate,
                 socketID: socket.id
             },
-            to: selectedUser.socketId
+            to: selectedUser.socketid
         });
         setInputMsg("");
         
         const newArr = [
             ...messages,
             {
-                username: userInfos.firstname + " " + userInfos.lastname,
+                username: fullname,
                 content: msg,
-                date: Math.floor((new Date()).getTime() / 1000),
+                date: newDate,
             }
         ];
+        saveMessage(msg, fullname);
         setMessages(newArr);
+    }
+
+    const saveMessage = (content, fullname) => {
+        fetch('http://localhost:3000/api/messages/create/' + selectedUser.chatId, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'POST', 
+            body: JSON.stringify({ content: content, userId: user.id, username: fullname })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
     }
 
     const ctrlInputMsg = (value) => {
         setInputMsg(value);
     }
 
-    const changeSelectedUser = (userId, socketId) => {
+    const changeSelectedUser = (userId, socketId, chatId) => {
+
+        setMessages([]);
 
         const newObj = {
             userId: userId,
-            socketId: socketId
+            socketid: socketId,
+            chatId: chatId
         };
-
+        
         setSelectedUser(newObj);
+        
+        const userIndex = users.findIndex(el => el.userId === userId);
+    
+        const arrUsers = users;
+        arrUsers[userIndex] = {
+            ...arrUsers[userIndex],
+            newMessage: false
+        }
+
+        getMessages(chatId);
+    }
+
+    const getMessages = (chatId) => {
+       
+        fetch('http://localhost:3000/api/messages/getMessages/' + chatId, {
+            headers: {
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                let newArr = [];
+                
+                if(data.data) {
+                   
+                    for (let i = 0; i < data.data.length; i++) {
+                        const item = {
+                            date: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000) ,
+                            content: data.data[i].content,
+                            username: data.data[i].username
+                        }
+                        newArr.push(item);
+                    }
+                    newArr.sort((a, b) => new Date(a.date) - new Date(b.date));
+                }
+                setMessages(newArr);
+            })
     }
     
     return (
@@ -222,12 +438,16 @@ console.log(selectedUser.socketId);
                 {
                     friends.map(el => {
                         let status = "Hors ligne";
-                        let socketId = ""
+                        let socketId = "";
+                        let newMsg = "";
 
                         users.forEach(ele => {
                             if(ele.userId === el.id) {
                                 status = "En ligne";
                                 socketId = ele.socketID;
+                                if (ele.newMessage && ele.newMessage === true) {
+                                    newMsg = " - Nouveau message"
+                                }
                             }
                         });
 
@@ -236,7 +456,7 @@ console.log(selectedUser.socketId);
                             color = "green";
                         }
 
-                        return  <p onClick={() => changeSelectedUser(el.id, socketId)} style={{color: color}} key={el.id}>{status} :{el.id}</p>
+                        return  <p onClick={() => changeSelectedUser(el.id, socketId, el.chatId)} style={{color: color}} key={el.id}>{status} :{el.id}{newMsg}</p>
                         {/* <a key={el.socketID} href="#">{el.username} {el.socketID}</a> */}
                     })
             }

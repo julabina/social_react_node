@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM("pending","friend","received"),
             allowNull: false,
             defaultValue: "pending"
+        },
+        chatId: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
     },{
         timestamps: true,
