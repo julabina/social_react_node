@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faHome, faRightFromBracket, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faHome, faRightFromBracket, faUsers, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const NavMenu = (props) => {
@@ -28,6 +28,7 @@ const NavMenu = (props) => {
                     <ul>
                         <a href="/"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--home' icon={faHome} /></li></a>
                         <a href={props.userId + "/amis"}><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--users' icon={faUsers} /></li></a>
+                        <a href="/messagerie"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--message' icon={faMessage} /></li></a>
                         <li onClick={logout}><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--logout' icon={faRightFromBracket} /></li>
                         {/* <li><FontAwesomeIcon icon={faRightFromBracket} /></li> */}
                     </ul>

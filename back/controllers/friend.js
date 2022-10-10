@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-const { Friend, Chat } = require('../db/sequelize');
+const { Friend, Chat, User, UserInfo } = require('../db/sequelize');
 
 /**
  * create friends relation with pending status
@@ -12,8 +12,8 @@ exports.createFriendQuery = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(friend => {
@@ -29,19 +29,19 @@ exports.createFriendQuery = (req, res, next) => {
             
             const newChat = new Chat({
                 id: newChatId,
-                userOne: user1,
-                userTwo: user2
+                mainId: user1,
+                userId: user2
             });
             
             const friendsQuery = new Friend({
-                friendOne: user1,
-                friendTwo: user2,
+                mainId: user1,
+                userId: user2,
                 chatId: newChatId
             });
             
             const friendReceived = new Friend({
-                friendOne: user2,
-                friendTwo: user1,
+                mainId: user2,
+                userId: user1,
                 chatId: newChatId,
                 status: "received"
             });
@@ -78,8 +78,8 @@ exports.checkIfFriend = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(friendRelation => {
@@ -107,8 +107,8 @@ exports.cancelFriendQuery = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(request => {
@@ -128,8 +128,8 @@ exports.cancelFriendQuery = (req, res, next) => {
 
                     Friend.findOne({
                         where: {
-                            friendOne: req.params.id,
-                            friendTwo: req.auth.userId,
+                            mainId: req.params.id,
+                            userId: req.auth.userId,
                         }
                     })
                         .then(received => {
@@ -176,8 +176,8 @@ exports.acceptFriendQuery = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id,
+            mainId: req.auth.userId,
+            userId: req.params.id,
         }
     })
         .then(relation => {
@@ -196,8 +196,8 @@ exports.acceptFriendQuery = (req, res, next) => {
                 .then(() => {
                     Friend.findOne({
                         where: {
-                            friendOne: req.params.id,
-                            friendTwo: req.auth.userId,
+                            mainId: req.params.id,
+                            userId: req.auth.userId,
                         }
                     })
                         .then(relation2 => {
@@ -243,15 +243,15 @@ exports.cancelRelation = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id,
+            mainId: req.auth.userId,
+            userId: req.params.id,
         }
     })
         .then(firstRelation => {
             Friend.findOne({
                 where: {
-                    friendOne: req.params.id,
-                    friendTwo: req.auth.userId,
+                    mainId: req.params.id,
+                    userId: req.auth.userId,
                 }
             })
                 .then(secondRelation => {
@@ -353,11 +353,24 @@ exports.cancelRelation = (req, res, next) => {
 
 exports.getFriends = (req, res, next) => {
 
+    User.hasOne(UserInfo);
+    UserInfo.belongsTo(User);
+    User.hasMany(Friend);
+    Friend.belongsTo(User);
+
     Friend.findAll({
         where: {
-            friendOne: req.params.id,
+            mainId: req.params.id,
             status: "friend"
-        }
+        },
+        include: [
+            {
+                model: User,
+                include: {
+                    model: UserInfo
+                }
+            }
+        ]
     })
         .then(friends => {
             if(!friends) {

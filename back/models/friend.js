@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        friendOne: {
+        mainId: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        friendTwo: {
+        userId: {
             type: DataTypes.STRING,
             allowNull: false
         },

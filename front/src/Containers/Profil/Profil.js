@@ -517,7 +517,7 @@ const Profil = () => {
                             <>
                                 {
                                     friendRelation === "friend" &&
-                                    <button>Message</button>
+                                    <a href={"/messagerie/" + params.id}><button>Message</button></a>
                                 }
                                 {
                                     friendRelation === "pending" ?

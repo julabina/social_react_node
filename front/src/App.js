@@ -13,7 +13,10 @@ function App() {
         <Route path="/profil_=:id" element={<Profil />} />
         <Route path="/connexion" element={<Log />} />
         <Route path="/inscription" element={<Sign />} />
-        <Route path="/messagerie" element={<Messenger />} />
+        <Route path="/messagerie">
+            <Route index element={<Messenger />} />
+            <Route path=":id" element={<Messenger />} />
+        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
   );

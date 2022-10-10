@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { decodeToken, isExpired } from 'react-jwt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-regular-svg-icons';
 import Header from '../../Components/Header/Header';
 import Message from '../../Components/Message/Message';
 import socket from "../../socket";
 
 const Messenger = () => {
 
+    const params = useParams();
     const navigate = useNavigate();
 
     const [messages, setMessages] = useState([]);
@@ -20,6 +23,8 @@ const Messenger = () => {
     const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
     const [logged, setLogged] = useState(false);
     const [reload, setReload] = useState(false);
+    const [paramsLoad, setParamsLoad] = useState(false);
+    const [friendInfos, setFriendInfos] = useState({})
 
    /*  useEffect(() => {
         
@@ -136,11 +141,11 @@ const Messenger = () => {
     },[socket, selectedUser]);, users, selectedUser, messages */
     
     useEffect(() => {
-
+        
         if (logged !== true) {
             checkIfLogged();
         }
-        
+
         socket.on('SERVER_MSG', ({content, from}) => {
             let newArr = [];
             newArr.push(content);
@@ -153,6 +158,37 @@ const Messenger = () => {
         });
         
     },[socket])
+
+        
+    useEffect(() => {
+        
+        if (paramsLoad === false) {
+            if(params.id) {
+                console.log(users);
+                console.log(friends);
+                if (friends.length > 0 && users.length > 0) {
+                    let selected = false;
+                    const paramFriend = friends.find(el => el.id === params.id);  
+                    for (let i = 0; i < users.length; i++) {
+                        if (users[i].userId === params.id) { 
+                            setParamsLoad(true);
+                            console.log("1");
+                            changeSelectedUser(params.id, users[i].socketID, paramFriend.chatId )
+                            selected = true;
+                            break;
+                        } 
+                    }
+                    if (selected === false) {
+                        setParamsLoad(true);
+                        changeSelectedUser(params.id, "", paramFriend.chatId )
+                    }
+                }
+            } else {
+                setParamsLoad(true);
+            }
+        }
+        
+    },[friends, users])
     
     useEffect(() => {
 
@@ -194,6 +230,14 @@ const Messenger = () => {
         }
         
     },[justReceived])
+
+    useEffect(() => {
+        let messagesContainer = document.querySelector('.messenger__container');
+
+        if (messagesContainer !== null) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }, [messages])
 
     const reloading = () => {
         setReload(!reload);
@@ -254,6 +298,26 @@ const Messenger = () => {
         }
     }
 
+    const getFriendInfos = (id) => {
+        if(id !== "" && id !== undefined) {
+            const url = 'http://localhost:3000/api/users/getUserInfos/' + id;
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    let item = {
+                        userId: data.data.userId,
+                        firstname: data.data.firstname,
+                        lastname: data.data.lastname,
+                        profilImg: data.data.profilImg,
+                    }
+                    
+                    const username = item.firstname + " " + item.lastname;
+
+                    setFriendInfos(item);
+                });
+        }
+    }
+
     const getAllFriends = (userId, token) => {
         fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
             headers: {
@@ -267,14 +331,16 @@ const Messenger = () => {
                     let newArr = [];
                     for (let i = 0; i < data.data.length; i++) {
                         let item = {
-                            id: data.data[i].friendTwo,
-                            chatId: data.data[i].chatId
+                            id: data.data[i].userId,
+                            chatId: data.data[i].chatId,
+                            fullname: data.data[i].User.User_info.firstname + " " + data.data[i].User.User_info.lastname,
+                            profilImg: data.data[i].User.User_info.profilImg
                         }
                         newArr.push(item);
+                        console.log(data.data[i]);
                     }
                     setFriends(newArr);
                 }
-                console.log(data);
             })
     }
 
@@ -380,7 +446,6 @@ const Messenger = () => {
     }
 
     const changeSelectedUser = (userId, socketId, chatId) => {
-
         setMessages([]);
 
         const newObj = {
@@ -400,6 +465,7 @@ const Messenger = () => {
         }
 
         getMessages(chatId);
+        getFriendInfos(userId);
     }
 
     const getMessages = (chatId) => {
@@ -434,7 +500,7 @@ const Messenger = () => {
         <>
         <Header />
         <main className='messenger'>
-            <div className="messenger__friendsList">
+            <section className="messenger__friendsList">
                 {
                     friends.map(el => {
                         let status = "Hors ligne";
@@ -446,37 +512,80 @@ const Messenger = () => {
                                 status = "En ligne";
                                 socketId = ele.socketID;
                                 if (ele.newMessage && ele.newMessage === true) {
-                                    newMsg = " - Nouveau message"
+                                    newMsg = "Nouveau message"
                                 }
                             }
                         });
 
-                        let color = "blue";
+                        let color = "#4e5166";
                         if (el.id === selectedUser.userId) {
-                            color = "green";
+                            color = "#fd2d01";
                         }
 
-                        return  <p onClick={() => changeSelectedUser(el.id, socketId, el.chatId)} style={{color: color}} key={el.id}>{status} :{el.id}{newMsg}</p>
+                        return <div key={el.id} onClick={() => changeSelectedUser(el.id, socketId, el.chatId)} className="messenger__friendsList__friend">
+                            <div className='messenger__friendsList__friend__profil'>
+                                <div className="messenger__friendsList__friend__profil__imgCont">
+                                {
+                                    el.profilImg !== null ? <img src={el.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" />
+                                }
+                                </div>
+                                <p className='messenger__friendsList__friend__profil__fullname' style={{color: color}}>{el.fullname}</p>
+                            </div>
+                            {
+                                status === "En ligne" ?
+                                <div className='messenger__friendsList__friend__statusCont'>
+                                    <div className='messenger__friendsList__friend__statusCont__status'></div><p>{status}</p>
+                                </div>
+                                :
+                                <div className='messenger__friendsList__friend__statusCont'>
+                                    <div className='messenger__friendsList__friend__statusCont__status messenger__friendsList__friend__statusCont__status--off'></div><p>{status}</p>
+                                </div>
+                            }
+                            <div className='messenger__friendsList__friend__statusCont'>
+                                <p>{newMsg}</p>
+                            </div>
+                        </div>  
+                        /* return  <p onClick={() => changeSelectedUser(el.id, socketId, el.chatId)} style={{color: color}} key={el.id}>{status} :{el.id}{newMsg}</p> */
                         {/* <a key={el.socketID} href="#">{el.username} {el.socketID}</a> */}
                     })
             }
-            </div>
-            {
-                selectedUser.userId !== "" &&
+            </section>
+            <section className="messenger__userSelected">
+                {
+                    selectedUser.userId !== "" &&
+                        <a href={"/profil_=" + friendInfos.userId}><div className='messenger__userSelected__user'>
+                            <div className="messenger__userSelected__user__imgCont">
+                            {
+                                friendInfos.profilImg !== null ? <img src={friendInfos.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" />
+                            }
+                            </div>
+                            <p>{friendInfos.firstname} {friendInfos.lastname}</p>
+                        </div></a>
+                    
+                }
+            </section>
                 <section className='messenger__container'>
                     <div className='messenger__container__messages'>
                     {
                         messages.map(el => {
-                            return <Message key={(el.date).toString() + Math.random(1,10000)} content={el.content} date={el.date} username={el.username} />
+                            let msgUsername = el.username;
+                            let loggedUser = false;
+                            const loggedUserUsername = userInfos.firstname + " " + userInfos.lastname;
+
+                            if (el.username === loggedUserUsername) {
+                                msgUsername = "Moi";
+                                loggedUser = true;
+                            }
+
+                            return <Message key={(el.date).toString() + Math.random(1,10000)} content={el.content} date={el.date} username={msgUsername} isLoggedUser={loggedUser} />
                         })
                     }
                     </div>
                     <div className="messenger__container__form">
-                        <input onInput={(e) => ctrlInputMsg(e.target.value)} value={inputMsg} type="text" />
-                        <button onClick={() => checkMessage()}>ok</button>
+                        <input onInput={(e) => ctrlInputMsg(e.target.value)} value={inputMsg} type="text" placeholder='Votre message ...' />
+                        <button onClick={() => checkMessage()}>Envoyé</button>
                     </div>
                 </section>
-            }
         </main>
         </>
     );
