@@ -18,6 +18,7 @@ const Profil = () => {
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
+    const [friends, setFriends] = useState([]);
     const [userInfos, setUserInfos] = useState({ firstname: "", lastname: "", profilImg : null, profilBaneer: null })
     const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({token : "", id : ""});
@@ -46,6 +47,7 @@ const Profil = () => {
                 };
                 setUser(newUserObj);
                 getUserInfo(newUserObj);
+                getAllFriends(params.id, newUserObj.token);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -430,6 +432,35 @@ const Profil = () => {
             })
     }
 
+    const getAllFriends = (userId, token) => {
+
+        fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let newArr = [];
+                if (data.data && data.data !== undefined) {
+                    for (let i = 0; i < data.data.length; i++) {
+                        
+                        let item = {
+                            id: data.data[i].userId,
+                            fullname: data.data[i].User.User_info.firstname + " " + data.data[i].User.User_info.lastname,
+                            profilImg: data.data[i].User.User_info.profilImg,
+                            created: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000)
+                        }
+                        newArr.push(item);
+                    }
+                    setFriends(newArr);
+                }
+            })
+
+    }
+
     return (
         <>
         <Header />
@@ -576,7 +607,24 @@ const Profil = () => {
                 :
                 <section className="profil__content">
                     <div className="profil__content__left">
-
+                        {
+                            friends.length > 0 ?
+                            friends.map(el => {
+                                return <a href={"/profil_=" + el.id}><div className="profil__content__left__friend">
+                                    <div className="profil__content__left__friend__infos">
+                                        <div className="profil__content__left__friend__infos__imgCont">
+                                            {
+                                                el.profilImg !== null ? <img src={el.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" />
+                                            }
+                                        </div>
+                                        <h3>{el.fullname}</h3>
+                                    </div>
+                                    <p>Amis depuis le {new Date(el.created * 1000).toLocaleDateString("fr-FR")}</p>
+                                </div></a>
+                            })
+                            :
+                            <p className="profil__content__left__alone">Aucun amis</p>
+                        }
                     </div>
                     <div className="profil__content__articles">
                         {

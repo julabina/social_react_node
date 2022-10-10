@@ -27,7 +27,7 @@ const NavMenu = (props) => {
                 <nav className='header__menu__nav'>
                     <ul>
                         <a href="/"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--home' icon={faHome} /></li></a>
-                        <a href={props.userId + "/amis"}><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--users' icon={faUsers} /></li></a>
+                        <a href="/amis"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--users' icon={faUsers} /></li></a>
                         <a href="/messagerie"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--message' icon={faMessage} /></li></a>
                         <li onClick={logout}><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--logout' icon={faRightFromBracket} /></li>
                         {/* <li><FontAwesomeIcon icon={faRightFromBracket} /></li> */}

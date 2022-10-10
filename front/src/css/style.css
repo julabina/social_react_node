@@ -365,7 +365,6 @@ body {
   border-radius: 30px 0 0 30px;
   height: 35px;
   resize: none;
-  padding-top: 20px;
   width: 250px;
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
 }
@@ -380,7 +379,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
-  height: 57px;
+  height: 39px;
   border-radius: 0 30px 30px 0;
   padding-right: 15px;
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
@@ -1435,10 +1434,60 @@ main {
 }
 .profil__content__left {
   width: 280px;
-  height: 400px;
   background: white;
   box-shadow: 1px 0 20px rgba(0, 0, 0, 0.199);
   border-radius: 8px;
+  min-height: 200px;
+  box-sizing: border-box;
+  padding: 25px 15px 15px;
+  margin-bottom: 20px;
+}
+.profil__content__left__alone {
+  color: #4e5166;
+  font-weight: 700;
+  font-size: 1.2em;
+  text-align: center;
+  margin-top: 50px;
+}
+.profil__content__left__friend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+  cursor: pointer;
+}
+.profil__content__left__friend__infos {
+  display: flex;
+  align-items: center;
+}
+.profil__content__left__friend__infos__imgCont {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 7px;
+}
+.profil__content__left__friend__infos__imgCont img {
+  height: 35px;
+  width: 35px;
+}
+.profil__content__left__friend__infos h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #4e5166;
+  transition: all 120ms ease-in-out;
+}
+.profil__content__left__friend p {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #4e5166;
+  margin-top: 10px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #cfcfcf;
+}
+.profil__content__left__friend:hover h3 {
+  color: #fd2d01;
+  transition: all 120ms ease-in-out;
 }
 .profil__content__articles {
   width: 700px;
