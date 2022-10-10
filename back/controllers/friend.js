@@ -1,4 +1,5 @@
-const { Friend, User } = require('../db/sequelize');
+const { v4 } = require('uuid');
+const { Friend, Chat, User, UserInfo } = require('../db/sequelize');
 
 /**
  * create friends relation with pending status
@@ -11,42 +12,57 @@ exports.createFriendQuery = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(friend => {
-
+            
             if(friend !== null) {
                 const message = "Une relation existe deja.";
                 return res.status(401).json({ message });
             }
-
+            
             const user1 = req.auth.userId;
             const user2 = req.params.id;
-        
+            const newChatId = v4();
+            
+            const newChat = new Chat({
+                id: newChatId,
+                mainId: user1,
+                userId: user2
+            });
+            
             const friendsQuery = new Friend({
-                friendOne: user1,
-                friendTwo: user2
+                mainId: user1,
+                userId: user2,
+                chatId: newChatId
             });
             
             const friendReceived = new Friend({
-                friendOne: user2,
-                friendTwo: user1,
+                mainId: user2,
+                userId: user1,
+                chatId: newChatId,
                 status: "received"
             });
-        
-            friendsQuery.save()
+            
+            newChat.save()
                 .then(() => {
-                    friendReceived.save()
+                    friendsQuery.save()
                         .then(() => {
-                            const message = "Demande bien créé.";
-                            res.status(201).json({ message, success: true });
+                            friendReceived.save()
+                                .then(() => {
+                                    const message = "Demande bien créé.";
+                                    res.status(201).json({ message, success: true });
+                                })
+                                .catch(error => res.status(501).json({ error }));
                         })
-                        .catch(error => res.status(501).json({ error }));
+                        .catch(error => res.status(500).json({ error }));
                 })
                 .catch(error => res.status(500).json({ error }));
+                
         })
+        .catch(error => res.status(500).json({ error }));
 
 
 };
@@ -62,8 +78,8 @@ exports.checkIfFriend = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(friendRelation => {
@@ -87,11 +103,12 @@ exports.checkIfFriend = (req, res, next) => {
  * @param {*} next 
  */
 exports.cancelFriendQuery = (req, res, next) => {
+    let chatId = "";
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id
+            mainId: req.auth.userId,
+            userId: req.params.id
         }
     })
         .then(request => {
@@ -104,13 +121,15 @@ exports.cancelFriendQuery = (req, res, next) => {
                 return res.status(401).json({ message });
             }
 
+            chatId = request.dataValues.chatId;
+
             request.destroy()
                 .then(() => {
 
                     Friend.findOne({
                         where: {
-                            friendOne: req.params.id,
-                            friendTwo: req.auth.userId,
+                            mainId: req.params.id,
+                            userId: req.auth.userId,
                         }
                     })
                         .then(received => {
@@ -120,11 +139,23 @@ exports.cancelFriendQuery = (req, res, next) => {
                             }
 
                             received.destroy()
-                            .then(() => {
-                                const message = 'Demande annulée.';
-                                res.status(201).json({ message, success: true });
-                            })
-                            .catch(error => res.status(500).json({ error }));
+                                .then(() => {
+                                    Chat.findByPk(chatId)
+                                        .then(chat => {
+                                            if (!chat) {
+                                                const message = 'Aucune conversation trouvé.';
+                                                return res.status(404).json({ message });
+                                            }
+
+                                            chat.destroy()
+                                                .then(() => {
+                                                    const message = 'Demande annulée.';
+                                                    res.status(201).json({ message, success: true });
+                                                })
+                                        })
+
+                                })
+                                .catch(error => res.status(500).json({ error }));
                         })
                         .catch(error => res.status(500).json({ error }));
                 })
@@ -145,8 +176,8 @@ exports.acceptFriendQuery = (req, res, next) => {
 
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id,
+            mainId: req.auth.userId,
+            userId: req.params.id,
         }
     })
         .then(relation => {
@@ -165,8 +196,8 @@ exports.acceptFriendQuery = (req, res, next) => {
                 .then(() => {
                     Friend.findOne({
                         where: {
-                            friendOne: req.params.id,
-                            friendTwo: req.auth.userId,
+                            mainId: req.params.id,
+                            userId: req.auth.userId,
                         }
                     })
                         .then(relation2 => {
@@ -208,17 +239,19 @@ exports.acceptFriendQuery = (req, res, next) => {
  */
 exports.cancelRelation = (req, res, next) => {
 
+    let chatId = "";
+
     Friend.findOne({
         where: {
-            friendOne: req.auth.userId,
-            friendTwo: req.params.id,
+            mainId: req.auth.userId,
+            userId: req.params.id,
         }
     })
         .then(firstRelation => {
             Friend.findOne({
                 where: {
-                    friendOne: req.params.id,
-                    friendTwo: req.auth.userId,
+                    mainId: req.params.id,
+                    userId: req.auth.userId,
                 }
             })
                 .then(secondRelation => {
@@ -226,28 +259,128 @@ exports.cancelRelation = (req, res, next) => {
                         const message = "Aucune relation trouvé.";
                         return res.status(404).json({ message });
                     } else if(!firstRelation) {
+                        chatId = secondRelation.dataValues.chatId;
                         secondRelation.destroy()
-                        .then(() => {
-                                const message = "Relation bien supprimé.";
-                                return res.status(201).json({ message, success: true });
+                            .then(() => {
+                                Chat.findByPk(chatId)
+                                    .then(chat => {
+                                        if (!chat) {
+                                            const message = "Aucune conversation trouvé.";
+                                            return res.status(201).json({ message });
+                                        }
+
+                                        chat.destroy()
+                                            .then(() => {
+                                                const message = "Relation bien supprimé.";
+                                                return res.status(201).json({ message, success: true });
+                                            })
+                                            .catch(error => {
+                                                return res.status(500).json({ error })
+                                            });
+                                    })
+                                    .catch(error => {
+                                        return res.status(500).json({ error })
+                                    });
+
                             })
+                            .catch(error => {
+                                return res.status(500).json({ error })
+                            });
                     } else if(!secondRelation) {
+                        chatId = firstRelation.dataValues.chatId;
                         firstRelation.destroy()
-                        .then(() => {
-                                const message = "Relation bien supprimé.";
-                                return res.status(201).json({ message, success: true });
+                            .then(() => {
+                                Chat.findByPk(chatId)
+                                    .then(chat => {
+                                        if (!chat) {
+                                            const message = "Aucune conversation trouvé.";
+                                            return res.status(201).json({ message });
+                                        }
+
+                                        chat.destroy()
+                                            .then(() => {
+                                                const message = "Relation bien supprimé.";
+                                                return res.status(201).json({ message, success: true });
+                                            })
+                                            .catch(error => {
+                                                return res.status(500).json({ error })
+                                            });
+                                    })
+                                    .catch(error => {
+                                        return res.status(500).json({ error })
+                                    });
                             })
+                            .catch(error => {
+                                return res.status(500).json({ error })
+                            });
                     }
                         
+                    chatId = firstRelation.dataValues.chatId;
                     firstRelation.destroy()
                         .then(() => {
                                 secondRelation.destroy()
                                     .then(() => {
-                                        const message = "Relations bien supprimés.";
-                                        res.status(201).json({ message, success: true });
-                                    })
+                                        Chat.findByPk(chatId)
+                                            .then(chat => {
+                                                if (!chat) {
+                                                    const message = "Aucune conversation trouvé.";
+                                                    return res.status(201).json({ message });
+                                                }
+
+                                                chat.destroy()
+                                                    .then(() => {
+                                                        const message = "Relations bien supprimé.";
+                                                        return res.status(201).json({ message, success: true });
+                                                    })
+                                                    .catch(error => {
+                                                        return res.status(500).json({ error })
+                                                    });
+                                            })
+                                            .catch(error => {
+                                                return res.status(500).json({ error })
+                                            });
+                                            })
+                                            .catch(error => res.status(500).json({ error }));
                             })
+                            .catch(error => res.status(500).json({ error }));
                 })
+                .catch(error => res.status(500).json({ error }));
         })
+        .catch(error => res.status(500).json({ error }));
+
+};
+
+
+exports.getFriends = (req, res, next) => {
+
+    User.hasOne(UserInfo);
+    UserInfo.belongsTo(User);
+    User.hasMany(Friend);
+    Friend.belongsTo(User);
+
+    Friend.findAll({
+        where: {
+            mainId: req.params.id,
+            status: "friend"
+        },
+        include: [
+            {
+                model: User,
+                include: {
+                    model: UserInfo
+                }
+            }
+        ]
+    })
+        .then(friends => {
+            if(!friends) {
+                const message = "Aucun ami trouvé.";
+                return res.status(404).json({ message })
+            }
+            
+            const message = "amis trouvé.";
+            res.status(200).json({ message, data: friends })
+        })
+        .catch(error => res.status(500).json({ error }));
 
 };

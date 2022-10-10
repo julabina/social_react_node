@@ -9,5 +9,6 @@ router.delete('/cancelQuery/:id', auth, friendController.cancelFriendQuery);
 router.put('/acceptQuery/:id', auth, friendController.acceptFriendQuery);
 router.delete('/cancelRelation/:id', auth, friendController.cancelRelation);
 router.get('/isFriend/:id', auth, friendController.checkIfFriend);
+router.get('/getFriends/:id', auth, friendController.getFriends);
 
 module.exports = router;

@@ -904,6 +904,9 @@ body {
 .header__menu__nav__icon--users {
   color: purple;
 }
+.header__menu__nav__icon--message {
+  color: dodgerblue;
+}
 .header__menu img {
   height: 30px;
   margin-left: 15px;
@@ -1587,6 +1590,200 @@ main {
 .profil__changeProfilImg__modal__btnCont button:hover, .profil__confirmCancelRelation__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+
+.messenger {
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.messenger__userSelected {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  height: 100px;
+  width: 600px;
+  cursor: pointer;
+}
+.messenger__userSelected__user {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.messenger__userSelected__user__imgCont {
+  background: #000;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.messenger__userSelected__user__imgCont img {
+  height: 40px;
+  width: 40px;
+}
+.messenger__userSelected__user p {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #4e5166;
+  margin-left: 10px;
+  padding-bottom: 4px;
+  transition: all 110ms ease-in-out;
+}
+.messenger__userSelected__user:hover p {
+  color: #fd2d01;
+  transition: all 110ms ease-in-out;
+}
+.messenger__container {
+  position: relative;
+  border: 1px solid gainsboro;
+  border-radius: 3px;
+  width: 600px;
+  height: 100%;
+  margin-bottom: 62px;
+  padding: 25px;
+  overflow-x: scroll;
+  background: white;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.13);
+}
+.messenger__container__messages {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+.messenger__container__messages__msg {
+  display: flex;
+  color: #080808;
+}
+.messenger__container__messages__msg__cont {
+  margin-bottom: 7px;
+  padding: 7px 15px 15px;
+  border-radius: 10px;
+  background: #ffd7d7;
+  max-width: 85%;
+}
+.messenger__container__messages__msg__cont h2 {
+  color: #4e5166;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+.messenger__container__messages__msg__cont__content {
+  line-height: 1.2;
+  margin: 15px 0 9px;
+}
+.messenger__container__messages__msg__cont__date {
+  font-size: 0.8em;
+  font-weight: 500;
+  color: #8f8f8f;
+}
+.messenger__container__messages__msg__cont__date--logged {
+  color: #ffd7d7;
+}
+.messenger__container__messages__msg__cont--logged {
+  background: #fd2d01;
+  text-align: right;
+}
+.messenger__container__messages__msg--logged {
+  justify-content: flex-end;
+}
+.messenger__container__form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 650px;
+  margin-left: -25px;
+  background: white;
+  position: fixed;
+  bottom: 0;
+  height: 80px;
+}
+.messenger__container__form input {
+  height: 40px;
+  background-color: #fff1f1;
+  border: none;
+  border-radius: 30px;
+  height: 35px;
+  padding-left: 25px;
+  font-size: 1.1em;
+  width: 420px;
+  border-radius: 5px 0 0 5px;
+  font-size: 1em;
+}
+.messenger__container__form button {
+  height: 40px;
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  border-radius: 0 5px 5px 0;
+}
+.messenger__container__form button:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
+.messenger__friendsList {
+  text-align: end;
+  position: absolute;
+  right: 0;
+  background: white;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.164);
+  overflow-y: scroll;
+  max-height: 60vh;
+}
+.messenger__friendsList__friend {
+  width: 230px;
+  padding: 20px 15px;
+  cursor: pointer;
+}
+.messenger__friendsList__friend__profil {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.messenger__friendsList__friend__profil__imgCont {
+  height: 30px;
+  width: 30px;
+  margin-right: 7px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.messenger__friendsList__friend__profil__imgCont img {
+  height: 30px;
+  width: 30px;
+}
+.messenger__friendsList__friend__profil__fullname {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.messenger__friendsList__friend__statusCont {
+  height: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.messenger__friendsList__friend__statusCont__status {
+  height: 7px;
+  width: 7px;
+  background: #dd0000;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.messenger__friendsList__friend__statusCont__status--off {
+  background: green;
+}
+.messenger__friendsList__friend__statusCont p {
+  color: #080808;
+  font-size: 0.8em;
+}
+.messenger__friendsList__friend:hover {
+  background: #ffd7d7;
 }
 
 .notFound {
