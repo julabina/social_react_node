@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import NavMenu from '../NavMenu/NavMenu';
-import SearchModul from '../SearchModul/SearchModul';
 import logo from '../../assets/icon-left-font.png';
 import { decodeToken } from 'react-jwt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -66,7 +65,6 @@ const Header = () => {
                 <NavMenu userId={user.id} />
                 <a href="/"><img className="header__menu__logo" src={logo} alt="logo de groupomania" /></a>
             </div>
-            <SearchModul />
             <div className="header__btns">
                 <div className="header__btns__btn"></div>
                     <a href={"/profil_=" + user.id}><div className="header__btns__btn header__btns__btn--profil">

@@ -906,6 +906,12 @@ body {
 .header__menu__nav__icon--message {
   color: dodgerblue;
 }
+.header__menu__nav__icon--legals {
+  color: forestgreen;
+}
+.header__menu__nav__icon--about {
+  color: darkmagenta;
+}
 .header__menu img {
   height: 30px;
   margin-left: 15px;
@@ -1875,6 +1881,77 @@ main {
 .notFound__container button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+
+.about {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.about section {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px 35px;
+  border-radius: 6px;
+  width: 800px;
+}
+.about section h1 {
+  color: #4e5166;
+  font-size: 1.7em;
+  font-weight: 600;
+  text-align: center;
+}
+.about section p {
+  line-height: 1.4;
+  margin-top: 25px;
+  font-weight: 500;
+  color: #080808;
+}
+
+.legals {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.legals__content {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.171);
+  width: 750px;
+  margin: 50px 0;
+  box-sizing: border-box;
+  padding: 25px 35px;
+}
+.legals__content h1 {
+  color: #4e5166;
+  font-size: 1.7em;
+  font-weight: 600;
+  text-align: center;
+}
+.legals__content h2 {
+  color: #4e5166;
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 60px 0 30px;
+}
+.legals__content p {
+  line-height: 1.4;
+  color: #080808;
+  font-weight: 500;
+}
+.legals__content__p2 {
+  margin-top: 30px;
 }
 
 /*# sourceMappingURL=style.css.map */

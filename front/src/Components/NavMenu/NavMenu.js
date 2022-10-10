@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faHome, faRightFromBracket, faUsers, faMessage } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faHome, faRightFromBracket, faUsers, faMessage, faScaleBalanced, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 const NavMenu = (props) => {
@@ -29,8 +29,9 @@ const NavMenu = (props) => {
                         <a href="/"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--home' icon={faHome} /></li></a>
                         <a href="/amis"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--users' icon={faUsers} /></li></a>
                         <a href="/messagerie"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--message' icon={faMessage} /></li></a>
+                        <a href="/mentions-legales"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--legals' icon={faScaleBalanced} /></li></a>
+                        <a href="/a-propos"><li><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--about' icon={faCircleInfo} /></li></a>
                         <li onClick={logout}><FontAwesomeIcon class='header__menu__nav__icon header__menu__nav__icon--logout' icon={faRightFromBracket} /></li>
-                        {/* <li><FontAwesomeIcon icon={faRightFromBracket} /></li> */}
                     </ul>
                 </nav>
             }
