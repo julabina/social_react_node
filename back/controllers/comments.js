@@ -29,9 +29,6 @@ exports.findAllComments = (req, res, next) => {
         ]
     })
         .then(({ count, rows }) => {
-            if(count === 0) {
-                return res.status(404).json({ error : new error('aucun commentaire trouvée.') });
-            }
             const message = `${count} commentaires bien trouvé.`;
             res.status(200).json({ message, data: rows, count });
         })

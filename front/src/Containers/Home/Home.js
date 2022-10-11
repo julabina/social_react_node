@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from "../../Components/Header/Header";
 import PostCard from '../../Components/PostCard/PostCard';
 import ImageUploading from 'react-images-uploading';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 const Home = () => {
 
     const navigate = useNavigate();
+    const ref = useRef(null);
 
     const [newPost, setNewPost] = useState({text:""});
     const [postData, setPostData] = useState([]);
+    const [toDisplayPostData, setToDisplayPostData] = useState([]);
     const [image, setImage] = React.useState([]);
     const [user, setUser] = useState({token : "", id : ""})
     const [isAdmin, setIsAdmin] = useState(false);
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
 
@@ -47,6 +51,31 @@ const Home = () => {
         }; 
 
     },[]);
+
+    /* const handleObserver = useCallback((entries) => {
+        
+        const target = entries[0];
+        if (target.isIntersecting) {
+            console.log(toDisplayPostData);
+            console.log('TTTTTEST');
+
+            loadPosts();
+        }
+        console.log(target);
+    }, [toDisplayPostData]); */
+    
+    /* useEffect(() => {
+        console.log('handle');
+        const option = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 0
+          };
+          const watcher = new IntersectionObserver(handleObserver, option);
+          if (ref.current) watcher.observe(ref.current);
+          console.log("handleBot");
+          
+    },[handleObserver]) */
 
     /**
      * check if current user is an admin
@@ -162,7 +191,6 @@ const Home = () => {
                         if(data.data[i].usersLiked.includes(id)) {
                             liked = true;
                         }
-                        console.log(liked);
 
                         if (data.data[i] !== undefined) {
                             let item = {
@@ -183,7 +211,13 @@ const Home = () => {
                     }
                     
                     newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+
+                    let displayArr = [];
+                    for (let l = 0; l < 10; l++) {
+                        displayArr.push(newArr[l]);        
+                    }
                     
+                    setToDisplayPostData(displayArr);
                 }
                 setPostData(newArr);
             })
@@ -193,11 +227,46 @@ const Home = () => {
         setImage(imageList);
     }
 
+    const loadPosts = () => {
+        
+        console.log('------------------------------------------------------');
+        console.log(postData);
+        console.log(toDisplayPostData);
+        console.log('------------------------------------------------------');
+
+        const dispLength = toDisplayPostData.length;
+        let toIndex = toDisplayPostData.length + 10;
+
+        if (toDisplayPostData.length === postData.length) {
+            return
+        }
+        
+        if(postData.length < toIndex) {
+            toIndex = postData.length;
+        } 
+
+        let newArr = toDisplayPostData;
+        for (let i = dispLength; i < toIndex; i++) {
+            toDisplayPostData.push(postData[i])
+        }
+
+        console.log("newArr", newArr);
+        setToDisplayPostData(newArr);
+        
+        reloading();
+    }
+
+    const reloading = () => {
+        console.log('reload');
+        setReload(!reload);
+    }
+
     return (
         <>
         <Header />
         <main className="home">
             <section className="home__newContent">
+            <button onClick={loadPosts}>ok</button>
                 <div className="home__newContent__new">
                     <h1>Créer un nouveau sujet</h1>
                     <div className="home__newContent__new__errorCont"></div>
@@ -238,11 +307,18 @@ const Home = () => {
                 </div>
             </section>
             <section className="home__mainContent">
+                <InfiniteScroll
+                    dataLength={toDisplayPostData.length}
+                    next={loadPosts}
+                    scrollThreshold={0.9}
+                    hasMore={true}
+                >
                 {
-                    postData.map(el => {
+                    toDisplayPostData.map(el => {
                         return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
                     })
                 }
+                </InfiniteScroll>
             </section>
         </main>
         </>

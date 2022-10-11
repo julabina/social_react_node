@@ -263,38 +263,39 @@ const PostCard = (props) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (data.data) {  
                     let newArr = [];
-                    for (let i = 0; i < data.data.length; i++) {
-                        let liked = false;
+                    if (data.data && data.data !== undefined) {
+                        for (let i = 0; i < data.data.length; i++) {
+                            let liked = false;
 
-                        if(data.data[i].usersLiked.includes(props.user.id)) {
-                            liked = true;
-                        }
+                            if(data.data[i].usersLiked.includes(props.user.id)) {
+                                liked = true;
+                            }
 
-                        if (data.data[i].commentId === null) {
-                            let item = {
-                                id: data.data[i].id,
-                                content: data.data[i].content,
-                                postId: data.data[i].postId,
-                                userId: data.data[i].userId,
-                                likedByUser: liked,
-                                likes: data.data[i].likes,
-                                firstname: data.data[i].User.User_info.firstname,
-                                lastname: data.data[i].User.User_info.lastname,
-                                profilImg: data.data[i].User.User_info.profilImg,
-                                time: calculTimeBetween(data.data[i].createdAt),
-                                created: data.data[i].createdAt,
-                                updated: data.data[i].updatedAt,
-                            };
-                            newArr.push(item);
+                            if (data.data[i].commentId === null) {
+                                let item = {
+                                    id: data.data[i].id,
+                                    content: data.data[i].content,
+                                    postId: data.data[i].postId,
+                                    userId: data.data[i].userId,
+                                    likedByUser: liked,
+                                    likes: data.data[i].likes,
+                                    firstname: data.data[i].User.User_info.firstname,
+                                    lastname: data.data[i].User.User_info.lastname,
+                                    profilImg: data.data[i].User.User_info.profilImg,
+                                    time: calculTimeBetween(data.data[i].createdAt),
+                                    created: data.data[i].createdAt,
+                                    updated: data.data[i].updatedAt,
+                                };
+                                newArr.push(item);
+                            }
                         }
+                        newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+                        
+                        setComments(newArr);
+                        setCommentCount(data.count);
                     }
-                    newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
-                    
-                    setComments(newArr);
-                    setCommentCount(data.count);
                 }
             })
     }
