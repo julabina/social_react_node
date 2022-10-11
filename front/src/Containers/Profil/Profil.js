@@ -3,6 +3,7 @@ import Header from "../../Components/Header/Header";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import PostCard from '../../Components/PostCard/PostCard';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
@@ -15,10 +16,12 @@ const Profil = () => {
 
     const [toggleBaneerForm, setToggleBaneerForm] = useState(false);
     const [toggleEditprofil, setToggleEditProfil] = useState(false);
+    const [toggleFriend, setToggleFriend] = useState(false);
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
     const [friends, setFriends] = useState([]);
+    const [currentUserFriends, setCurrentUserFriends] = useState([]);
     const [userInfos, setUserInfos] = useState({ firstname: "", lastname: "", profilImg : null, profilBaneer: null })
     const [postData, setPostData] = useState([]);
     const [user, setUser] = useState({token : "", id : ""});
@@ -371,8 +374,8 @@ const Profil = () => {
         }
     }
 
-    const sendingFriendQuery = () => {
-        fetch('http://localhost:3000/api/friends/query/' + params.id, {
+    const sendingFriendQuery = (id) => {
+        fetch('http://localhost:3000/api/friends/query/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -383,11 +386,14 @@ const Profil = () => {
             .then(res => res.json())
             .then(data => {
                 getIsFriend(user.token);
+                if (id !== params.id) {
+                    getAllRelations(user.id);
+                }
             })
     }
 
-    const cancelFriendQuery = () => {
-        fetch('http://localhost:3000/api/friends/cancelQuery/' + params.id, {
+    const cancelFriendQuery = (id) => {
+        fetch('http://localhost:3000/api/friends/cancelQuery/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -398,6 +404,9 @@ const Profil = () => {
             .then(res => res.json())
             .then(data => {
                 getIsFriend(user.token);
+                if (id !== params.id) {
+                    getAllRelations(user.id);
+                }
             })
     }
     
@@ -417,8 +426,8 @@ const Profil = () => {
             })
     }
 
-    const acceptFriendQuery = () => {
-        fetch('http://localhost:3000/api/friends/acceptQuery/' + params.id, {
+    const acceptFriendQuery = (id) => {
+        fetch('http://localhost:3000/api/friends/acceptQuery/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -429,6 +438,9 @@ const Profil = () => {
             .then(res => res.json())
             .then(data => {
                 getIsFriend(user.token);
+                if (id !== params.id) {
+                    getAllRelations(user.id);
+                }
             })
     }
 
@@ -451,14 +463,91 @@ const Profil = () => {
                             id: data.data[i].userId,
                             fullname: data.data[i].User.User_info.firstname + " " + data.data[i].User.User_info.lastname,
                             profilImg: data.data[i].User.User_info.profilImg,
+                            friend: "",
                             created: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000)
                         }
                         newArr.push(item);
                     }
+
                     setFriends(newArr);
                 }
             })
 
+    }
+
+    const getAllRelations = (id) => {
+
+        fetch('http://localhost:3000/api/friends/getRelations/' + id , {
+            headers: {
+                "Authorization": "Bearer " + user.token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                let newArr = [];
+                if (data.data && data.data !== undefined) {
+                    for (let i = 0; i < data.data.length; i++) {
+                        
+                        let item = {
+                            id: data.data[i].userId,
+                            fullname: data.data[i].User.User_info.firstname + " " + data.data[i].User.User_info.lastname,
+                            profilImg: data.data[i].User.User_info.profilImg,
+                            friend: data.data[i].status,
+                            created: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000)
+                        }
+                        newArr.push(item);
+                    }
+
+                    setCurrentUserFriends(newArr);
+
+                    let friendArr = friends;
+                    console.log(friendArr);
+                    for (let l = 0; l < friendArr.length; l++) {
+
+                        const friendFiltered = newArr.filter(el => {
+                            return el.id === friendArr[l].id;
+                        })    
+                        console.log(friends); 
+                        console.log(friendFiltered); 
+                        console.log(friendArr[l]);
+                        
+                        if(friendFiltered.length > 0) {
+
+                            friendArr[l] = {
+                                ...friendArr[l],
+                                friend: friendFiltered[0].friend
+                            }
+                                
+                        } else if (friendArr[l].friend !== "") {
+                                
+                            friendArr[l] = {
+                                ...friendArr[l],
+                                friend: ""
+                            }
+
+                        }
+                    }
+                    console.log(friendArr);
+                    setFriends(friendArr);
+                }
+            })
+    }
+
+    const handleLink = (link) => {
+        setToggleEditProfil(false);
+
+        if (link === "friends") {
+
+            if (currentUserFriends.length === 0) {
+                getAllRelations(user.id);
+            }
+
+            setToggleFriend(true);
+        } else {
+            setToggleFriend(false);
+        }
     }
 
     return (
@@ -552,15 +641,15 @@ const Profil = () => {
                                 }
                                 {
                                     friendRelation === "pending" ?
-                                    <button onClick={cancelFriendQuery}>Demande envoyé</button>
+                                    <button onClick={() =>cancelFriendQuery(params.id)}>Demande envoyé</button>
                                     :
                                     friendRelation === "received" ?
-                                    <button onClick={acceptFriendQuery}>Accepter demande</button>
+                                    <button onClick={() => acceptFriendQuery(params.id)}>Accepter demande</button>
                                     :
                                     friendRelation === "friend" ?
                                     <button onClick={handleFriendDeleteModal}>Supprimer des amis</button>
                                     :
-                                    <button onClick={sendingFriendQuery}>Ajouter</button>
+                                    <button onClick={() => sendingFriendQuery(params.id)}>Ajouter</button>
                                 }
                             </>
                         }
@@ -568,8 +657,8 @@ const Profil = () => {
                 </div>
 
                 <div className="profil__top__menu">
-                    <button>test</button>
-                    <button>test</button>
+                    <p onClick={() => handleLink("posts")}>Publications</p>
+                    <p onClick={() => handleLink("friends")}>Amis</p>
                 </div>
             </section>
 
@@ -605,35 +694,112 @@ const Profil = () => {
                     </div>
                 </section>
                 :
-                <section className="profil__content">
-                    <div className="profil__content__left">
-                        {
-                            friends.length > 0 ?
-                            friends.map(el => {
-                                return <a href={"/profil_=" + el.id}><div className="profil__content__left__friend">
-                                    <div className="profil__content__left__friend__infos">
-                                        <div className="profil__content__left__friend__infos__imgCont">
+                <>
+                {
+                    toggleFriend ?
+                    <section className='profil__friendsList'>
+                        <h2>{user.id === params.id ? "Mes amis" : "Amis de " + userInfos.firstname + " " + userInfos.lastname}</h2>
+
+                        <div className="profil__friendsList__list">
+                            {
+                                friends.map(el => {
+                                    return <div key={el.id} className='profil__friendsList__list__friend'>
+                                        <a href={"/profil_=" + el.id}><div className="profil__friendsList__list__friend__left">
+                                            <div className="profil__friendsList__list__friend__left__imgCont">
+                                                {
+                                                    el.profilImg !== null ?
+                                                    <img src={el.profilImg} alt={"photo de profil de " + el.firstname + el.lastname} />
+                                                    :
+                                                    <FontAwesomeIcon icon={faUser} className="profil__top__pictures__profilImg__icon" />
+                                                }
+                                            </div>
+                                            <p className='profil__friendsList__list__friend__left__name'>{el.fullname}</p>
+                                        </div></a>
+                                        <div className="profil__friendsList__list__friend__right">
                                             {
-                                                el.profilImg !== null ? <img src={el.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" />
+                                                user.id === params.id ? 
+                                                <FontAwesomeIcon className='profil__friendsList__list__friend__right__menu' icon={faEllipsis} />
+                                                :
+                                                <>
+                                                {
+                                                    el.id !== user.id && el.friend === "friend" ?
+                                                        <FontAwesomeIcon className='profil__friendsList__list__friend__right__menu' icon={faEllipsis} />
+                                                    :
+                                                    el.id !== user.id && el.friend === 'pending' ?
+                                                        <button onClick={() => cancelFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Demande envoyé</button> :
+                                                        el.id !== user.id && el.friend === 'received' ?
+                                                        <button onClick={() => acceptFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Accepter demande</button> :
+                                                        el.id !== user.id && el.friend === '' &&
+                                                        <button onClick={() => sendingFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Ajouter</button>   
+                                                }
+                                                </>
                                             }
                                         </div>
-                                        <h3>{el.fullname}</h3>
                                     </div>
-                                    <p>Amis depuis le {new Date(el.created * 1000).toLocaleDateString("fr-FR")}</p>
-                                </div></a>
-                            })
-                            :
-                            <p className="profil__content__left__alone">Aucun amis</p>
-                        }
-                    </div>
-                    <div className="profil__content__articles">
-                        {
-                            postData.map(el => {
-                                return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost()} />
-                            })
-                        }
-                    </div>
-                </section>
+
+
+
+
+                                            /* 
+                                            friendRelation === "pending" ?
+                                            <button onClick={cancelFriendQuery}></button>
+                                            :
+                                            friendRelation === "received" ?
+                                            <button onClick={acceptFriendQuery}>Accepter demande</button>
+                                            :
+                                            friendRelation === "friend" ?
+                                            <button onClick={handleFriendDeleteModal}>Supprimer des amis</button>
+                                            :
+                                            <button onClick={() => sendingFriendQuery(params.id)}>Ajouter</button>
+                                            */
+
+
+
+
+
+
+
+
+
+
+
+                                })
+                            }
+                        </div>
+
+                    </section>
+                    :
+                    <section className="profil__content">
+                        <div className="profil__content__left">
+                            {
+                                friends.length > 0 ?
+                                friends.map(el => {
+                                    return <a key={el.id} href={"/profil_=" + el.id}><div className="profil__content__left__friend">
+                                        <div className="profil__content__left__friend__infos">
+                                            <div className="profil__content__left__friend__infos__imgCont">
+                                                {
+                                                    el.profilImg !== null ? <img src={el.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" />
+                                                }
+                                            </div>
+                                            <h3>{el.fullname}</h3>
+                                        </div>
+                                        <p>Amis depuis le {new Date(el.created * 1000).toLocaleDateString("fr-FR")}</p>
+                                    </div></a>
+                                })
+                                :
+                                <p className="profil__content__left__alone">Aucun amis</p>
+                            }
+                        </div>
+                        <div className="profil__content__articles">
+                            {
+                                postData.map(el => {
+                                    return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost()} />
+                                })
+                            }
+                        </div>
+                    </section>
+                }
+                </>
             }
         </main>
         {

@@ -266,7 +266,6 @@ const Home = () => {
         <Header />
         <main className="home">
             <section className="home__newContent">
-            <button onClick={loadPosts}>ok</button>
                 <div className="home__newContent__new">
                     <h1>Créer un nouveau sujet</h1>
                     <div className="home__newContent__new__errorCont"></div>

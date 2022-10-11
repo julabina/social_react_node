@@ -1429,7 +1429,21 @@ main {
   border-top: 1px solid #d5d6df;
   width: 1000px;
   margin-top: 50px;
-  height: 120px;
+  height: 60px;
+}
+.profil__top__menu p {
+  color: #4e5166;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-decoration: underline;
+  margin: 0 10px;
+  text-decoration-thickness: 2px;
+  cursor: pointer;
+  transition: all 120ms ease-in-out;
+}
+.profil__top__menu p:hover {
+  color: #fd2d01;
+  transition: all 120ms ease-in-out;
 }
 .profil__content {
   display: flex;
@@ -1645,6 +1659,91 @@ main {
 .profil__changeProfilImg__modal__btnCont button:hover, .profil__confirmCancelRelation__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+.profil__friendsList {
+  width: 1000px;
+  border-radius: 7px;
+  margin: 25px 0;
+  background: white;
+  box-sizing: border-box;
+  padding: 25px 40px 70px;
+  box-shadow: 1px 0 20px rgba(0, 0, 0, 0.199);
+}
+.profil__friendsList h2 {
+  font-size: 1.4em;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 70px;
+  color: #4e5166;
+}
+.profil__friendsList__list {
+  width: 900px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(430px, 430px));
+  grid-auto-rows: 110px;
+  grid-gap: 20px;
+}
+.profil__friendsList__list__friend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #cfcfcf;
+  border-radius: 7px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  width: 430px;
+  height: 110px;
+}
+.profil__friendsList__list__friend__left {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.profil__friendsList__list__friend__left__imgCont {
+  height: 85px;
+  width: 85px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 15px;
+}
+.profil__friendsList__list__friend__left__imgCont img {
+  height: 85px;
+  width: 85px;
+}
+.profil__friendsList__list__friend__left__name {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #4e5166;
+  transition: all 150ms ease-in-out;
+}
+.profil__friendsList__list__friend__left:hover .profil__friendsList__list__friend__left__name {
+  color: #fd2d01;
+  transition: all 150ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__addBtn {
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__addBtn:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__menu {
+  cursor: pointer;
+  color: #4e5166;
+  transition: all 120ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__menu:hover {
+  color: #fd2d01;
+  transition: all 120ms ease-in-out;
 }
 
 .messenger {

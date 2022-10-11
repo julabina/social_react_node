@@ -122,7 +122,21 @@
             border-top: 1px solid lighten(map-get($map: $colors, $key:tertiary ), 50);
             width: 1000px;
             margin-top: 50px;
-            height: 120px;
+            height: 60px;
+            p {
+                color: map-get($map: $colors, $key: tertiary);
+                font-size: 1.1em;
+                font-weight: 600;
+                text-decoration:underline;
+                margin: 0 10px;
+                text-decoration-thickness: 2px;
+                cursor: pointer;
+                transition: all 120ms ease-in-out;
+                &:hover {
+                    color: map-get($map: $colors, $key: primary);
+                    transition: all 120ms ease-in-out;
+                }
+            }
         }
     }
     &__content {
@@ -301,6 +315,80 @@
                 button {
                     @include btn;
                     margin: 0 7px;
+                }
+            }
+        }
+    }
+    &__friendsList {
+        width: 1000px;
+        border-radius: 7px;
+        margin: 25px 0;
+        background: white;
+        box-sizing: border-box;
+        padding: 25px 40px 70px;
+        box-shadow: 1px 0 20px rgba(0, 0, 0, 0.199);
+        h2 {
+            font-size: 1.4em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 70px;
+            color: map-get($map: $colors, $key: tertiary);
+        }
+        &__list {
+            width: 900px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(430px, 430px));
+            grid-auto-rows: 110px;
+            grid-gap: 20px;
+            &__friend {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: 1px solid lighten(map-get($map: $colors, $key: light-gray), 25);
+                border-radius: 7px;
+                box-sizing: border-box;
+                padding: 0 10px;
+                width: 430px;
+                height: 110px;
+                &__left {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    &__imgCont {
+                        height: 85px;
+                        width: 85px;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        margin-right: 15px;
+                        img {
+                            height: 85px;
+                            width: 85px;
+                        }
+                    }
+                    &__name {
+                        font-size: 1.2em;
+                        font-weight: 600;
+                        color: map-get($map: $colors, $key: tertiary);
+                        transition: all 150ms ease-in-out;
+                    }
+                    &:hover &__name {
+                        color: map-get($map: $colors, $key: primary);
+                        transition: all 150ms ease-in-out;
+                    }
+                }
+                &__right {
+                    &__addBtn {
+                        @include btn;
+                    }
+                    &__menu {
+                        cursor: pointer;
+                        color:map-get($map: $colors, $key: tertiary);
+                        transition: all 120ms ease-in-out;
+                        &:hover {
+                            color:map-get($map: $colors, $key: primary);
+                            transition: all 120ms ease-in-out;
+                        }
+                    }
                 }
             }
         }

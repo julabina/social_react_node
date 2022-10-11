@@ -4,7 +4,6 @@ import Log from "./Containers/Log/Log";
 import Messenger from "./Containers/Messenger/Messenger";
 import NotFound from "./Containers/NotFound/NotFound";
 import Profil from "./Containers/Profil/Profil";
-import Friend from "./Containers/Friend/Friend";
 import Sign from "./Containers/Sign/Sign";
 import About from "./Containers/About/About";
 import Legals from "./Containers/Legals/Legals";
@@ -16,7 +15,6 @@ function App() {
         <Route path="/connexion" element={<Log />} />
         <Route path="/inscription" element={<Sign />} />
         <Route path="/profil_=:id" element={<Profil />} />
-        <Route path="/amis" element={<Friend />} />
         <Route path="/mentions-legales" element={<Legals />} />
         <Route path="/a-propos" element={<About />} />
         <Route path="/messagerie">

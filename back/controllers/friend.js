@@ -26,13 +26,13 @@ exports.createFriendQuery = (req, res, next) => {
             const user1 = req.auth.userId;
             const user2 = req.params.id;
             const newChatId = v4();
-            
+
             const newChat = new Chat({
                 id: newChatId,
-                mainId: user1,
-                userId: user2
+                userOne: user1,
+                userTwo: user2
             });
-            
+
             const friendsQuery = new Friend({
                 mainId: user1,
                 userId: user2,
@@ -47,7 +47,7 @@ exports.createFriendQuery = (req, res, next) => {
             });
             
             newChat.save()
-                .then(() => {
+            .then(() => {
                     friendsQuery.save()
                         .then(() => {
                             friendReceived.save()
@@ -378,8 +378,41 @@ exports.getFriends = (req, res, next) => {
                 return res.status(404).json({ message })
             }
             
-            const message = "amis trouvé.";
+            const message = "Amis trouvé.";
             res.status(200).json({ message, data: friends })
+        })
+        .catch(error => res.status(500).json({ error }));
+
+};
+
+exports.getRelations = (req, res, next) => {
+
+    User.hasOne(UserInfo);
+    UserInfo.belongsTo(User);
+    User.hasMany(Friend);
+    Friend.belongsTo(User);
+
+    Friend.findAll({
+        where: {
+            mainId: req.params.id,
+        },
+        include: [
+            {
+                model: User,
+                include: {
+                    model: UserInfo
+                }
+            }
+        ]
+    })
+        .then(relation => {
+            if(!relation) {
+                const message = "Aucune relation trouvé.";
+                return res.status(404).json({ message })
+            }
+            
+            const message = "Relations trouvé.";
+            res.status(200).json({ message, data: relation })
         })
         .catch(error => res.status(500).json({ error }));
 
