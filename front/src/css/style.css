@@ -493,9 +493,9 @@ body {
   transition: all 110ms ease-in-out;
 }
 .comment__top__menuCont__menu {
+  position: absolute;
   display: flex;
   flex-direction: column;
-  position: absolute;
   z-index: 100;
   right: 0;
   padding: 10px 15px;
@@ -742,9 +742,9 @@ body {
   transition: all 110ms ease-in-out;
 }
 .response__top__menuCont__menu {
+  position: absolute;
   display: flex;
   flex-direction: column;
-  position: absolute;
   z-index: 100;
   right: 0;
   padding: 10px 15px;
@@ -1736,14 +1736,43 @@ main {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }
-.profil__friendsList__list__friend__right__menu {
+.profil__friendsList__list__friend__right__menuCont {
+  position: relative;
+}
+.profil__friendsList__list__friend__right__menuCont__icon {
   cursor: pointer;
   color: #4e5166;
   transition: all 120ms ease-in-out;
 }
-.profil__friendsList__list__friend__right__menu:hover {
+.profil__friendsList__list__friend__right__menuCont__icon:hover {
   color: #fd2d01;
   transition: all 120ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__menuCont__menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  right: 0;
+  padding: 10px 15px;
+  width: 185px;
+  background: white;
+  border-radius: 6px;
+  line-height: 1.4;
+  box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
+}
+.profil__friendsList__list__friend__right__menuCont__menu__separator {
+  border-bottom: 1px solid #e6e7ec;
+  margin: 5px 0;
+}
+.profil__friendsList__list__friend__right__menuCont__menu__link {
+  color: #4e5166;
+  cursor: pointer;
+  transition: all 140ms ease-in-out;
+}
+.profil__friendsList__list__friend__right__menuCont__menu__link:hover {
+  color: #fd2d01;
+  transition: all 140ms ease-in-out;
 }
 
 .messenger {

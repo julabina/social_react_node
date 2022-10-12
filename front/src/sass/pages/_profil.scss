@@ -380,13 +380,19 @@
                     &__addBtn {
                         @include btn;
                     }
-                    &__menu {
-                        cursor: pointer;
-                        color:map-get($map: $colors, $key: tertiary);
-                        transition: all 120ms ease-in-out;
-                        &:hover {
-                            color:map-get($map: $colors, $key: primary);
+                    &__menuCont {
+                        position: relative;
+                        &__icon {
+                            cursor: pointer;
+                            color:map-get($map: $colors, $key: tertiary);
                             transition: all 120ms ease-in-out;
+                            &:hover {
+                                color:map-get($map: $colors, $key: primary);
+                                transition: all 120ms ease-in-out;
+                            }
+                        }
+                        &__menu {
+                            @include tinyMenu;
                         }
                     }
                 }

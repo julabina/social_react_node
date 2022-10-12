@@ -177,30 +177,7 @@
                 }
             }
             &__menu {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                z-index: 100;
-                right: 0;
-                padding: 10px 15px;
-                width: 185px;
-                background: white;   
-                border-radius: 6px;
-                line-height: 1.4;
-                box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
-                &__separator {
-                    border-bottom: 1px solid lighten(map-get($map: $colors, $key:tertiary ), 56);
-                    margin: 5px 0;
-                }
-                &__link {
-                    color: map-get($map: $colors, $key: tertiary);
-                    cursor: pointer;
-                    transition: all 140ms ease-in-out;
-                    &:hover {
-                        color: map-get($map: $colors, $key: primary);
-                        transition: all 140ms ease-in-out;
-                    }
-                }
+                @include tinyMenu;
             }
         }
     }
@@ -255,6 +232,33 @@
                     margin: 0 10px;
                 }
             }
+        }
+    }
+}
+
+@mixin tinyMenu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    right: 0;
+    padding: 10px 15px;
+    width: 185px;
+    background: white;   
+    border-radius: 6px;
+    line-height: 1.4;
+    box-shadow: 2px 0 18px rgba(0, 0, 0, 0.212);
+    &__separator {
+        border-bottom: 1px solid lighten(map-get($map: $colors, $key:tertiary ), 56);
+        margin: 5px 0;
+    }
+    &__link {
+        color: map-get($map: $colors, $key: tertiary);
+        cursor: pointer;
+        transition: all 140ms ease-in-out;
+        &:hover {
+            color: map-get($map: $colors, $key: primary);
+            transition: all 140ms ease-in-out;
         }
     }
 }

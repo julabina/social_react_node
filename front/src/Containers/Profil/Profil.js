@@ -3,11 +3,11 @@ import Header from "../../Components/Header/Header";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import PostCard from '../../Components/PostCard/PostCard';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
 import ImageUploading from 'react-images-uploading';
+import Friend from '../../Components/Friend/Friend';
 
 const Profil = () => {
 
@@ -346,6 +346,7 @@ const Profil = () => {
     }
 
     const handleFriendDeleteModal = () => {
+
         setToggleFriendDeleteModal(!toggleFriendDeleteModal);
     }
 
@@ -410,8 +411,8 @@ const Profil = () => {
             })
     }
     
-    const cancelFriendRelation = () => {
-        fetch('http://localhost:3000/api/friends/cancelRelation/' + params.id, {
+    const cancelFriendRelation = (id) => {
+        fetch('http://localhost:3000/api/friends/cancelRelation/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -421,8 +422,11 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                handleFriendDeleteModal();
+                setToggleFriendDeleteModal(false);
                 getIsFriend(user.token);
+                if (id !== params.id) {
+                    window.location.reload();                    
+                }
             })
     }
 
@@ -647,7 +651,7 @@ const Profil = () => {
                                     <button onClick={() => acceptFriendQuery(params.id)}>Accepter demande</button>
                                     :
                                     friendRelation === "friend" ?
-                                    <button onClick={handleFriendDeleteModal}>Supprimer des amis</button>
+                                    <button onClick={handleFriendDeleteModal}>Retirer des amis</button>
                                     :
                                     <button onClick={() => sendingFriendQuery(params.id)}>Ajouter</button>
                                 }
@@ -703,66 +707,7 @@ const Profil = () => {
                         <div className="profil__friendsList__list">
                             {
                                 friends.map(el => {
-                                    return <div key={el.id} className='profil__friendsList__list__friend'>
-                                        <a href={"/profil_=" + el.id}><div className="profil__friendsList__list__friend__left">
-                                            <div className="profil__friendsList__list__friend__left__imgCont">
-                                                {
-                                                    el.profilImg !== null ?
-                                                    <img src={el.profilImg} alt={"photo de profil de " + el.firstname + el.lastname} />
-                                                    :
-                                                    <FontAwesomeIcon icon={faUser} className="profil__top__pictures__profilImg__icon" />
-                                                }
-                                            </div>
-                                            <p className='profil__friendsList__list__friend__left__name'>{el.fullname}</p>
-                                        </div></a>
-                                        <div className="profil__friendsList__list__friend__right">
-                                            {
-                                                user.id === params.id ? 
-                                                <FontAwesomeIcon className='profil__friendsList__list__friend__right__menu' icon={faEllipsis} />
-                                                :
-                                                <>
-                                                {
-                                                    el.id !== user.id && el.friend === "friend" ?
-                                                        <FontAwesomeIcon className='profil__friendsList__list__friend__right__menu' icon={faEllipsis} />
-                                                    :
-                                                    el.id !== user.id && el.friend === 'pending' ?
-                                                        <button onClick={() => cancelFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Demande envoyé</button> :
-                                                        el.id !== user.id && el.friend === 'received' ?
-                                                        <button onClick={() => acceptFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Accepter demande</button> :
-                                                        el.id !== user.id && el.friend === '' &&
-                                                        <button onClick={() => sendingFriendQuery(el.id)} className='profil__friendsList__list__friend__right__addBtn'>Ajouter</button>   
-                                                }
-                                                </>
-                                            }
-                                        </div>
-                                    </div>
-
-
-
-
-                                            /* 
-                                            friendRelation === "pending" ?
-                                            <button onClick={cancelFriendQuery}></button>
-                                            :
-                                            friendRelation === "received" ?
-                                            <button onClick={acceptFriendQuery}>Accepter demande</button>
-                                            :
-                                            friendRelation === "friend" ?
-                                            <button onClick={handleFriendDeleteModal}>Supprimer des amis</button>
-                                            :
-                                            <button onClick={() => sendingFriendQuery(params.id)}>Ajouter</button>
-                                            */
-
-
-
-
-
-
-
-
-
-
-
+                                    return <Friend key={el.id} fullname={el.fullname} id={el.id} profilImg={el.profilImg} currentUserId={user.id} friend={el.friend} paramsId={params.id} sendingQueryFunc={sendingFriendQuery} cancelQueryFunc={cancelFriendQuery} acceptQueryFunc={acceptFriendQuery} cancelRelationFunc={cancelFriendRelation} />
                                 })
                             }
                         </div>
@@ -853,7 +798,7 @@ const Profil = () => {
                     <h2>Ne plus etre ami avec {userInfos.firstname}</h2>
                     <div className="profil__confirmCancelRelation__modal__btnCont">
                         <button onClick={handleFriendDeleteModal}>Annuler</button>
-                        <button onClick={cancelFriendRelation}>Ok</button>
+                        <button onClick={() => cancelFriendRelation(params.id)}>Ok</button>
                     </div>
                 </div>
             </div>
