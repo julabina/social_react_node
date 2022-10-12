@@ -1,11 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../Components/Header/Header';
+import { decodeToken, isExpired } from 'react-jwt';
+import { useNavigate } from 'react-router-dom';
 
 const Legals = () => {
+
+    const navigate = useNavigate();
+
+    const [logStatus, setLogStatus] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem('token') !== null) {
+            let getToken = localStorage.getItem('token');
+            let token = JSON.parse(getToken);
+            if (token !== null) {
+                let decodedToken = decodeToken(token.version);
+                let isTokenExpired = isExpired(token.version);
+                if (decodedToken.userId !== token.content || isTokenExpired === true) {
+                    // DISCONNECT
+                    localStorage.removeItem('token');
+                    return navigate('/connexion', { replace: true });
+                };
+                const newUserObj = {
+                    token: token.version,
+                    id: decodedToken.userId,
+                };
+                setLogStatus(true);
+            } 
+        }
+
+    },[]);
+
     return (
         <>
-        <Header />
+        {
+            logStatus === true &&
+            <Header />
+        }
         <main className='legals'>
+            {
+                logStatus === false &&
+                <a className='legals__signLink' href="/inscription">Créer un compte</a>
+            }
             <section className="legals__content">
                 <h1>Mentions légales</h1>
 

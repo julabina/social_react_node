@@ -2,7 +2,7 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap");
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -63,7 +63,7 @@ a {
 }
 
 body {
-  font-family: "Barlow", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 .postArticle {
@@ -1155,6 +1155,9 @@ main {
   color: #fd2d01;
   transition: all 100ms ease-in-out;
 }
+.sign__section__link--noMarg {
+  margin-left: 0;
+}
 
 .login {
   height: 100vh;
@@ -1243,6 +1246,9 @@ main {
 .login__section__link:hover {
   color: #fd2d01;
   transition: all 100ms ease-in-out;
+}
+.login__section__link--noMarg {
+  margin-left: 0;
 }
 .login__section__form {
   width: 350px;
@@ -2047,6 +2053,17 @@ main {
   bottom: 0;
   left: 0;
   right: 0;
+}
+.legals__signLink {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  color: blue;
+  transition: all 140ms ease-in-out;
+}
+.legals__signLink:hover {
+  color: #fd2d01;
+  transition: all 140ms ease-in-out;
 }
 .legals__content {
   position: absolute;

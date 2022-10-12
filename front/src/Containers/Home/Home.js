@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from "../../Components/Header/Header";
 import PostCard from '../../Components/PostCard/PostCard';
 import ImageUploading from 'react-images-uploading';
@@ -10,7 +10,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Home = () => {
 
     const navigate = useNavigate();
-    const ref = useRef(null);
 
     const [newPost, setNewPost] = useState({text:""});
     const [postData, setPostData] = useState([]);
@@ -19,9 +18,9 @@ const Home = () => {
     const [user, setUser] = useState({token : "", id : ""})
     const [isAdmin, setIsAdmin] = useState(false);
     const [reload, setReload] = useState(false);
+    const [logStatus, setLogStatus] = useState(false);
 
     useEffect(() => {
-
         if (localStorage.getItem('token') !== null) {
             let getToken = localStorage.getItem('token');
             let token = JSON.parse(getToken);
@@ -40,6 +39,7 @@ const Home = () => {
                 setUser(newUserObj);
                 getRole(newUserObj.id, newUserObj.token);
                 getAllPosts(newUserObj.id);
+                setLogStatus(true);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -128,8 +128,8 @@ const Home = () => {
         }
         
         if (newPost.text !== "") {   
-            if (newPost.text.length < 10 || newPost.text.length > 500) {
-                errorP.textContent = '- La longueur du contenu doit être compris entre 10 et 500 caractères.'; 
+            if (newPost.text.length > 500) {
+                errorP.textContent = '- La longueur du contenu ne doit pas dépasser 500 caractères.'; 
                 return errorCont.append(errorP);
             }
         }
@@ -263,7 +263,7 @@ const Home = () => {
 
     return (
         <>
-        <Header />
+        <Header logged={logStatus} />
         <main className="home">
             <section className="home__newContent">
                 <div className="home__newContent__new">

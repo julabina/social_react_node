@@ -19,6 +19,7 @@ const Profil = () => {
     const [toggleFriend, setToggleFriend] = useState(false);
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
+    const [logStatus, setLogStatus] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
     const [friends, setFriends] = useState([]);
     const [currentUserFriends, setCurrentUserFriends] = useState([]);
@@ -51,6 +52,7 @@ const Profil = () => {
                 setUser(newUserObj);
                 getUserInfo(newUserObj);
                 getAllFriends(params.id, newUserObj.token);
+                setLogStatus(true);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -556,7 +558,7 @@ const Profil = () => {
 
     return (
         <>
-        <Header />
+        <Header logged={logStatus} />
         <main className='profil'>
 
             <section className='profil__top'>

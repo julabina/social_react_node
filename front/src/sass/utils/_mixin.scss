@@ -90,6 +90,9 @@
                 color: map-get($map: $colors, $key: primary);
                 transition: all 100ms ease-in-out;
             }
+            &--noMarg {
+                margin-left: 0;
+            }
         }
     }
 }

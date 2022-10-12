@@ -24,6 +24,7 @@ const Messenger = () => {
     const [logged, setLogged] = useState(false);
     const [reload, setReload] = useState(false);
     const [paramsLoad, setParamsLoad] = useState(false);
+    const [logStatus, setLogStatus] = useState(false);
     const [friendInfos, setFriendInfos] = useState({})
 
    /*  useEffect(() => {
@@ -263,6 +264,7 @@ const Messenger = () => {
                 setLogged(true);
                 getUserInfos(newUserObj.id);
                 getAllFriends(newUserObj.id, newUserObj.token);
+                setLogStatus(true);
                 /* getRole(newUserObj.id, newUserObj.token);
                 getAllPosts(newUserObj.id);
                 connectToSocket(newUserObj.id); */
@@ -498,7 +500,7 @@ const Messenger = () => {
     
     return (
         <>
-        <Header />
+        <Header logged={logStatus} />
         <main className='messenger'>
             <section className="messenger__friendsList">
                 {

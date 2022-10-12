@@ -143,7 +143,7 @@ const Sign = () => {
                     </div>
                     <div className='sign__section__form__checkCont'>
                             <input  onInput={(e) => controlInputs('check', e.target.value)} value={signForm.check} type="checkbox" id="signCheck" />
-                            <label htmlFor="signCheck">En cochant cette case blablabla</label>
+                            <label htmlFor="signCheck">En cochant cette case, vous accepter les <a className='login__section__link login__section__link--noMarg' href="/mentions-legales">CGU</a></label>
                     </div>
                     <div className="sign__section__form__btnCont">
                         <button onClick={checkInputs}>Créer</button>

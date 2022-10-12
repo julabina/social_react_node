@@ -6,14 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 
-const Header = () => {
+const Header = (props) => {
 
     const [user, setUser] = useState({ token: "", id: "" });
     const [hideHeader, setHideHeader] = useState(true);
     const [userData, setUserData] = useState({ userId: "", firstname: "", lastname: "", profilImg: "" });
 
+    console.log("454zaezaezae545");
     useEffect(() => {
-        
+        console.log("454545");
         getUserInfos();
     },[]);
     
@@ -57,7 +58,9 @@ const Header = () => {
         }
     };
     
-    getUserId();
+    if(props.logged === true) {
+        getUserId();
+    }
 
     return (
         <header className="header">

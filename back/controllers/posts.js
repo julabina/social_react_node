@@ -55,8 +55,8 @@ exports.createPost = (req, res, next) => {
         let textWithoutTag = "";
         
         if (JSON.parse(req.body.text) !== "") {  
-            if(JSON.parse(req.body.text).length < 10 || JSON.parse(req.body.text).length > 500) {
-                const message = "La longueur du contenu doit être compris entre 10 et 500 caractères.";
+            if(JSON.parse(req.body.text).length > 500) {
+                const message = "La longueur du contenu ne doit pas dépasser 500 caractères.";
                 return res.status(401).json({ error: message })
             } else {
                 textWithoutTag = JSON.parse(req.body.text).replace(/<\/?[^>]+>/g,'');
@@ -149,8 +149,8 @@ exports.modifyPost = (req, res, next) => {
                 let textWithoutTag = ""
 
                 if (JSON.parse(req.body.text) !== "") {  
-                    if(JSON.parse(req.body.text).length < 10 || JSON.parse(req.body.text).length > 500) {
-                        const message = "La longueur du contenu doit être compris entre 10 et 500 caractères.";
+                    if(JSON.parse(req.body.text).length > 500) {
+                        const message = "La longueur du contenu ne doit pas dépasser 500 caractères.";
                         return res.status(401).json({ error: message })
                     } else {
                         textWithoutTag = JSON.parse(req.body.text).replace(/<\/?[^>]+>/g,'');
