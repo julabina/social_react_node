@@ -1,5 +1,6 @@
 const { v4 } = require('uuid');
 const { Friend, Chat, User, UserInfo } = require('../db/sequelize');
+const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 /**
  * create friends relation with pending status
@@ -52,14 +53,38 @@ exports.createFriendQuery = (req, res, next) => {
                         .then(() => {
                             friendReceived.save()
                                 .then(() => {
-                                    const message = "Demande bien créé.";
+                                    const message = "Demande bien créée.";
                                     res.status(201).json({ message, success: true });
                                 })
-                                .catch(error => res.status(501).json({ error }));
+                                .catch(error => {
+                                    if (error instanceof ValidationError) {
+                                        return res.status(400).json({message: error.message, data: error}); 
+                                    } 
+                                    if (error instanceof UniqueConstraintError) {
+                                        return res.status(400).json({message: error.message, data: error});
+                                    }
+                                    res.status(500).json({ error }); 
+                                });
                         })
-                        .catch(error => res.status(500).json({ error }));
+                        .catch(error => {
+                            if (error instanceof ValidationError) {
+                                return res.status(400).json({message: error.message, data: error}); 
+                            } 
+                            if (error instanceof UniqueConstraintError) {
+                                return res.status(400).json({message: error.message, data: error});
+                            }
+                            res.status(500).json({ error }); 
+                        });
                 })
-                .catch(error => res.status(500).json({ error }));
+                .catch(error => {
+                    if (error instanceof ValidationError) {
+                        return res.status(400).json({message: error.message, data: error}); 
+                    } 
+                    if (error instanceof UniqueConstraintError) {
+                        return res.status(400).json({message: error.message, data: error});
+                    }
+                    res.status(500).json({ error }); 
+                });
                 
         })
         .catch(error => res.status(500).json({ error }));
@@ -182,7 +207,7 @@ exports.acceptFriendQuery = (req, res, next) => {
     })
         .then(relation => {
             if(!relation) {
-                const message = "Aucune relation trouvé.";
+                const message = "Aucune relation trouvée.";
                 return res.status(404).json({ message });
             }
             if (relation.status !== "received") {
@@ -205,7 +230,7 @@ exports.acceptFriendQuery = (req, res, next) => {
                                 relation.destroy()
                                     .then(() => {
 
-                                        const message = "Aucune relation trouvé.";
+                                        const message = "Aucune relation trouvée.";
                                         return res.status(404).json({ message });
                                     })
                                     .catch(error => {
@@ -220,11 +245,27 @@ exports.acceptFriendQuery = (req, res, next) => {
                                     const message_= "Relation mise à jour.";
                                     res.status(201).json({ message, success: true });
                                 })
-                                .catch(error => res.status(500).json({ error }));
+                                .catch(error => {
+                                    if (error instanceof ValidationError) {
+                                        return res.status(400).json({message: error.message, data: error}); 
+                                    } 
+                                    if (error instanceof UniqueConstraintError) {
+                                        return res.status(400).json({message: error.message, data: error});
+                                    }
+                                    res.status(500).json({ error }); 
+                                });
                         })
                         .catch(error => res.status(500).json({ error }));
                 })
-                .catch(error => res.status(500).json({ error }));
+                .catch(error => {
+                    if (error instanceof ValidationError) {
+                        return res.status(400).json({message: error.message, data: error}); 
+                    } 
+                    if (error instanceof UniqueConstraintError) {
+                        return res.status(400).json({message: error.message, data: error});
+                    }
+                    res.status(500).json({ error }); 
+                });
         })
         .catch(error => res.status(500).json({ error }));
 
@@ -256,7 +297,7 @@ exports.cancelRelation = (req, res, next) => {
             })
                 .then(secondRelation => {
                     if(!firstRelation && !secondRelation) {
-                        const message = "Aucune relation trouvé.";
+                        const message = "Aucune relation trouvée.";
                         return res.status(404).json({ message });
                     } else if(!firstRelation) {
                         chatId = secondRelation.dataValues.chatId;
@@ -265,13 +306,13 @@ exports.cancelRelation = (req, res, next) => {
                                 Chat.findByPk(chatId)
                                     .then(chat => {
                                         if (!chat) {
-                                            const message = "Aucune conversation trouvé.";
+                                            const message = "Aucune conversation trouvée.";
                                             return res.status(201).json({ message });
                                         }
 
                                         chat.destroy()
                                             .then(() => {
-                                                const message = "Relation bien supprimé.";
+                                                const message = "Relation bien supprimée.";
                                                 return res.status(201).json({ message, success: true });
                                             })
                                             .catch(error => {
@@ -293,13 +334,13 @@ exports.cancelRelation = (req, res, next) => {
                                 Chat.findByPk(chatId)
                                     .then(chat => {
                                         if (!chat) {
-                                            const message = "Aucune conversation trouvé.";
+                                            const message = "Aucune conversation trouvée.";
                                             return res.status(201).json({ message });
                                         }
 
                                         chat.destroy()
                                             .then(() => {
-                                                const message = "Relation bien supprimé.";
+                                                const message = "Relation bien supprimée.";
                                                 return res.status(201).json({ message, success: true });
                                             })
                                             .catch(error => {
@@ -323,13 +364,13 @@ exports.cancelRelation = (req, res, next) => {
                                         Chat.findByPk(chatId)
                                             .then(chat => {
                                                 if (!chat) {
-                                                    const message = "Aucune conversation trouvé.";
+                                                    const message = "Aucune conversation trouvée.";
                                                     return res.status(201).json({ message });
                                                 }
 
                                                 chat.destroy()
                                                     .then(() => {
-                                                        const message = "Relations bien supprimé.";
+                                                        const message = "Relations bien supprimée.";
                                                         return res.status(201).json({ message, success: true });
                                                     })
                                                     .catch(error => {
@@ -378,7 +419,7 @@ exports.getFriends = (req, res, next) => {
                 return res.status(404).json({ message })
             }
             
-            const message = "Amis trouvé.";
+            const message = "Amis trouvés.";
             res.status(200).json({ message, data: friends })
         })
         .catch(error => res.status(500).json({ error }));
@@ -407,11 +448,11 @@ exports.getRelations = (req, res, next) => {
     })
         .then(relation => {
             if(!relation) {
-                const message = "Aucune relation trouvé.";
+                const message = "Aucune relation trouvée.";
                 return res.status(404).json({ message })
             }
             
-            const message = "Relations trouvé.";
+            const message = "Relations trouvée.";
             res.status(200).json({ message, data: relation })
         })
         .catch(error => res.status(500).json({ error }));

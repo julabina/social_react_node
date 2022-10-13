@@ -390,8 +390,10 @@ const Messenger = () => {
     } */
 
     const checkMessage = () => {
-        if (inputMsg !== "") {
-            sendMessage(inputMsg);
+        if (inputMsg !== "" && inputMsg.length < 501) {
+            const textWithoutTag = inputMsg.replace(/<\/?[^>]+>/g,'');
+
+            sendMessage(textWithoutTag);
         }
     }
 
@@ -504,6 +506,10 @@ const Messenger = () => {
         <main className='messenger'>
             <section className="messenger__friendsList">
                 {
+
+                    friends.length === 0 ?
+                    <p className='messenger__friendsList__noFriend'>Pas encore d'amis</p>
+                    :
                     friends.map(el => {
                         let status = "Hors ligne";
                         let socketId = "";
@@ -569,6 +575,7 @@ const Messenger = () => {
                 <section className='messenger__container'>
                     <div className='messenger__container__messages'>
                     {
+                        (friends.length > 0 && selectedUser.userId !== "") &&
                         messages.map(el => {
                             let msgUsername = el.username;
                             let loggedUser = false;

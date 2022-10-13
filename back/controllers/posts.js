@@ -1,6 +1,7 @@
 const { v4 } = require('uuid');
 const { Post, UserInfo, User, Comment } = require('../db/sequelize');
 const fs = require('fs');
+const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 /**
  * get all posts
@@ -75,7 +76,15 @@ exports.createPost = (req, res, next) => {
                 const message = 'Post bien créé."';
                 res.status(201).json({ message, success: true });
             })
-            .catch(error => res.status(401).json({ error }));
+            .catch(error => {
+                if (error instanceof ValidationError) {
+                    return res.status(400).json({message: error.message, data: error}); 
+                }
+                if (error instanceof UniqueConstraintError) {
+                    return res.status(400).json({message: error.message, data: error});
+                }
+                res.status(401).json({ error });
+            });
         
     } else {
         return res.status(401).json({ error: new error('Aucun contenu ajouté.') });
@@ -112,7 +121,7 @@ exports.createPost = (req, res, next) => {
                             }
                         })
                             .then(() => {
-                                const message = "Le post a bien été supprimer.";
+                                const message = "Le post a bien été supprimé.";
                                 res.status(200).json({ message });
                             })
                             .catch(error => res.status(500).json({ error }));
@@ -128,7 +137,7 @@ exports.createPost = (req, res, next) => {
                         }
                     })
                         .then(() => {
-                            const message = "Le post a bien été supprimer.";
+                            const message = "Le post a bien été supprimé.";
                             res.status(200).json({ message });
                         })
                         .catch(error => res.status(500).json({ error }));
@@ -186,7 +195,15 @@ exports.modifyPost = (req, res, next) => {
                             const message = "Post mis à jour.";
                             res.status(200).json({ message });   
                         })
-                        .catch(error => res.status(500).json({ error }));                       
+                        .catch(error => {
+                            if (error instanceof ValidationError) {
+                                return res.status(400).json({message: error.message, data: error}); 
+                            }
+                            if (error instanceof UniqueConstraintError) {
+                                return res.status(400).json({message: error.message, data: error});
+                            }
+                            res.status(401).json({ error });
+                        });                       
                 } else {
                     post.update(
                         {
@@ -197,7 +214,15 @@ exports.modifyPost = (req, res, next) => {
                             const message = "Post mis à jour.";
                             res.status(200).json({ message });   
                         })
-                        .catch(error => res.status(500).json({ error }));
+                        .catch(error => {
+                            if (error instanceof ValidationError) {
+                                return res.status(400).json({message: error.message, data: error}); 
+                            }
+                            if (error instanceof UniqueConstraintError) {
+                                return res.status(400).json({message: error.message, data: error});
+                            }
+                            res.status(401).json({ error });
+                        });
                 }
             })
             .catch(error => res.status(500).json({ error }));
@@ -217,7 +242,7 @@ exports.deleteCurrentImg = (req, res, next) => {
     Post.findByPk(req.params.id)
         .then(post => {
             if(!post) {
-                return res.status(404).json({ error : 'Post non trouvée.' });
+                return res.status(404).json({ error : 'Post non trouvé.' });
             }
             
             if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
@@ -232,7 +257,7 @@ exports.deleteCurrentImg = (req, res, next) => {
                 }
                 )
                     .then(() => {
-                        const message = "Image bien supprimé.";
+                        const message = "Image bien supprimée.";
                         res.status(200).json({ message });
                     })
                     .catch(error => res.status(400).json({ error }));
@@ -260,7 +285,7 @@ exports.getPicture = (req, res, next) => {
             } 
 
             const image = post.picture;
-            const message = "Une image a bien été trouvé.";
+            const message = "Une image a bien été trouvée.";
             res.status(200).json({ message, data: image })
         })
         .catch(error => res.status(500).json({ error }));
@@ -281,7 +306,7 @@ exports.findAllPostForUser = (req, res, next) => {
     })
         .then(posts => {
             if(!posts) {
-                return res.status(404).json({ error : new error('Aucun post de trouvée.') });
+                return res.status(404).json({ error : new error('Aucun post de trouvé.') });
             }
 
             const message = "Des posts ont bien été trouvé..";

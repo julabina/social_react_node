@@ -3,6 +3,7 @@ const { User, UserInfo } = require('../db/sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 /**
  * create an user account
@@ -19,13 +20,8 @@ exports.sign = (req, res, next) => {
         return res.status(401).json({ message });
 
     } else if(
-        req.body.password !== "" && req.body.email !== "" &&
-        req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)  &&
-        req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i) &&
-        req.body.firstname.match(/^[a-zA-Zé èà]*$/) &&
-        req.body.lastname.match(/^[a-zA-Zé èà]*$/) &&
-        req.body.firstname.length > 1 && req.body.firstname.length < 26 && 
-        req.body.lastname.length > 1 && req.body.lastname.length < 26
+        req.body.password !== "" &&
+        req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
     ) {
         
         bcrypt.hash(req.body.password, 10)
@@ -49,9 +45,25 @@ exports.sign = (req, res, next) => {
                                 const message = "Utilisateur bien créé.";
                                 res.status(201).json({ message });
                             })
-                            .catch(error => res.status(400).json({ message: "Une erreur est survenue lors de la création des informations de l'utilisateur.", error }));
+                            .catch(error => {
+                                if (error instanceof ValidationError) {
+                                    return res.status(400).json({message: error.message, data: error}); 
+                                }
+                                if (error instanceof UniqueConstraintError) {
+                                    return res.status(400).json({message: error.message, data: error});
+                                }
+                                res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                            });
                     })
-                    .catch(error => res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error }));
+                    .catch(error => {
+                        if (error instanceof ValidationError) {
+                            return res.status(400).json({message: error.message, data: error}); 
+                        }
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({message: error.message, data: error});
+                        }
+                        res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                    });
             })
             .catch(error => res.status(500).json({ error }));
 
@@ -69,34 +81,44 @@ exports.sign = (req, res, next) => {
  * @param {*} next 
  */
 exports.login = (req, res, next) => {
-    
-    User.findOne({ where: {email: req.body.email} })
-        .then(user => {
-            if(user === null) {
-                const message = "Aucun utilisateur trouvé.";
-                return res.status(404).json({ message });
-            }
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if(!valid) {
-                        const message = "Le mot de passe est incorrect.";
-                        return res.status(401).json({ message });
-                    }
-                    res.status(200).json({
-                        userId: user.id,
-                        token: jwt.sign(
-                            {userId: user.id},
-                            '' + process.env.REACT_APP_JWT_PRIVATE_KEY + '',
-                            { expiresIn: '24h' }
-                        )
+
+    if (
+        req.body.password !== "" && req.body.email !== "" &&
+        req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)  &&
+        req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i) 
+    ) {    
+        User.findOne({ where: {email: req.body.email} })
+            .then(user => {
+                if(user === null) {
+                    const message = "Aucun utilisateur trouvé.";
+                    return res.status(404).json({ message });
+                }
+                bcrypt.compare(req.body.password, user.password)
+                    .then(valid => {
+                        if(!valid) {
+                            const message = "Le mot de passe est incorrect.";
+                            return res.status(401).json({ message });
+                        }
+                        res.status(200).json({
+                            userId: user.id,
+                            token: jwt.sign(
+                                {userId: user.id},
+                                '' + process.env.REACT_APP_JWT_PRIVATE_KEY + '',
+                                { expiresIn: '24h' }
+                            )
+                        })
                     })
-                })
-                .catch(error => res.status(500).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
+                    .catch(error => res.status(500).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+        } else {
+            const message = 'Les informations sont incorrectes ou incomplètes.';
+            res.status(401).json({ message });
+        }
 };
 
 /**
+ * get info for one user
  * 
  * @param {*} req 
  * @param {*} res 
@@ -144,7 +166,7 @@ exports.changeBaneer = (req, res, next) => {
                     profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
                 })
                 .then(() => {
-                    const message = "Bannière bien modifié.";
+                    const message = "Bannière bien modifiée.";
                     res.status(201).json({ message, success: true });
                 })
                 .catch(error => res.status(501).json({ error }));
@@ -157,7 +179,7 @@ exports.changeBaneer = (req, res, next) => {
                         profilBaneer: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
                     })
                     .then(() => {
-                        const message = "Bannière bien modifié.";
+                        const message = "Bannière bien modifiée.";
                         res.status(201).json({ message, success: true });
                     })
                     .catch(error => res.status(501).json({ error }));
@@ -168,21 +190,19 @@ exports.changeBaneer = (req, res, next) => {
         })
         .catch(error => res.status(503).json({ error }));
     } else {
-        const message = 'Aucune image importé.';
+        const message = 'Aucune image importée.';
         res.status(400).json({ message });
     }
 };
 
 /**
- * edit user fisrtname and lastname
+ * edit user firstname and lastname
  * 
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  */
 exports.editNames = (req, res, next) => {
-
-    if((req.body.firstname !== undefined && req.body.firstname.match(/^[a-zA-Zé èà]*$/)) && (req.body.lastname !== undefined && req.body.lastname.match(/^[a-zA-Zé èà]*$/))) {
 
         UserInfo.findOne({
             where: {
@@ -205,15 +225,19 @@ exports.editNames = (req, res, next) => {
                         const message = "Informations bien modifiés.";
                         res.status(200).json({ message, success: true })
                     })
-                    .catch(error => res.status(500).json({ error }));
+                    .catch(error => {
+                        if (error instanceof ValidationError) {
+                            return res.status(400).json({message: error.message, data: error}); 
+                        }
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({message: error.message, data: error});
+                        }
+                        res.status(401).json({ error });
+                    });
 
             })
             .catch(error => res.status(500).json({ error }));
             
-    } else {
-        const error = "Une erreur s'est produite.";
-        res.status(400).json({ error });
-    }
 };
 
 /**
@@ -224,8 +248,6 @@ exports.editNames = (req, res, next) => {
  * @param {*} next 
  */
 exports.editEmail = (req, res, next) => {
-
-    if((req.body.email !== undefined && req.body.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.new !== undefined && req.body.new.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i)) && (req.body.password !== undefined && req.body.password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/))) {
 
         User.findByPk(req.params.id)
             .then(user => {
@@ -255,18 +277,30 @@ exports.editEmail = (req, res, next) => {
                                 const message = "Email bien modifié.";
                                 res.status(201).json({ message, success: true });
                             })
-                            .catch(error => res.status(500).json({ error }));
+                            .catch(error => {
+                        if (error instanceof ValidationError) {
+                            return res.status(400).json({message: error.message, data: error}); 
+                        }
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({message: error.message, data: error});
+                        }
+                        res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                    });
 
                     })
-                    .catch(error => res.status(500).json({ error }));
+                    .catch(error => {
+                        if (error instanceof ValidationError) {
+                            return res.status(400).json({message: error.message, data: error}); 
+                        }
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({message: error.message, data: error});
+                        }
+                        res.status(401).json({ error });
+                    });
 
             })
             .catch(error => res.status(500).json({ error }));
 
-    } else {
-        const error = "Une erreur s'est produite.";
-        res.status(400).json({ error });
-    }
 
 };
 
@@ -286,7 +320,7 @@ exports.isAdmin = (req, res, next) => {
             res.status(200).json({ isAdmin: false });
         }
     } else {
-        res.status(500).json({ error: "Une erreur est survenu." });
+        res.status(500).json({ error: "Une erreur est survenue." });
     }
 
 };
@@ -309,7 +343,7 @@ exports.changeProfilImg = (req, res, next) => {
         })
         .then(userInfo => {
             if(!userInfo) {
-                return res.status(404).json({ error :'Utilisateur non trouvée.' });
+                return res.status(404).json({ error :'Utilisateur non trouvé.' });
             }
             if(userInfo.userId !== req.auth.userId) {
                 return res.status(401).json({ error : 'Requete non authorisée.' });
@@ -321,7 +355,7 @@ exports.changeProfilImg = (req, res, next) => {
                     profilImg: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
                 })
                 .then(() => {
-                    const message = "Bannière bien modifié.";
+                    const message = "Photo de profil bien modifiée.";
                     res.status(201).json({ message, success: true });
                 })
                 .catch(error => res.status(501).json({ error }));
@@ -334,7 +368,7 @@ exports.changeProfilImg = (req, res, next) => {
                         profilImg: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null
                     })
                     .then(() => {
-                        const message = "Bannière bien modifié.";
+                        const message = "Photo de profil bien modifiée.";
                         res.status(201).json({ message, success: true });
                     })
                     .catch(error => res.status(501).json({ error }));
@@ -344,7 +378,7 @@ exports.changeProfilImg = (req, res, next) => {
         })
         .catch(error => res.status(503).json({ error }));
     } else {
-        const message = 'Aucune image importé.';
+        const message = 'Aucune image importée.';
         res.status(400).json({ message });
     }
 

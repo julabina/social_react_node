@@ -1940,6 +1940,11 @@ main {
   overflow-y: scroll;
   max-height: 60vh;
 }
+.messenger__friendsList__noFriend {
+  width: 260px;
+  margin: 30px 0;
+  text-align: center;
+}
 .messenger__friendsList__friend {
   width: 230px;
   padding: 20px 15px;

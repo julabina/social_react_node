@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             primaryKey: true,
             allowNull: false,
+            unique: {
+                msg: 'L\'id est deja utilisé.'
+            },
             validate: {
                 notEmpty: { msg: "L'id ne doit pas être vide." },
                 notNull: { msg: "L'id est une propriété requise." },

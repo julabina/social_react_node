@@ -1,5 +1,6 @@
 const { v4 } = require('uuid');
 const { Comment, User, UserInfo } = require('../db/sequelize');
+const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 /**
  * find all comments for one post
@@ -29,7 +30,7 @@ exports.findAllComments = (req, res, next) => {
         ]
     })
         .then(({ count, rows }) => {
-            const message = `${count} commentaires bien trouvé.`;
+            const message = `${count} commentaires bien trouvés.`;
             res.status(200).json({ message, data: rows, count });
         })
         .catch(error => res.status(500).json({ error })); 
@@ -61,7 +62,15 @@ exports.createComment = (req, res, next) => {
                 const message = 'Commentaire bien créé.';
                 res.status(201).json({ message, success: true });
             })
-            .catch(error => res.status(500).json({ error }));
+            .catch(error => {
+                if (error instanceof ValidationError) {
+                     return res.status(400).json({message: error.message, data: error}); 
+                } 
+                if (error instanceof UniqueConstraintError) {
+                    return res.status(400).json({message: error.message, data: error});
+                }
+                res.status(500).json({ error }); 
+            });
     }
 };
 
@@ -173,7 +182,15 @@ exports.modifyComment = (req, res, next) => {
                         const message = "Commentaire bien modifié.";
                         res.status(201).json({ message, success : true });
                     })  
-                    .catch(error => res.status(500).json({ error }));  
+                    .catch(error => {
+                        if (error instanceof ValidationError) {
+                             return res.status(400).json({message: error.message, data: error}); 
+                        } 
+                        if (error instanceof UniqueConstraintError) {
+                            return res.status(400).json({message: error.message, data: error});
+                        }
+                        res.status(500).json({ error }); 
+                    });
 
             })
             .catch(error => res.status(500).json({ error }));

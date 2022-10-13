@@ -5,11 +5,19 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: {
                 msg: 'L\'id est deja utilisé.'
+            },
+            allowNull:false,
+            validate: {
+                notEmpty: { msg: "L'id ne doit pas être vide." },
+                notNull: { msg: "L'id est une propriété requise." },
             }
         },
         content: {
             type: DataTypes.TEXT,
-            allowNull: false
+            allowNull: false, 
+            validate: {
+                notNull: { msg: "L'id est une propriété requise." },
+            }
         },
         picture: {
             type: DataTypes.TEXT, 
@@ -17,7 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         userId: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "L'id ne doit pas être vide." },
+                notNull: { msg: "L'id est une propriété requise." },
+            }
         },
         likes: {
             type: DataTypes.INTEGER,

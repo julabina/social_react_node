@@ -52,7 +52,6 @@ const Profil = () => {
                 setUser(newUserObj);
                 getUserInfo(newUserObj);
                 getAllFriends(params.id, newUserObj.token);
-                setLogStatus(true);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -309,6 +308,8 @@ const Profil = () => {
     }
 
     const modifyNames = () => {
+        const successCont = document.querySelector('.profil__edit__successCont');
+
         fetch('http://localhost:3000/api/users/edit/' + user.id, {
             headers: {
                 'Accept': 'application/json',
@@ -321,7 +322,7 @@ const Profil = () => {
             .then(res => res.json())
             .then(data => {
                 if(data.success === true) {
-                    /* message success */
+                    window.location.reload();
                 }
             })
         }
@@ -681,6 +682,7 @@ const Profil = () => {
                 <section className='profil__edit'>
                     <h2>Modifier votre profil</h2>
 
+                    <div className="profil__edit__successCont"></div>
                     <div className="profil__edit__errorCont"></div>
                     <div className="profil__edit__form">
                         <div className="profil__edit__form__tabsCon">
