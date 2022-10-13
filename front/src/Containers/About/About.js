@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../Components/Header/Header';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const About = () => {
 
@@ -42,6 +43,14 @@ const About = () => {
 
     return (
         <>
+        <Helmet>
+            <title>Groupomania - A propos</title>
+            <meta name="title" content="Groupomania - A propos" />
+            <meta
+            name="description"
+            content="Toutes les informations concernant Groupomania ce trouvent sur cette page."
+            />
+        </Helmet>
          <Header user={user} />
         <main className='about'>
             <section>

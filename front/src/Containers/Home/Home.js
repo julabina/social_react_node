@@ -5,6 +5,8 @@ import ImageUploading from 'react-images-uploading';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import ToTop from '../../Components/ToTop/ToTop';
+import { Helmet } from 'react-helmet';
 
 
 const Home = () => {
@@ -79,6 +81,9 @@ const Home = () => {
 
     /**
      * check if current user is an admin
+     * 
+     * @param {*} id 
+     * @param {*} token 
      */
     const getRole = (id, token) => {
         fetch('http://localhost:3000/api/users/isAdmin/' + id ,{
@@ -266,7 +271,16 @@ const Home = () => {
 
     return (
         <>
-         <Header user={user} />
+        <Helmet>
+            <title>Groupomania</title>
+            <meta name="title" content="Groupomania" />
+            <meta
+            name="description"
+            content="La page principale de Groupomania, ou vous pouvez voir, commenter et creer des posts."
+            />
+        </Helmet>
+        <Header user={user} />
+        <ToTop />
         <main className="home">
             <section className="home__newContent">
                 <div className="home__newContent__new">

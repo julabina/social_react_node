@@ -1,0 +1,33 @@
+.toTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    height: 40px;width: 40px;
+    background: map-get($map: $colors, $key: secondary);
+    border-radius: 6px;
+    color: map-get($map: $colors, $key: tertiary);
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.521);
+    transition: all 200ms ease-out;
+    opacity: 0;
+    visibility: hidden;
+    &:hover {
+        color: map-get($map: $colors, $key: primary);
+        transition: color 500ms ease-out;
+    }
+    &--visible {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 500ms ease-out;
+    }
+    /* @include forMobile1 {
+        right: 10px;
+        top: initial;
+        bottom: 80px;
+    } */
+}

@@ -838,6 +838,41 @@ body {
   transition: all 150ms ease-in-out;
 }
 
+.toTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  height: 40px;
+  width: 40px;
+  background: #ffd7d7;
+  border-radius: 6px;
+  color: #4e5166;
+  font-size: 1.2em;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.521);
+  transition: all 200ms ease-out;
+  opacity: 0;
+  visibility: hidden;
+  /* @include forMobile1 {
+      right: 10px;
+      top: initial;
+      bottom: 80px;
+  } */
+}
+.toTop:hover {
+  color: #fd2d01;
+  transition: color 500ms ease-out;
+}
+.toTop--visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 500ms ease-out;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

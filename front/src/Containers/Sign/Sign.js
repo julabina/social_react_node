@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const Sign = () => {
     
@@ -118,6 +119,15 @@ const Sign = () => {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>Groupomania - Inscription</title>
+            <meta name="title" content="Groupomania - Inscription" />
+            <meta
+            name="description"
+            content="Creez un compte groupomania."
+            />
+        </Helmet>
         <main className='sign'>
             <section className='sign__section'>
                 <form className='sign__section__form'>
@@ -152,6 +162,7 @@ const Sign = () => {
                 <a className='login__section__link' href="/connexion">Vous avez deja un compte ?</a>
             </section>
         </main>
+        </>
     );
 };
 

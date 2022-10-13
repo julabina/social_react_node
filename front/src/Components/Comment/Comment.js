@@ -91,7 +91,12 @@ const Comment = (props) => {
      * get all response for one comment
      */
     const getAllResponse = () => {
-        fetch('http://localhost:3000/api/comments/findResponse/' + props.id)
+        fetch('http://localhost:3000/api/comments/findResponse/' + props.id, {
+            headers: {
+                "Authorization": "Bearer " + props.user.token
+            },
+            method: 'GET'
+        })
             .then(res => res.json())
             .then(data => {
                 console.log(data);

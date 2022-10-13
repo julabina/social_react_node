@@ -8,6 +8,7 @@ import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
 import ImageUploading from 'react-images-uploading';
 import Friend from '../../Components/Friend/Friend';
+import { Helmet } from 'react-helmet';
 
 const Profil = () => {
 
@@ -20,6 +21,7 @@ const Profil = () => {
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
     const [logStatus, setLogStatus] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
     const [friends, setFriends] = useState([]);
     const [currentUserFriends, setCurrentUserFriends] = useState([]);
@@ -51,6 +53,7 @@ const Profil = () => {
                 };
                 setUser(newUserObj);
                 getUserInfo(newUserObj);
+                getRole(newUserObj.id, newUserObj.token);
                 getAllFriends(params.id, newUserObj.token);
             } else {
                 // DISCONNECT
@@ -63,7 +66,12 @@ const Profil = () => {
 
     const getUserInfo = (userObj) => {
 
-        fetch('http://localhost:3000/api/users/getUserInfos/' + params.id)
+        fetch('http://localhost:3000/api/users/getUserInfos/' + params.id, {
+            headers: {
+                "Authorization": "Bearer " + userObj.token
+            },
+            method: 'GET'
+        })
             .then(res => res.json())
             .then(data => {
                 console.log(data);
@@ -79,15 +87,42 @@ const Profil = () => {
                 }
                 setUserInfos(newObj);
                 setEditName(newEditObj);
-                getUserPost(userObj.id);
+                getUserPost(userObj.id, userObj.token);
                 if (userObj.id !== params.id) {   
                     getIsFriend(userObj.token);
                 }
             });
     }
 
-    const getUserPost = (id) => {
-        fetch('http://localhost:3000/api/posts/findAllForUser/' + params.id)
+    /**
+     * check if current user is an admin
+     * 
+     * @param {*} id 
+     * @param {*} token 
+     */
+     const getRole = (id, token) => {
+        fetch('http://localhost:3000/api/users/isAdmin/' + id ,{
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if(data.isAdmin === true) {
+                    setIsAdmin(true);
+                }
+            })
+    }
+
+    const getUserPost = (id, token) => {
+        fetch('http://localhost:3000/api/posts/findAllForUser/' + params.id, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET'
+        })
             .then(res => res.json())
             .then(data => {
                 console.log(data);
@@ -567,6 +602,14 @@ const Profil = () => {
 
     return (
         <>
+        <Helmet>
+            <title>Profil de {userInfos.firstname} {userInfos.lastname}</title>
+            <meta name="title" content={"Profil de " + userInfos.firstname + " " + userInfos.lastname} />
+            <meta
+            name="description"
+            content={"La page de profil de " + userInfos.firstname + " " + userInfos.lastname + ", ou vous trouverez tous les posts et informations de l'utilisateur."}
+            />
+        </Helmet>
         <Header user={user} />
         <main className='profil'>
 
@@ -751,7 +794,7 @@ const Profil = () => {
                             {
                                 postData.map(el => {
                                     console.log(el);
-                                    return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost(user.id)} /* isAdmin={isAdmin} */ likedByUser={el.likedByUser} likes={el.likes} />
+                                    return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost(user.id, user.token)} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
                                 })
                             }
                         </div>

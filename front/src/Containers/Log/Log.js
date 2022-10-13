@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const Log = () => {
 
@@ -76,6 +77,15 @@ const Log = () => {
     }
 
     return (
+        <>
+        <Helmet>
+            <title>Groupomania - Connexion</title>
+            <meta name="title" content="Groupomania - Connexion" />
+            <meta
+            name="description"
+            content="Connecter vous à votre compte Groupomania."
+            />
+        </Helmet>
         <main className='login'>
             <section className='login__section'>
                 <form className="login__section__form">
@@ -98,6 +108,7 @@ const Log = () => {
                 <a className='login__section__link' href="/inscription">Vous n'avez pas encore de compte ?</a>
             </section>
         </main>
+        </>
     );
 };
 

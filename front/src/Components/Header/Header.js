@@ -21,8 +21,13 @@ const Header = (props) => {
     
     const getUserInfos = () => {
         if(props.user.id !== "" && props.user.id !== undefined) {
-            const url = 'http://localhost:3000/api/users/getUserInfos/' + props.user.id;
-            fetch(url)
+
+            fetch('http://localhost:3000/api/users/getUserInfos/' + props.user.id, {
+                headers: {
+                    "Authorization": "Bearer " + props.user.token
+                },
+                method: 'GET'
+            })
             .then(res => res.json())
             .then(data => {
                 console.log(data);

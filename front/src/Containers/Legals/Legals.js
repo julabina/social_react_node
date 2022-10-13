@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../Components/Header/Header';
 import { decodeToken, isExpired } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const Legals = () => {
 
@@ -35,6 +36,14 @@ const Legals = () => {
 
     return (
         <>
+        <Helmet>
+            <title>Groupomania - Mentions légales</title>
+            <meta name="title" content="Groupomania - Mentions légales" />
+            <meta
+            name="description"
+            content="Vous trouverez les mentions légales du site Groupomania."
+            />
+        </Helmet>
         {
             logStatus === true &&
             <Header user={user} />

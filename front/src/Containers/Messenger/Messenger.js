@@ -6,6 +6,7 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import Header from '../../Components/Header/Header';
 import Message from '../../Components/Message/Message';
 import socket from "../../socket";
+import { Helmet } from 'react-helmet';
 
 const Messenger = () => {
 
@@ -262,7 +263,7 @@ const Messenger = () => {
                 };
                 setUser(newUserObj);
                 setLogged(true);
-                getUserInfos(newUserObj.id);
+                getUserInfos(newUserObj.id, newUserObj.token);
                 getAllFriends(newUserObj.id, newUserObj.token);
                 setLogStatus(true);
                 /* getRole(newUserObj.id, newUserObj.token);
@@ -279,10 +280,14 @@ const Messenger = () => {
         }; 
     }
 
-    const getUserInfos = (id) => {
+    const getUserInfos = (id, token) => {
         if(id !== "" && id !== undefined) {
-            const url = 'http://localhost:3000/api/users/getUserInfos/' + id;
-            fetch(url)
+            fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                method: 'GET'
+            })
                 .then(res => res.json())
                 .then(data => {
                     let item = {
@@ -300,10 +305,14 @@ const Messenger = () => {
         }
     }
 
-    const getFriendInfos = (id) => {
+    const getFriendInfos = (id, token) => {
         if(id !== "" && id !== undefined) {
-            const url = 'http://localhost:3000/api/users/getUserInfos/' + id;
-            fetch(url)
+            fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                method: 'GET'
+            })
                 .then(res => res.json())
                 .then(data => {
                     let item = {
@@ -469,7 +478,7 @@ const Messenger = () => {
         }
 
         getMessages(chatId);
-        getFriendInfos(userId);
+        getFriendInfos(userId, user.token);
     }
 
     const getMessages = (chatId) => {
@@ -502,6 +511,14 @@ const Messenger = () => {
     
     return (
         <>
+        <Helmet>
+            <title>Groupomania - Messagerie</title>
+            <meta name="title" content="Groupomania - Messagerie" />
+            <meta
+            name="description"
+            content="Restez en contact avec vos amis grace à la messagerie de Groupomania."
+            />
+        </Helmet>
         <Header user={user} />
         <main className='messenger'>
             <section className="messenger__friendsList">
