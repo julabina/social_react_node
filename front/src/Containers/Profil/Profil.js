@@ -20,6 +20,7 @@ const Profil = () => {
     const [toggleFriend, setToggleFriend] = useState(false);
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
+    const [toggleAccountDeleteModal, setToggleAccountDeleteModal] = useState(false);
     const [logStatus, setLogStatus] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
@@ -600,6 +601,30 @@ const Profil = () => {
         }
     }
 
+    const handleToggleDeleteAccountModal = () => {
+        setToggleAccountDeleteModal(!toggleAccountDeleteModal);
+    }
+
+    const deleteAccount = () => {
+        /* handleToggleDeleteAccountModal(); */
+
+        if (params.id === user.id) {   
+            fetch('http://localhost:3000/api/users/delete/' + params.id, {
+                headers: {
+                    "Authorization": "Bearer " + user.token
+                },
+                method: 'DELETE'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === true) {
+                        localStorage.removeItem('token');
+                        navigate('/inscription', { replace: true });
+                    }
+                })
+        }
+    }
+
     return (
         <>
         <Helmet>
@@ -732,6 +757,7 @@ const Profil = () => {
                             <div onClick={() => changeTab(0)} className="profil__edit__form__tabsCon__tab profil__edit__form__tabsCon__tab--active">Informations</div>
                             <div onClick={() => changeTab(1)} className="profil__edit__form__tabsCon__tab">Email</div>
                             <div onClick={() => changeTab(2)} className="profil__edit__form__tabsCon__tab">Mot de passe</div>
+                            <div onClick={handleToggleDeleteAccountModal} className="profil__edit__form__tabsCon__tab profil__edit__form__tabsCon__tab--del">Supprimer le compte</div>
                         </div>
                         <div className="profil__edit__form__container">
                             <input onInput={(e) => ctrlEditInput('firstname', e.target.value)} value={editName.firstname} type="text" placeholder='Prénom'/>
@@ -855,6 +881,19 @@ const Profil = () => {
                     <div className="profil__confirmCancelRelation__modal__btnCont">
                         <button onClick={handleFriendDeleteModal}>Annuler</button>
                         <button onClick={() => cancelFriendRelation(params.id)}>Ok</button>
+                    </div>
+                </div>
+            </div>
+        }
+        {
+            toggleAccountDeleteModal &&
+            <div className="profil__confirmCancelRelation">
+                <div className="profil__confirmCancelRelation__modal">
+                    <h2>Supprimer votre compte ?</h2>
+                    <p className='profil__confirmCancelRelation__modal__para'>Cette action est irréversible</p>
+                    <div className="profil__confirmCancelRelation__modal__btnCont">
+                        <button onClick={handleToggleDeleteAccountModal}>Annuler</button>
+                        <button onClick={deleteAccount}>Ok</button>
                     </div>
                 </div>
             </div>

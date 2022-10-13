@@ -256,10 +256,18 @@
                     &--active {
                         background: map-get($colors, secondary);
                     }
-                    &:last-child {
+                    &--del {
+                        box-sizing: border-box;
+                        width: auto;
+                        padding: 0 15px;
                         border-right: solid 1px lighten(map-get($map: $colors, $key: light-gray), 20);
+                        transition: all 150ms ease-in-out;
                         &:hover {
-                            border-right: solid 4px lighten(map-get($map: $colors, $key: light-gray), 20);
+                            background: map-get($map: $colors, $key: light-red);
+                            transition: all 150ms ease-in-out;
+                            border-width: 1px;
+                            border-bottom: none;
+                            color: map-get($map: $colors, $key: light-white);
                         }
                     }
                 }
@@ -318,6 +326,12 @@
                     @include btn;
                     margin: 0 7px;
                 }
+            }
+            &__para {
+                text-align: center;
+                color: map-get($map: $colors, $key: light-red);
+                margin-bottom: 50px;
+                margin-top: -15px;
             }
         }
     }

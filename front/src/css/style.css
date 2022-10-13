@@ -1621,11 +1621,19 @@ main {
 .profil__edit__form__tabsCon__tab--active {
   background: #ffd7d7;
 }
-.profil__edit__form__tabsCon__tab:last-child {
+.profil__edit__form__tabsCon__tab--del {
+  box-sizing: border-box;
+  width: auto;
+  padding: 0 15px;
   border-right: solid 1px #c2c2c2;
+  transition: all 150ms ease-in-out;
 }
-.profil__edit__form__tabsCon__tab:last-child:hover {
-  border-right: solid 4px #c2c2c2;
+.profil__edit__form__tabsCon__tab--del:hover {
+  background: #dd0000;
+  transition: all 150ms ease-in-out;
+  border-width: 1px;
+  border-bottom: none;
+  color: #eeeeee;
 }
 .profil__edit__form__container {
   display: flex;
@@ -1714,6 +1722,12 @@ main {
 .profil__changeProfilImg__modal__btnCont button:hover, .profil__confirmCancelRelation__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+.profil__changeProfilImg__modal__para, .profil__confirmCancelRelation__modal__para {
+  text-align: center;
+  color: #dd0000;
+  margin-bottom: 50px;
+  margin-top: -15px;
 }
 .profil__friendsList {
   width: 1000px;

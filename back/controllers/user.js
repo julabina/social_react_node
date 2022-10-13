@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-const { User, UserInfo } = require('../db/sequelize');
+const { User, UserInfo, Comment, Post, Friend, Chat, Message } = require('../db/sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -380,6 +380,87 @@ exports.changeProfilImg = (req, res, next) => {
     } else {
         const message = 'Aucune image importée.';
         res.status(400).json({ message });
+    }
+
+};
+
+exports.deleteAccount = (req, res, next) => {
+    
+    if (req.params.id === req.auth.userId) { 
+        
+        let commentsByUser = [];
+        let chatsForUser = []
+        
+        User.findByPk(req.params.id)
+            .then(user => {
+                if (!user) {
+                    const message = "L'utilisateur n'a pas été trouvé.";
+                    return res.status(404).json({ message });
+                }
+                // get comment create by user 
+                
+                Comment.findAll({where: {userId: req.params.id, commentId: null}})
+                    .then(comments => {
+                        if (comments) {  
+                            for (let i = 0; i < comments.length; i++) {
+                                commentsByUser.push(comments[i].id);
+                            }
+                        }
+                        // get chat room used by user
+                        Friend.findAll({where: { mainId: req.params.id }})
+                            .then(friendRelations => {
+                                if (friendRelations) {  
+                                    for (let i = 0; i < friendRelations.length; i++) {
+                                        chatsForUser.push(friendRelations[i].chatId);
+                                    }
+                                }
+
+                                //start to destroy
+
+                                Comment.destroy({where: { commentId: commentsByUser }})
+                                    .then(() => {
+                                        Comment.destroy({where: { userId: req.params.id }})
+                                            .then(() => {
+                                                Message.destroy({where: { chatId: chatsForUser }})
+                                                    .then(() => {
+                                                        Chat.destroy({ where: { id: chatsForUser } })
+                                                            .then(() => {
+                                                                Post.destroy({ where: { userId: req.params.id } })
+                                                                    .then(() => {
+                                                                        Friend.destroy({ where: { chatId: chatsForUser } })
+                                                                            .then(() => {
+                                                                                UserInfo.destroy({where: { userId: req.params.id }})
+                                                                                    .then(() => {
+                                                                                        User.destroy({ where: { id: req.params.id } })
+                                                                                            .then(() => {
+                                                                                                const message = "Utilisateur bien supprimé";
+                                                                                                res.status(200).json({ message, success: true });
+                                                                                            })
+                                                                                            .catch(error =>  res.status(500).json({ error }));
+                                                                                    })
+                                                                                    .catch(error =>  res.status(500).json({ error }));
+                                                                            })
+                                                                            .catch(error =>  res.status(500).json({ error }));
+                                                                    })
+                                                                    .catch(error =>  res.status(500).json({ error }));
+                                                            })
+                                                            .catch(error =>  res.status(500).json({ error }));
+                                                    })
+                                                    .catch(error =>  res.status(500).json({ error }));
+                                            })
+                                            .catch(error =>  res.status(500).json({ error }));
+                                    })
+                                    .catch(error =>  res.status(500).json({ error }));
+                            })
+                            .catch(error =>  res.status(500).json({ error }));
+                    })
+                    .catch(error =>  res.status(500).json({ error }));
+
+            })
+            .catch(error => res.status(500).json({ error }));
+    } else {
+        const message = "L'id ne correspond pas.";
+        res.status(401).json({ message });
     }
 
 };
