@@ -80,14 +80,14 @@ const Profil = () => {
                 }
                 setUserInfos(newObj);
                 setEditName(newEditObj);
-                getUserPost();
+                getUserPost(userObj.id);
                 if (userObj.id !== params.id) {   
                     getIsFriend(userObj.token);
                 }
             });
     }
 
-    const getUserPost = () => {
+    const getUserPost = (id) => {
         fetch('http://localhost:3000/api/posts/findAllForUser/' + params.id)
             .then(res => res.json())
             .then(data => {
@@ -95,12 +95,20 @@ const Profil = () => {
                 let newArr = [];
                 if(data.data !== undefined) {
                     for (let i = 0; i < data.data.length; i++) {
+                        let liked = false;
+
+                        if(data.data[i].usersLiked.includes(id)) {
+                            liked = true;
+                        }
+
                         if (data.data[i] !== undefined) {
                             let item = {
                                 content: data.data[i].content,
                                 picture: data.data[i].picture,
                                 id: data.data[i].id,
                                 userId: data.data[i].userId,
+                                likedByUser: liked,
+                                likes: data.data[i].likes,
                                 created: data.data[i].createdAt,
                                 updated: data.data[i].updatedAt,
                             };  
@@ -740,7 +748,8 @@ const Profil = () => {
                         <div className="profil__content__articles">
                             {
                                 postData.map(el => {
-                                    return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost()} />
+                                    console.log(el);
+                                    return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost(user.id)} /* isAdmin={isAdmin} */ likedByUser={el.likedByUser} likes={el.likes} />
                                 })
                             }
                         </div>

@@ -1,5 +1,5 @@
 const { v4 } = require('uuid');
-const { Post, UserInfo, User } = require('../db/sequelize');
+const { Post, UserInfo, User, Comment } = require('../db/sequelize');
 const fs = require('fs');
 
 /**
@@ -106,16 +106,32 @@ exports.createPost = (req, res, next) => {
                 fs.unlink(`images/${filename}`, () => {
                     Post.destroy({ where: {id: req.params.id} })
                     .then(() => {
-                        const message = "Le post a bien été supprimer.";
-                        res.status(200).json({ message });
+                        Comment.destroy({
+                            where: {
+                                postId: req.params.id
+                            }
+                        })
+                            .then(() => {
+                                const message = "Le post a bien été supprimer.";
+                                res.status(200).json({ message });
+                            })
+                            .catch(error => res.status(500).json({ error }));
                     })
                     .catch(error => res.status(400).json({ error }));
                 });
             } else {
                 Post.destroy({ where: {id: req.params.id} })
                 .then(() => {
-                    const message = "Le post a bien été supprimer.";
-                    res.status(200).json({ message });
+                    Comment.destroy({
+                        where: {
+                            postId: req.params.id
+                        }
+                    })
+                        .then(() => {
+                            const message = "Le post a bien été supprimer.";
+                            res.status(200).json({ message });
+                        })
+                        .catch(error => res.status(500).json({ error }));
                 })
                 .catch(error => res.status(400).json({ error }));
             }

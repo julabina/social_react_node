@@ -9,7 +9,7 @@ const Response = (props) => {
     const [toggleDeleteResponseModal, setToggleDeleteResponseModal] = useState(false);
     const [toggleModifyResponse, setToggleModifyResponse] = useState(false);
     const [response, setResponse] = useState(props.content);
-    const [isLiked, setIsLiked] = useState(props.likedByUser);
+    const [isLiked, setIsLiked] = useState(props.isLiked);
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
@@ -122,9 +122,9 @@ const Response = (props) => {
         <>
         <article className='response'>
             <div className="response__top">
-                <div className="response__top__profilCont">
+                <a href={"profil_=" + props.userId}><div className="response__top__profilCont">
                     { props.profilImg !== null ? <img src={props.profilImg} alt={"Photo de profil"} /> : <FontAwesomeIcon icon={faUser} className="response__top__profilCont__user" />}
-                </div>
+                </div></a>
                 <div className={props.userId === props.user.id ? "response__top__bubble response__top__bubble--me" : "response__top__bubble"}></div>
                 {
                     toggleModifyResponse ?
