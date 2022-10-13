@@ -8,6 +8,7 @@ const Legals = () => {
     const navigate = useNavigate();
 
     const [logStatus, setLogStatus] = useState(false);
+    const [user, setUser] = useState({token: "", id: ""});
 
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
@@ -26,6 +27,7 @@ const Legals = () => {
                     id: decodedToken.userId,
                 };
                 setLogStatus(true);
+                setUser(newUserObj);
             } 
         }
 
@@ -35,7 +37,7 @@ const Legals = () => {
         <>
         {
             logStatus === true &&
-            <Header />
+            <Header user={user} />
         }
         <main className='legals'>
             {

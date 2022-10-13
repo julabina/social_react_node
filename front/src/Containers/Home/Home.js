@@ -183,7 +183,7 @@ const Home = () => {
             .then(data => {
                 const usersData = data.users;
                 let newArr = [];
-                if(data.data !== undefined) {
+                if(data.data !== undefined && data.data.length > 0) {
                     for (let i = 0; i < data.data.length; i++) {
                         const dataUser = usersData.find(el => el.userId === data.data[i].userId);
                         let liked = false;
@@ -213,10 +213,13 @@ const Home = () => {
                     newArr.sort((a, b) => new Date(b.updated) - new Date(a.updated));
 
                     let displayArr = [];
-                    for (let l = 0; l < 10; l++) {
-                        displayArr.push(newArr[l]);        
+                    if (newArr.length > 10) {   
+                        for (let l = 0; l < 10; l++) {
+                            displayArr.push(newArr[l]);        
+                        }
+                    } else {
+                        displayArr = newArr;
                     }
-                    
                     setToDisplayPostData(displayArr);
                 }
                 setPostData(newArr);
@@ -263,7 +266,7 @@ const Home = () => {
 
     return (
         <>
-        <Header logged={logStatus} />
+         <Header user={user} />
         <main className="home">
             <section className="home__newContent">
                 <div className="home__newContent__new">
@@ -306,18 +309,23 @@ const Home = () => {
                 </div>
             </section>
             <section className="home__mainContent">
-                <InfiniteScroll
-                    dataLength={toDisplayPostData.length}
-                    next={loadPosts}
-                    scrollThreshold={0.9}
-                    hasMore={true}
-                >
                 {
-                    toDisplayPostData.map(el => {
-                        return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
-                    })
+                    toDisplayPostData.length > 0 ?
+                    <InfiniteScroll
+                        dataLength={toDisplayPostData.length}
+                        next={loadPosts}
+                        scrollThreshold={0.9}
+                        hasMore={true}
+                    >
+                        {
+                            toDisplayPostData.map(el => {
+                                return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
+                            })
+                        }
+                    </InfiniteScroll>
+                    :
+                    <h2>Pas encore de posts.</h2>
                 }
-                </InfiniteScroll>
             </section>
         </main>
         </>

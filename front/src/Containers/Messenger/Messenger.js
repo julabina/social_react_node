@@ -500,7 +500,7 @@ const Messenger = () => {
     
     return (
         <>
-        <Header logged={logStatus} />
+        <Header user={user} />
         <main className='messenger'>
             <section className="messenger__friendsList">
                 {

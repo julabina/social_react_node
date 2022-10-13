@@ -558,7 +558,7 @@ const Profil = () => {
 
     return (
         <>
-        <Header logged={logStatus} />
+        <Header user={user} />
         <main className='profil'>
 
             <section className='profil__top'>
@@ -602,7 +602,7 @@ const Profil = () => {
                             </>
                             :
                             userInfos.profilBaneer !== null &&
-                                <img src={userInfos.profilBaneer} alt="" />
+                                <img className='profil__top__pictures__baneer__img' src={userInfos.profilBaneer} alt="" />
                         }
                     </div>
                     {

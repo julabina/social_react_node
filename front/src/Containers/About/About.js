@@ -8,6 +8,7 @@ const About = () => {
     const navigate = useNavigate();
 
     const [logStatus, setLogStatus] = useState(false);
+    const [user, setUser] = useState({token: "", id: ""});
     
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
@@ -26,6 +27,7 @@ const About = () => {
                     id: decodedToken.userId,
                 };
                 setLogStatus(true);
+                setUser(newUserObj);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -40,7 +42,7 @@ const About = () => {
 
     return (
         <>
-        <Header logged={logStatus} />
+         <Header user={user} />
         <main className='about'>
             <section>
                 <h1>A propos</h1>
