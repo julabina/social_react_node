@@ -46,60 +46,24 @@ const io = require('socket.io')(server, {
       }
 });
 
-/* io.use((socket, next) => {
-    const username = socket.handshake.auth.username;
-    if (!username) {
-      return next(new Error("invalid username"));
-    }
-    socket.username = username;
-    next();
-}); */
 let users = [];
 
 io.on('connection', socket => {
     console.log(socket.id + " user just connected");
-    console.log("----------------------------------------------");
-    console.log(socket.id);
-
     
-
-   
- /*
-    for (let [id, socket] of io.of("/").sockets) {
-        users.push({
-            userID: id,
-            username: socket.username,
-        });
-
-        socket.emit("users", users);
-    }
-    
-
-    socket.broadcast.emit("user connected", {
-        userID: socket.id,
-        username: socket.username,
-      });*/
-
-    /* socket.on('CLIENT_MSG', data => {
-        io.emit('SERVER_MSG', data);
-    })  */
-
     socket.on('CLIENT_MSG', ({ content, to }) => {
         socket.to(to).emit('SERVER_MSG', {
             content,
             from: socket.id
         })
-        console.log(content);
     }) 
 
     socket.on('newUser', data => {
         users.push(data);
-        console.log(data);
-        console.log(data.socketID);
+
         if(data.socketID === undefined) {
             data.socketID = socket.id;
         }
-        console.log(data);
 
         io.emit('server_newUser_response', users);
     })
@@ -114,7 +78,6 @@ io.on('connection', socket => {
         io.emit('server_newUser_response', users);
         socket.disconnect();
     });
-    console.log("+++++++++++++++++++++++++++++++++++++++++++++");
 }); 
 
 server.on('error', errorHandler);

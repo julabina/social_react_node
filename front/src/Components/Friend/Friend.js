@@ -46,7 +46,7 @@ const Friend = (props) => {
             </div></a>
             <div className="profil__friendsList__list__friend__right">
                 {
-                    props.currentUserId === props.paramsId ? 
+                    props.currentUserId === props.paramsId && props.friend === "friend" ? 
                     <div className='profil__friendsList__list__friend__right__menuCont'>
                         <FontAwesomeIcon onClick={handleMenu} className='profil__friendsList__list__friend__right__menuCont__icon' icon={faEllipsis} />
                         {
@@ -61,7 +61,15 @@ const Friend = (props) => {
                             </div>
                         }
                     </div>
-                    :
+                    :   
+                     
+                        props.id === props.currentUserId && props.friend === 'pending' ?
+                        <button onClick={() => props.cancelQueryFunc(props.id)} className='profil__friendsList__list__friend__right__addBtn'>Demande envoyé</button> :
+                        props.id === props.currentUserId && props.friend === 'received' ?
+                        <button onClick={() => props.acceptQueryFunc(props.id)} className='profil__friendsList__list__friend__right__addBtn'>Accepter demande</button> 
+                    
+                    
+                    : 
                     <>
                     {
                         props.id !== props.currentUserId && props.friend === "friend" ?
@@ -81,7 +89,7 @@ const Friend = (props) => {
                             }
                         </div>
                         :
-                        props.id !== props.currentUserId && props.friend === 'pending' ?
+                            props.id !== props.currentUserId && props.friend === 'pending' ?
                             <button onClick={() => props.cancelQueryFunc(props.id)} className='profil__friendsList__list__friend__right__addBtn'>Demande envoyé</button> :
                             props.id !== props.currentUserId && props.friend === 'received' ?
                             <button onClick={() => props.acceptQueryFunc(props.id)} className='profil__friendsList__list__friend__right__addBtn'>Accepter demande</button> :

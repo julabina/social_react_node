@@ -163,7 +163,7 @@ const Comment = (props) => {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
+                    
                     if (data.success === true) {
                         getAllResponse();
                         respToggle(true);

@@ -48,7 +48,7 @@ exports.createComment = (req, res, next) => {
 
     if (req.body.content !== "" || req.body.content !== undefined) {     
         textWithoutTag = req.body.content.replace(/<\/?[^>]+>/g,'');
-        console.log(req.body);
+        
         const comment = new Comment({
             id: v4(),
             content: textWithoutTag,

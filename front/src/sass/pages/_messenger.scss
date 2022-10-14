@@ -157,11 +157,11 @@
                 justify-content: flex-end;
                 &__status {
                     height: 7px;width: 7px;
-                    background: map-get($colors, light-red);
                     border-radius: 50%;
                     margin-right: 5px;
+                    background: green;
                     &--off {
-                        background: green;
+                        background: map-get($colors, light-red);
                     }
             }
             p {

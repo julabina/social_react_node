@@ -1846,6 +1846,11 @@ main {
   color: #fd2d01;
   transition: all 140ms ease-in-out;
 }
+.profil__friendsList__list__pending {
+  margin-top: 50px;
+  padding-top: 50px;
+  border-top: 1px solid #cfcfcf;
+}
 
 .messenger {
   position: fixed;
@@ -2033,12 +2038,12 @@ main {
 .messenger__friendsList__friend__statusCont__status {
   height: 7px;
   width: 7px;
-  background: #dd0000;
   border-radius: 50%;
   margin-right: 5px;
+  background: green;
 }
 .messenger__friendsList__friend__statusCont__status--off {
-  background: green;
+  background: #dd0000;
 }
 .messenger__friendsList__friend__statusCont p {
   color: #080808;

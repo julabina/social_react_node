@@ -24,6 +24,7 @@ const Profil = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
     const [friends, setFriends] = useState([]);
+    const [pendingUserFriend, setPendingUserFriend] = useState([]);
     const [currentUserFriends, setCurrentUserFriends] = useState([]);
     const [userInfos, setUserInfos] = useState({ firstname: "", lastname: "", profilImg : null, profilBaneer: null })
     const [postData, setPostData] = useState([]);
@@ -120,7 +121,7 @@ const Profil = () => {
     };
 
     /**
-     * 
+     * get all user posts
      * 
      * @param {*} id 
      * @param {*} token 
@@ -471,7 +472,6 @@ const Profil = () => {
 
             const img = imageProfil[0].file;
             formData.append('image', img, img.name);
-            console.log(formData);
             
             fetch('http://localhost:3000/api/users/changeProfilImg/' + user.id, {
                 headers: {
@@ -651,6 +651,16 @@ const Profil = () => {
                     }
 
                     setCurrentUserFriends(newArr);
+
+                    if (params.id === id) {
+                        const pendingFriend = newArr.filter(el => {
+                            return el.friend !== 'friend';
+                        });
+
+                        if(pendingFriend.length > 0) {
+                            setPendingUserFriend(pendingFriend);
+                        }
+                    }
 
                     let friendArr = friends;
 
@@ -898,6 +908,18 @@ const Profil = () => {
                                 })
                             }
                         </div>
+                        {
+                            (user.id === params.id && pendingUserFriend.length > 0) &&
+                            <>
+                                <div className="profil__friendsList__list profil__friendsList__list__pending">
+                                    {
+                                        pendingUserFriend.map(el => {
+                                            return <Friend key={el.id} fullname={el.fullname} id={el.id} profilImg={el.profilImg} currentUserId={user.id} friend={el.friend} paramsId={params.id} sendingQueryFunc={sendingFriendQuery} cancelQueryFunc={cancelFriendQuery} acceptQueryFunc={acceptFriendQuery} cancelRelationFunc={cancelFriendRelation} />
+                                        })
+                                    }
+                                </div>
+                            </>
+                        }
 
                     </section>
                     :
@@ -925,7 +947,6 @@ const Profil = () => {
                         <div className="profil__content__articles">
                             {
                                 postData.map(el => {
-                                    console.log(el);
                                     return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={userInfos.firstname} lastname={userInfos.lastname} profilImg={userInfos.profilImg} user={user} loadAfterFunc={() => getUserPost(user.id, user.token)} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
                                 })
                             }
