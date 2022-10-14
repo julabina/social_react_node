@@ -8,6 +8,12 @@ const Sign = () => {
 
     const [signForm, setSignForm] = useState({ email: "", pwd: "", firstname: "", lastname: "", check : false });
 
+    /**
+     * control all inputs
+     * 
+     * @param {*} action 
+     * @param {*} value 
+     */
     const controlInputs = (action, value) => {
 
         if(action === 'email') {
@@ -44,6 +50,12 @@ const Sign = () => {
 
     };
 
+    /**
+     * valid inputs before create account
+     * 
+     * @param {*} e 
+     * @returns 
+     */
     const checkInputs = (e) => {
         e.preventDefault();
         const errorCont = document.querySelector('.sign__section__form__errorCont');
@@ -93,6 +105,14 @@ const Sign = () => {
 
     };
 
+    /**
+     * create an account
+     * 
+     * @param {*} email 
+     * @param {*} pwd 
+     * @param {*} firstname 
+     * @param {*} lastname 
+     */
     const tryToSign = (email, pwd, firstname, lastname) => {
         const errorCont = document.querySelector('.sign__section__form__errorCont');
 

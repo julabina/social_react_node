@@ -16,7 +16,7 @@ const Response = (props) => {
         if(props.isAdmin && (typeof props.isAdmin === "boolean")) {
             setIsAdmin(props.isAdmin);
         }
-    },[])
+    },[]);
 
     /**
      * toggle menu display for one response
@@ -29,7 +29,7 @@ const Response = (props) => {
             return setToggleResponseMenu(false);
         }
         setToggleResponseMenu(!toggleResponseMenu);
-    }
+    };
 
     /**
      * toggle delete modal display
@@ -37,13 +37,13 @@ const Response = (props) => {
     const deleteResponseModalToggle = () => {
         responseMenuToggle(true);
         setToggleDeleteResponseModal(!toggleDeleteResponseModal);
-    }
+    };
 
     /**
      * delete one response
      */
     const tryToDeleteResponse = () => {
-        console.log(props);
+        
         fetch('http://localhost:3000/api/comments/delete/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
@@ -54,7 +54,7 @@ const Response = (props) => {
             .then(data => {
                 props.getAllRespFunc();
             })
-    }
+    };
 
     /**
     * toggle textarea for modify one response
@@ -63,7 +63,7 @@ const Response = (props) => {
         const textarea = document.querySelector('.response__top__content--ctrl');
         responseMenuToggle(true);
         setToggleModifyResponse(!toggleModifyResponse);
-    }
+    };
 
     /**
      * control textarea for modifying response
@@ -72,12 +72,13 @@ const Response = (props) => {
      */
      const ctrlModifyResponse = (value) => {
         setResponse(value);
-    }
+    };
 
     /**
      * modify one response
      */
     const tryToModifyResponse = () => {
+
         if (response !== "" && response.length < 300) {
             const responseWithoutTag = response.replace(/<\/?[^>]+>/g,'');
 
@@ -98,8 +99,11 @@ const Response = (props) => {
                     }
                 })
         }
-    }
+    };
 
+    /**
+     * handle response likes
+     */
     const handleLike = () => {
 
         fetch('http://localhost:3000/api/comments/addLike/' + props.id, {
@@ -116,7 +120,7 @@ const Response = (props) => {
                 }
             })
 
-    }
+    };
 
     return (
         <>

@@ -27,9 +27,9 @@ const ToTop = () => {
 
     return (
         <>
-                <button onClick={toTop} className='toTop'>
-                    <FontAwesomeIcon icon={faArrowUp} />
-                </button>
+        <button onClick={toTop} className='toTop'>
+            <FontAwesomeIcon icon={faArrowUp} />
+        </button>
         </>
     );
 };

@@ -15,13 +15,12 @@ const Profil = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const [toggleBaneerForm, setToggleBaneerForm] = useState(false);
+    const [toggleBannerForm, setToggleBannerForm] = useState(false);
     const [toggleEditprofil, setToggleEditProfil] = useState(false);
     const [toggleFriend, setToggleFriend] = useState(false);
     const [toggleProfilImgModal, setToggleProfilImgModal] = useState(false);
     const [toggleFriendDeleteModal, setToggleFriendDeleteModal] = useState(false);
     const [toggleAccountDeleteModal, setToggleAccountDeleteModal] = useState(false);
-    const [logStatus, setLogStatus] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [friendRelation, setFriendRelation] = useState("");
     const [friends, setFriends] = useState([]);
@@ -63,8 +62,13 @@ const Profil = () => {
             };
         }
 
-    },[])
+    },[]);
 
+    /**
+     * get user infos
+     * 
+     * @param {*} userObj 
+     */
     const getUserInfo = (userObj) => {
 
         fetch('http://localhost:3000/api/users/getUserInfos/' + params.id, {
@@ -75,7 +79,6 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 const newObj = {
                     firstname: data.data.firstname,
                     lastname: data.data.lastname,
@@ -93,7 +96,7 @@ const Profil = () => {
                     getIsFriend(userObj.token);
                 }
             });
-    }
+    };
 
     /**
      * check if current user is an admin
@@ -110,14 +113,20 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if(data.isAdmin === true) {
                     setIsAdmin(true);
                 }
             })
-    }
+    };
 
+    /**
+     * 
+     * 
+     * @param {*} id 
+     * @param {*} token 
+     */
     const getUserPost = (id, token) => {
+
         fetch('http://localhost:3000/api/posts/findAllForUser/' + params.id, {
             headers: {
                 "Authorization": "Bearer " + token
@@ -126,7 +135,6 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 let newArr = [];
                 if(data.data !== undefined) {
                     for (let i = 0; i < data.data.length; i++) {
@@ -156,9 +164,15 @@ const Profil = () => {
                 }
                 setPostData(newArr);
             })
-    }
+    };
 
+    /**
+     * check if user profil is a friend
+     * 
+     * @param {*} token 
+     */
     const getIsFriend = (token) => {
+
         fetch('http://localhost:3000/api/friends/isFriend/' + params.id, {
             headers: {
                 "Authorization": "Bearer " + token
@@ -171,28 +185,45 @@ const Profil = () => {
                     setFriendRelation(data.status);
                 } 
             })
-    }
+    };
 
+    /**
+     * toggle for change banner form
+     */
     const baneerFormToggle = () => {
-        setToggleBaneerForm(!toggleBaneerForm);
-    }
+        setToggleBannerForm(!toggleBannerForm);
+    };
 
+    /**
+     * add image File for banner
+     * 
+     * @param {*} imageList 
+     * @param {*} addUpdateIndex 
+     */
     const imgChange = (imageList, addUpdateIndex) => {
         setImage(imageList);
-    }
+    };
 
+    /**
+     * add image File for profil image
+     * 
+     * @param {*} imageList 
+     * @param {*} addUpdateIndex 
+     */
     const profilImgChange = (imageList, addUpdateIndex) => {
         setImageProfil(imageList);
-    }
+    };
 
-    const changeBaneer = () => {
-        console.log(image);
+    /**
+     * change user banner 
+     */
+    const changeBanner = () => {
+        
         if (image.length !== 0) {
             let formData = new FormData();
 
             const img = image[0].file;
             formData.append('image', img, img.name);
-            console.log(formData);
             
             fetch('http://localhost:3000/api/users/changeBaneer/' + user.id, {
                 headers: {
@@ -209,12 +240,20 @@ const Profil = () => {
                     }
                 })
         }
-    }
+    };
 
+    /**
+     * toggle edit profil forms
+     */
     const editProfilToggle = () => {
         setToggleEditProfil(!toggleEditprofil);
-    }
+    };
 
+    /**
+     * tab switch 
+     * 
+     * @param {*} ind 
+     */
     const changeTab = (ind) => {
         const tabsContainer = document.querySelectorAll('.profil__edit__form__container');
         const tabs = document.querySelectorAll('.profil__edit__form__tabsCon__tab');
@@ -232,9 +271,14 @@ const Profil = () => {
                 tabsContainer[i].classList.remove('profil__edit__form__container--hidden');
             }
         }
+    };
 
-    }
-
+    /**
+     * control account edit inputs
+     * 
+     * @param {*} action 
+     * @param {*} value 
+     */
     const ctrlEditInput = (action, value) => {
         if(action === "firstname") {
             const newObj = {
@@ -285,8 +329,13 @@ const Profil = () => {
             }
             setEditPassword(newObj);
         }
-    }
+    };
 
+    /**
+     * valid inputs for basics informations edit
+     * 
+     * @returns 
+     */
     const checkNames = () => {
         const errorCont = document.querySelector('.profil__edit__errorCont ');
         errorCont.innerHTML = '';
@@ -313,8 +362,13 @@ const Profil = () => {
         }
 
         modifyNames();
-    }
+    };
 
+    /**
+     * valid informations for user email edit
+     * 
+     * @returns 
+     */
     const checkEditEmail = () => {
         const errorCont = document.querySelector('.profil__edit__errorCont ');
         errorCont.innerHTML = '';
@@ -341,8 +395,11 @@ const Profil = () => {
         }
 
         modifyMail();
-    }
+    };
 
+    /**
+     * update fullname
+     */
     const modifyNames = () => {
         const successCont = document.querySelector('.profil__edit__successCont');
 
@@ -361,8 +418,11 @@ const Profil = () => {
                     window.location.reload();
                 }
             })
-        }
-        
+    };
+       
+    /**
+     * update email
+     */
     const modifyMail = () => {
         const errorCont = document.querySelector('.profil__edit__errorCont ');
         errorCont.innerHTML = '';   
@@ -378,7 +438,6 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if(data.success === true) {
                     /* message success */
                 } else if (data.error === "email" || data.error === "pwd") {
@@ -386,17 +445,26 @@ const Profil = () => {
                     errorCont.innerHTML = error;
                 }
             })
-    }
+    };
 
+    /**
+     * toggle modal for edit profil image
+     */
     const handleProfilImgModal = () => {
         setToggleProfilImgModal(!toggleProfilImgModal);
-    }
+    };
 
+    /**
+     * toggle modal for delete friend
+     */
     const handleFriendDeleteModal = () => {
 
         setToggleFriendDeleteModal(!toggleFriendDeleteModal);
-    }
+    };
 
+    /**
+     * update profil image
+     */
     const changeProfilImg = () => {
         if (imageProfil.length !== 0) {
             let formData = new FormData();
@@ -420,8 +488,13 @@ const Profil = () => {
                     }
                 })
         }
-    }
+    };
 
+    /**
+     * send query for adding friend
+     * 
+     * @param {*} id 
+     */
     const sendingFriendQuery = (id) => {
         fetch('http://localhost:3000/api/friends/query/' + id, {
             headers: {
@@ -438,8 +511,13 @@ const Profil = () => {
                     getAllRelations(user.id);
                 }
             })
-    }
+    };
 
+    /**
+     * cancel friend query
+     * 
+     * @param {*} id 
+     */
     const cancelFriendQuery = (id) => {
         fetch('http://localhost:3000/api/friends/cancelQuery/' + id, {
             headers: {
@@ -456,9 +534,15 @@ const Profil = () => {
                     getAllRelations(user.id);
                 }
             })
-    }
+    };
     
+    /**
+     * cancel and delete friend relation
+     * 
+     * @param {*} id 
+     */
     const cancelFriendRelation = (id) => {
+
         fetch('http://localhost:3000/api/friends/cancelRelation/' + id, {
             headers: {
                 'Accept': 'application/json',
@@ -475,9 +559,15 @@ const Profil = () => {
                     window.location.reload();                    
                 }
             })
-    }
+    };
 
+    /**
+     * accepte user query for become friend
+     * 
+     * @param {*} id 
+     */
     const acceptFriendQuery = (id) => {
+
         fetch('http://localhost:3000/api/friends/acceptQuery/' + id, {
             headers: {
                 'Accept': 'application/json',
@@ -493,8 +583,14 @@ const Profil = () => {
                     getAllRelations(user.id);
                 }
             })
-    }
+    };
 
+    /**
+     * get all user friends
+     * 
+     * @param {*} userId 
+     * @param {*} token 
+     */
     const getAllFriends = (userId, token) => {
 
         fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
@@ -505,7 +601,6 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 let newArr = [];
                 if (data.data && data.data !== undefined) {
                     for (let i = 0; i < data.data.length; i++) {
@@ -524,8 +619,13 @@ const Profil = () => {
                 }
             })
 
-    }
+    };
 
+    /**
+     * get all user relations
+     * 
+     * @param {*} id 
+     */
     const getAllRelations = (id) => {
 
         fetch('http://localhost:3000/api/friends/getRelations/' + id , {
@@ -536,7 +636,6 @@ const Profil = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 let newArr = [];
                 if (data.data && data.data !== undefined) {
                     for (let i = 0; i < data.data.length; i++) {
@@ -554,15 +653,12 @@ const Profil = () => {
                     setCurrentUserFriends(newArr);
 
                     let friendArr = friends;
-                    console.log(friendArr);
+
                     for (let l = 0; l < friendArr.length; l++) {
 
                         const friendFiltered = newArr.filter(el => {
                             return el.id === friendArr[l].id;
                         })    
-                        console.log(friends); 
-                        console.log(friendFiltered); 
-                        console.log(friendArr[l]);
                         
                         if(friendFiltered.length > 0) {
 
@@ -580,12 +676,16 @@ const Profil = () => {
 
                         }
                     }
-                    console.log(friendArr);
                     setFriends(friendArr);
                 }
             })
-    }
+    };
 
+    /**
+     * handle is friend
+     * 
+     * @param {*} link 
+     */
     const handleLink = (link) => {
         setToggleEditProfil(false);
 
@@ -599,14 +699,20 @@ const Profil = () => {
         } else {
             setToggleFriend(false);
         }
-    }
+    };
 
+    /**
+     * toggle modal for account user deleting
+     */
     const handleToggleDeleteAccountModal = () => {
         setToggleAccountDeleteModal(!toggleAccountDeleteModal);
-    }
+    };
 
+    /**
+     * delte account
+     */
     const deleteAccount = () => {
-        /* handleToggleDeleteAccountModal(); */
+        handleToggleDeleteAccountModal();
 
         if (params.id === user.id) {   
             fetch('http://localhost:3000/api/users/delete/' + params.id, {
@@ -623,7 +729,7 @@ const Profil = () => {
                     }
                 })
         }
-    }
+    };
 
     return (
         <>
@@ -642,7 +748,7 @@ const Profil = () => {
                 <div className="profil__top__pictures">
                     <div className="profil__top__pictures__baneer">
                         {
-                            toggleBaneerForm ?
+                            toggleBannerForm ?
                             <>
                                 <ImageUploading
                                     value={image}
@@ -686,10 +792,10 @@ const Profil = () => {
                         user.id === params.id &&
                         <>
                             {
-                                toggleBaneerForm ?
+                                toggleBannerForm ?
                                 <>
                                 <button onClick={baneerFormToggle} className='profil__top__pictures__changeBaneer'>Annuler</button>
-                                <button onClick={changeBaneer} className='profil__top__pictures__changeBaneer profil__top__pictures__changeBaneer--valid'>Ok</button>
+                                <button onClick={changeBanner} className='profil__top__pictures__changeBaneer profil__top__pictures__changeBaneer--valid'>Ok</button>
                                 </>
                                 :
                                 <button onClick={baneerFormToggle} className='profil__top__pictures__changeBaneer'>Changer</button> 

@@ -8,6 +8,12 @@ const Log = () => {
 
     const [logInputs, setLogInputs] = useState({email: "", password: ""});
 
+    /**
+     * control log form input
+     * 
+     * @param {*} action 
+     * @param {*} value 
+     */
     const controlInputs = (action, value) => {
         if(action === "email") {
             const newObj = {
@@ -22,8 +28,14 @@ const Log = () => {
             };
             setLogInputs(newObj);
         }
-    }
+    };
 
+    /**
+     * valid input before logging
+     * 
+     * @param {*} e 
+     * @returns 
+     */
     const checkInputs = (e) => {
         e.preventDefault();
 
@@ -48,8 +60,14 @@ const Log = () => {
         } else {
             tryToLog(logInputs.email, logInputs.password);
         }
-    }
+    };
 
+    /**
+     * send query and log user if success response
+     * 
+     * @param {*} email 
+     * @param {*} pwd 
+     */
     const tryToLog = (email, pwd) => {
         const errorCont = document.querySelector(".login__section__form__errorCont");
 
@@ -74,7 +92,7 @@ const Log = () => {
                     navigate('/', { replace: true });
                 }
             })
-    }
+    };
 
     return (
         <>

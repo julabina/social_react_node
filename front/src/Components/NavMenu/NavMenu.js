@@ -9,15 +9,21 @@ const NavMenu = (props) => {
 
     const [toggleMenu, setToggleMenu] = useState(false);
 
+    /**
+     * toggle display menu
+     */
     const handleMenu = () => {
         setToggleMenu(!toggleMenu);
-    }
+    };
 
+    /**
+     * logout the user
+     */
     const logout = () => {
         localStorage.removeItem('token');
         handleMenu();
         navigate('/connexion', { replace: true });
-    }
+    };
 
     return (
         <>

@@ -8,18 +8,27 @@ const Friend = (props) => {
     const [toggleMenu, setToggleMenu] = useState(false);
     const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
 
+    /**
+     * handle friend menu
+     */
     const handleMenu = () => {
         setToggleMenu(!toggleMenu);
-    }
+    };
     
+    /**
+     * toggle modale for delete friend
+     */
     const deleteModalToggle = () => {
         setToggleMenu(false);
         setToggleDeleteModal(!toggleDeleteModal);
-    }
+    };
     
+    /**
+     * accepte friend deleting and launch delete user function
+     */
     const acceptDelete = () => {
         props.cancelRelationFunc(props.id);
-    }
+    };
 
     return (
         <>

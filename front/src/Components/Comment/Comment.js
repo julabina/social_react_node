@@ -24,14 +24,14 @@ const Comment = (props) => {
             setIsAdmin(props.isAdmin);
         }
 
-    },[])
+    },[]);
 
     /**
      * toggle display form for adding new response
      */
     const responseToggle = () => {
         setToggleResponse(!toggleResponse);
-    }
+    };
 
     /**
      * calcul time between created and current time
@@ -85,12 +85,13 @@ const Comment = (props) => {
         }
 
         return diffDisplay;
-    }
+    };
 
     /**
      * get all response for one comment
      */
     const getAllResponse = () => {
+
         fetch('http://localhost:3000/api/comments/findResponse/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
@@ -99,7 +100,6 @@ const Comment = (props) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if(data.data) {
                     let newArr = [];
 
@@ -133,7 +133,7 @@ const Comment = (props) => {
                     setResponseCount(data.count);
                 }
             })
-    }
+    };
 
     /**
      * control add comment input
@@ -142,12 +142,13 @@ const Comment = (props) => {
      */
     const ctrlResponse = (value) => {
         setResponseText(value);
-    }
+    };
 
     /**
      * try to add new response to one comment
      */
     const sendResponse = () => {
+
         if (responseText !== "" && responseText.length < 300) {
             const responseWithoutTag = responseText.replace(/<\/?[^>]+>/g,'');
 
@@ -171,7 +172,7 @@ const Comment = (props) => {
                     }
                 })
         }
-    }
+    };
 
     /**
      * toggle display all responses for one comment
@@ -184,7 +185,7 @@ const Comment = (props) => {
             return setToggleResponses(true);
         }
         setToggleResponses(!toggleResponses);
-    }
+    };
 
     /**
      * toggle the comment menu
@@ -197,7 +198,7 @@ const Comment = (props) => {
             return setToggleCommentMenu(false);
         }
         setToggleCommentMenu(!toggleCommentMenu);
-    }
+    };
 
     /**
      * toggle the confirmation modal for deleting comment
@@ -205,13 +206,13 @@ const Comment = (props) => {
     const deleteCommentModalToggle = () => {
         commentMenuToggle(true);
         setToggleDeleteCommentModal(!toggleDeleteCommentModal);
-    }
+    };
 
     /**
      * try to delete one comment and responses
      */
     const tryToDeleteComment = () => {
-        console.log(props);
+        
         fetch('http://localhost:3000/api/comments/delete/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
@@ -222,7 +223,7 @@ const Comment = (props) => {
             .then(data => {
                 props.getCommentsFunc();
             })
-    }
+    };
 
     /**
      * toggle textarea for modify one comment
@@ -231,7 +232,7 @@ const Comment = (props) => {
         const textarea = document.querySelector('.comment__top__content--ctrl');
         commentMenuToggle(true);
         setToggleModifyComment(!toggleModifyComment);
-    }
+    };
 
     /**
      * control textarea for modifying comment
@@ -240,12 +241,13 @@ const Comment = (props) => {
      */
     const ctrlModifyComment = (value) => {
         setComment(value);
-    }
+    };
 
     /**
      * modify one comment
      */
     const tryToModifyComment = () => {
+
         if (comment !== "" && comment.length < 300) {
             const commentWithoutTag = comment.replace(/<\/?[^>]+>/g,'');
 
@@ -266,8 +268,11 @@ const Comment = (props) => {
                     }
                 })
         }
-    }
+    };
 
+    /**
+     * handle likes for comments
+     */
     const handleLike = () => {
 
         fetch('http://localhost:3000/api/comments/addLike/' + props.id, {
@@ -283,8 +288,7 @@ const Comment = (props) => {
                     props.getCommentsFunc();
                 }
             })
-
-    }
+    };
 
     return (
         <>

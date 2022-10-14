@@ -138,7 +138,7 @@ exports.findUserInfos = (req, res, next) => {
 };
 
 /**
- * change the banneer image
+ * change the banner image
  * 
  * @param {*} req 
  * @param {*} res 

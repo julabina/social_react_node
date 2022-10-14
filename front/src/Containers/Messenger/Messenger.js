@@ -21,127 +21,14 @@ const Messenger = () => {
     const [users, setUsers] = useState([]);
     const [friends, setFriends] = useState([]);
     const [userInfos, setUserInfos] = useState({ firstname: '', lastname: '' });
-    const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
     const [logged, setLogged] = useState(false);
     const [reload, setReload] = useState(false);
     const [paramsLoad, setParamsLoad] = useState(false);
-    const [logStatus, setLogStatus] = useState(false);
-    const [friendInfos, setFriendInfos] = useState({})
+    const [friendInfos, setFriendInfos] = useState({});
 
-   /*  useEffect(() => {
-        
-        if (logged !== true) {
-            checkIfLogged();
-        }
-
-        let TETEST = test();
-        
-        socket.on('SERVER_MSG', ({content, from}) => {
-
-            for (let i = 0; i < friends.length; i++) {
-                
-                const friend = friends[i];
-
-                console.log('//////////////////////////////////////');
-                console.log(selectedUser);
-                console.log(content);
-                console.log(friend);
-                console.log('//////////////////////////////////////');
-
-                if (friend.id === content.userId) {
-                    console.log('CESOKDECECOTE');
-                    if(content.userId === selectedUser.userId) {
-
-                        let newArr = [
-                            ...messages,
-                            content
-                        ];
-                        setMessages(newArr);
-                        break;
-                    }
-
-                     if(friend.userId !== selectedUser.userId) {
-                        console.log('OPTION2');
-                    } 
-                    break;
-                }
-                
-            } 
-            console.log(selectedUser);
-            console.log(TETEST);
-            console.log('------------------------------');
-
-            console.log('TESTESTESTESTE', content);
-  
-            let goodSocket = "";
-            if(selectedUser.userId === content.userId) {
-                goodSocket = selectedUser.socketid;
-            } else {
-                goodSocket = "";
-            }
-            console.log('//////////////////////////////////////');
-            console.log(selectedUser.userId);
-            console.log(selectedUser.socketid);
-            console.log(goodSocket);
-            console.log(from);
-            console.log('//////////////////////////////////////');
-            console.log('----------------------------------------------');
-            console.log(selectedUser.userId);
-            console.log(content.userId);
-            console.log('----------------------------------------------');
-
-            console.log(messages);
-            
-            if(goodSocket === from) {
-                let newArr = [
-                    ...messages,
-                    content
-                ];
-                console.log('1');
-                setMessages(newArr);
-                
-            } else if ((content.userId === selectedUser.userId) && selectedUser.userId !== "") {
-                console.log('2');
-                const item = {
-                    ...selectedUser,
-                    socketid: from
-                }
-                setSelectedUser(item);
-                let newArr = [
-                    ...messages,
-                    content
-                ];
-                
-                setMessages(newArr);
-                
-            } else {
-
-                console.log('3');
-                if ((content.userId !== selectedUser.userId) && selectedUser.userId !== "") {
-                    const userIndex = users.findIndex(el => el.userId === content.userId);
-                    console.log('4');
-                    
-                    let arrUsers = users;
-                    arrUsers[userIndex] = {
-                        ...arrUsers[userIndex],
-                        newMessage: true
-                    }
-                    
-                    setUsers(arrUsers);
-                    reload();
-                }
-                console.log('3.1');
-            }
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'); 
-        }); 
-        
-        socket.on('server_newUser_response', data => {
-            setUsers(data);
-        });
-
-        console.log('7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777');
-    },[socket, selectedUser]);, users, selectedUser, messages */
-    
+    /**
+     * listen socket
+     */
     useEffect(() => {
         
         if (logged !== true) {
@@ -153,36 +40,37 @@ const Messenger = () => {
             newArr.push(content);
             newArr.push(from);
             setJustReceived(newArr);
-        })
+        });
         
         socket.on('server_newUser_response', data => {
             setUsers(data);
         });
         
-    },[socket])
+    },[socket]);
 
-        
+     /**
+      *  listen users change
+      */   
     useEffect(() => {
         
         if (paramsLoad === false) {
             if(params.id) {
-                console.log(users);
-                console.log(friends);
+
                 if (friends.length > 0 && users.length > 0) {
                     let selected = false;
                     const paramFriend = friends.find(el => el.id === params.id);  
+
                     for (let i = 0; i < users.length; i++) {
                         if (users[i].userId === params.id) { 
                             setParamsLoad(true);
-                            console.log("1");
-                            changeSelectedUser(params.id, users[i].socketID, paramFriend.chatId )
+                            changeSelectedUser(params.id, users[i].socketID, paramFriend.chatId );
                             selected = true;
                             break;
                         } 
                     }
                     if (selected === false) {
                         setParamsLoad(true);
-                        changeSelectedUser(params.id, "", paramFriend.chatId )
+                        changeSelectedUser(params.id, "", paramFriend.chatId );
                     }
                 }
             } else {
@@ -190,8 +78,11 @@ const Messenger = () => {
             }
         }
         
-    },[friends, users])
+    },[friends, users]);
     
+    /**
+     * handle new received message
+     */
     useEffect(() => {
 
         if(justReceived.length > 0) {
@@ -215,7 +106,6 @@ const Messenger = () => {
                 
             } else {
                 
-                console.log('3');
                 if ((justReceived[0].userId !== selectedUser.userId)) {
                     const userIndex = users.findIndex(el => el.userId === justReceived[0].userId);
                     
@@ -231,8 +121,11 @@ const Messenger = () => {
             }
         }
         
-    },[justReceived])
+    },[justReceived]);
 
+    /**
+     * handle auto-scroll
+     */
     useEffect(() => {
         let messagesContainer = document.querySelector('.messenger__container');
 
@@ -241,10 +134,18 @@ const Messenger = () => {
         }
     }, [messages])
 
+    /**
+     * simple state reloader
+     */
     const reloading = () => {
         setReload(!reload);
     }
 
+    /**
+     * check if user is logged
+     * 
+     * @returns 
+     */
     const checkIfLogged = () => {
         if (localStorage.getItem('token') !== null) {
             let getToken = localStorage.getItem('token');
@@ -265,10 +166,7 @@ const Messenger = () => {
                 setLogged(true);
                 getUserInfos(newUserObj.id, newUserObj.token);
                 getAllFriends(newUserObj.id, newUserObj.token);
-                setLogStatus(true);
-                /* getRole(newUserObj.id, newUserObj.token);
-                getAllPosts(newUserObj.id);
-                connectToSocket(newUserObj.id); */
+
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -278,9 +176,16 @@ const Messenger = () => {
             // DISCONNECT
             navigate('/connexion', { replace: true });
         }; 
-    }
+    };
 
+    /**
+     * get user infos
+     * 
+     * @param {*} id 
+     * @param {*} token 
+     */
     const getUserInfos = (id, token) => {
+
         if(id !== "" && id !== undefined) {
             fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
                 headers: {
@@ -295,7 +200,7 @@ const Messenger = () => {
                         firstname: data.data.firstname,
                         lastname: data.data.lastname,
                         profilImg: data.data.profilImg,
-                    }
+                    };
                     
                     const username = item.firstname + " " + item.lastname;
                     socket.emit('newUser', { username, userId: id, socketID: socket.id });
@@ -303,9 +208,16 @@ const Messenger = () => {
                     setUserInfos(item);
                 });
         }
-    }
+    };
 
+    /**
+     * get friend infos
+     * 
+     * @param {*} id 
+     * @param {*} token 
+     */
     const getFriendInfos = (id, token) => {
+
         if(id !== "" && id !== undefined) {
             fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
                 headers: {
@@ -327,9 +239,16 @@ const Messenger = () => {
                     setFriendInfos(item);
                 });
         }
-    }
+    };
 
+    /**
+     * get all friends
+     * 
+     * @param {*} userId 
+     * @param {*} token 
+     */
     const getAllFriends = (userId, token) => {
+
         fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
             headers: {
                 "Authorization": "Bearer " + token
@@ -348,71 +267,32 @@ const Messenger = () => {
                             profilImg: data.data[i].User.User_info.profilImg
                         }
                         newArr.push(item);
-                        console.log(data.data[i]);
                     }
                     setFriends(newArr);
                 }
             })
-    }
+    };
 
-    /* const connectToSocket = (username) => {
-        setUsernameAlreadySelected(true);
-        socket.auth = { username };
-        socket.connect(); 
-
-        socket.emit('newUser', { username, socketID: socket.id });
-
-        socket.on("connect_error", (err) => {
-            if (err.message === "invalid username") {
-                setUsernameAlreadySelected(false);
-                socket.off("connect_error");
-                  
-            }
-            });
-    } */
-
-    /* socket.on('SERVER_MSG', msg => {
-        setNewMessage(msg);
-    }); */
-
-    /* const setNewMessage = (msg) => {
-        let newObj = [
-          ...messages,
-          msg
-        ];
-        console.log(newObj);
-        setMessages(newObj);
-    } */
-
-    /* const sendMessage = () => {
-
-        const msg = {
-            username: "Luc",
-            content: inputMsg,
-            date: Math.floor((new Date()).getTime() / 1000)
-        }
-
-        setInputMsg('');
-
-        socket.emit('CLIENT_MSG', msg);
-        
-    } */
-
+    /**
+     * replace tag if exist and send message
+     */
     const checkMessage = () => {
         if (inputMsg !== "" && inputMsg.length < 501) {
             const textWithoutTag = inputMsg.replace(/<\/?[^>]+>/g,'');
 
             sendMessage(textWithoutTag);
         }
-    }
+    };
 
+    /**
+     * send message to server socket
+     * 
+     * @param {*} msg 
+     */
     const sendMessage = (msg) => {
 
         const fullname = userInfos.firstname + " " + userInfos.lastname;
         const newDate = Math.floor((new Date()).getTime() / 1000);
-        console.log(newDate);
-        console.log(typeof newDate);
-        console.log(new Date())
 
         socket.emit('CLIENT_MSG', {
             content: {
@@ -436,9 +316,16 @@ const Messenger = () => {
         ];
         saveMessage(msg, fullname);
         setMessages(newArr);
-    }
+    };
 
+    /**
+     * save message to database
+     * 
+     * @param {*} content 
+     * @param {*} fullname 
+     */
     const saveMessage = (content, fullname) => {
+
         fetch('http://localhost:3000/api/messages/create/' + selectedUser.chatId, {
             headers: {
                 'Accept': 'application/json',
@@ -450,15 +337,28 @@ const Messenger = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                
             })
-    }
+    };
 
+    /**
+     * control input message
+     * 
+     * @param {*} value 
+     */
     const ctrlInputMsg = (value) => {
         setInputMsg(value);
-    }
+    };
 
+    /**
+     * change selected user
+     * 
+     * @param {*} userId 
+     * @param {*} socketId 
+     * @param {*} chatId 
+     */
     const changeSelectedUser = (userId, socketId, chatId) => {
+
         setMessages([]);
 
         const newObj = {
@@ -475,12 +375,17 @@ const Messenger = () => {
         arrUsers[userIndex] = {
             ...arrUsers[userIndex],
             newMessage: false
-        }
+        };
 
         getMessages(chatId);
         getFriendInfos(userId, user.token);
-    }
+    };
 
+    /**
+     * get all messages for one friend
+     * 
+     * @param {*} chatId 
+     */
     const getMessages = (chatId) => {
        
         fetch('http://localhost:3000/api/messages/getMessages/' + chatId, {
@@ -497,7 +402,7 @@ const Messenger = () => {
                    
                     for (let i = 0; i < data.data.length; i++) {
                         const item = {
-                            date: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000) ,
+                            date: Math.floor((new Date(data.data[i].createdAt)).getTime() / 1000),
                             content: data.data[i].content,
                             username: data.data[i].username
                         }
@@ -507,7 +412,7 @@ const Messenger = () => {
                 }
                 setMessages(newArr);
             })
-    }
+    };
     
     return (
         <>
@@ -570,8 +475,7 @@ const Messenger = () => {
                                 <p>{newMsg}</p>
                             </div>
                         </div>  
-                        /* return  <p onClick={() => changeSelectedUser(el.id, socketId, el.chatId)} style={{color: color}} key={el.id}>{status} :{el.id}{newMsg}</p> */
-                        {/* <a key={el.socketID} href="#">{el.username} {el.socketID}</a> */}
+                        
                     })
             }
             </section>
@@ -609,7 +513,7 @@ const Messenger = () => {
                     </div>
                     <div className="messenger__container__form">
                         <input onInput={(e) => ctrlInputMsg(e.target.value)} value={inputMsg} type="text" placeholder='Votre message ...' />
-                        <button onClick={() => checkMessage()}>Envoyé</button>
+                        <button onClick={() => checkMessage()}>Envoyer</button>
                     </div>
                 </section>
         </main>

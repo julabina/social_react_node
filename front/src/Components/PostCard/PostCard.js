@@ -30,7 +30,7 @@ const PostCard = (props) => {
         if(props.isAdmin && (typeof props.isAdmin === "boolean")) {
             setIsAdmin(props.isAdmin);
         }
-    },[])
+    },[]);
 
     /**
      * calcul time between created date and current date
@@ -84,14 +84,14 @@ const PostCard = (props) => {
         }
 
         return diffDisplay;
-    }
+    };
 
     /**
      * toggle the post menu
      */
     const menuToggle = () => {
         setToggleMenu(!toggleMenu);
-    }
+    };
     
     /**
      * toggle content and modify form for modify one post
@@ -102,7 +102,7 @@ const PostCard = (props) => {
         }
 
         setToggleModify(!toggleModify);
-    }
+    };
 
     /**
      * toggle delete modal
@@ -112,12 +112,13 @@ const PostCard = (props) => {
             menuToggle();
         }
         setToggleDeleteModal(!toggleDeleteModal);
-    }
+    };
 
     /**
      * try to delete one post
      */
     const tryToDeletePost = () => {
+
         fetch('http://localhost:3000/api/posts/delete/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
@@ -126,11 +127,10 @@ const PostCard = (props) => {
         })
             .then(res => {
                 if (res.status === 200) {
-                    props.loadAfterFunc(props.user.id);
+                    props.loadAfterFunc(props.user.id, props.user.token);
                 }
             })
-    
-    }
+    };
 
     /**
      * control adding content form input for creating post
@@ -139,7 +139,7 @@ const PostCard = (props) => {
      */
     const ctrlText = (value) => {
         setTextArticle(value);
-    }
+    };
 
     /**
      * adding image to image state
@@ -149,7 +149,7 @@ const PostCard = (props) => {
      */
     const imgChange = (imageList, addUpdateIndex) => {
         setImage(imageList);
-    }
+    };
 
     /**
      * check if form is ok
@@ -179,7 +179,7 @@ const PostCard = (props) => {
         const textWithoutTag = textArticle.replace(/<\/?[^>]+>/g,'');
 
         tryToModifyPost(textWithoutTag);
-    }
+    };
 
     /**
      * try to modify one post
@@ -197,7 +197,6 @@ const PostCard = (props) => {
             const img = image[0].file;
             formData.append('image', img, img.name);
         }
-        console.log(formData);
 
         fetch('http://localhost:3000/api/posts/modify/' + props.id, {
             headers: {
@@ -212,9 +211,9 @@ const PostCard = (props) => {
                 modifyToggle();
                 setImage([]);
                 getCurrentImg();
-                props.loadAfterFunc();
+                props.loadAfterFunc(props.user.id, props.user.token);
             })
-    }
+    };
     
     /**
      * delete current post image
@@ -232,7 +231,7 @@ const PostCard = (props) => {
             setImage([]);
             getCurrentImg();
         })
-    }
+    };
 
     /**
      * get current image
@@ -246,10 +245,9 @@ const PostCard = (props) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 setCurrentImage(data.data);
             })
-    }
+    };
 
     /**
      * get all comments for one post
@@ -298,7 +296,7 @@ const PostCard = (props) => {
                     }
                 }
             })
-    }
+    };
 
     /**
      * toggle display comments
@@ -316,8 +314,11 @@ const PostCard = (props) => {
             getAllComments();
         }
         setCommentShowToggle(!commentShowToggle);
-    }
+    };
     
+    /**
+     * handle post likes
+     */
     const handleLike = () => {
 
         fetch('http://localhost:3000/api/posts/addLike/' + props.id, {
@@ -330,11 +331,11 @@ const PostCard = (props) => {
             .then(data => {
                 if(data.success) {
                     setIsLiked(!isLiked);
-                    props.loadAfterFunc();
+                    props.loadAfterFunc(props.user.id, props.user.token);
                 }
             })
 
-    }
+    };
 
     return (
         <>

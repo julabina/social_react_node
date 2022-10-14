@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NavMenu from '../NavMenu/NavMenu';
 import logo from '../../assets/icon-left-font.png';
-import { decodeToken } from 'react-jwt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 
@@ -12,13 +11,13 @@ const Header = (props) => {
     const [reload, setReload] = useState(false);
     
     useEffect(() => {
-        console.log(props.user);
         setReload(!reload);
-        console.log(props.user);
         getUserInfos();
     },[props.user]);
 
-    
+    /**
+     * get user infos
+     */
     const getUserInfos = () => {
         if(props.user.id !== "" && props.user.id !== undefined) {
 
@@ -30,7 +29,6 @@ const Header = (props) => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
 
                 let item = {
                     userId: data.data.userId,

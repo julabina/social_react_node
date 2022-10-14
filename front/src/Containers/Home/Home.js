@@ -20,7 +20,6 @@ const Home = () => {
     const [user, setUser] = useState({token : "", id : ""})
     const [isAdmin, setIsAdmin] = useState(false);
     const [reload, setReload] = useState(false);
-    const [logStatus, setLogStatus] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
@@ -40,8 +39,7 @@ const Home = () => {
                 };
                 setUser(newUserObj);
                 getRole(newUserObj.id, newUserObj.token);
-                getAllPosts(newUserObj.id);
-                setLogStatus(true);
+                getAllPosts(newUserObj.id, newUserObj.token);
             } else {
                 // DISCONNECT
                 localStorage.removeItem('token');
@@ -53,31 +51,6 @@ const Home = () => {
         }; 
 
     },[]);
-
-    /* const handleObserver = useCallback((entries) => {
-        
-        const target = entries[0];
-        if (target.isIntersecting) {
-            console.log(toDisplayPostData);
-            console.log('TTTTTEST');
-
-            loadPosts();
-        }
-        console.log(target);
-    }, [toDisplayPostData]); */
-    
-    /* useEffect(() => {
-        console.log('handle');
-        const option = {
-            root: null,
-            rootMargin: "20px",
-            threshold: 0
-          };
-          const watcher = new IntersectionObserver(handleObserver, option);
-          if (ref.current) watcher.observe(ref.current);
-          console.log("handleBot");
-          
-    },[handleObserver]) */
 
     /**
      * check if current user is an admin
@@ -94,12 +67,11 @@ const Home = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if(data.isAdmin === true) {
                     setIsAdmin(true);
                 }
             })
-    }
+    };
 
     /**
      * controll newPost inputs
@@ -152,6 +124,7 @@ const Home = () => {
      * @param {*} text 
      */
     const tryToCreateNew = (text) => {
+        const errorCont = document.querySelector('.home__newContent__new__errorCont');
         const formData = new FormData();
 
         formData.append('text', JSON.stringify(text));
@@ -170,20 +143,38 @@ const Home = () => {
         })
             .then(res => res.json())
             .then(data => {
+                
                 if (data.success) {
-                    getAllPosts(user.id);
+                    getAllPosts(user.id, user.token);
                     setNewPost({text: ''});
                     setImage([]);
                     window.scrollTo(0, 0);
+                } else if(data.message) {
+                    errorCont.innerHTML = `
+                        <p>- ${data.message}</p>
+                    `
+                } else {
+                    errorCont.innerHTML = `
+                        <p>- Une erreur est survenue, veuillez réessayer plus tard.</p>
+                    `
                 }
             })
     };
 
     /**
      * get all posts
+     * 
+     * @param {*} id 
+     * @param {*} token 
      */
-    const getAllPosts = (id) => {
-        fetch('http://localhost:3000/api/posts/findAll')
+    const getAllPosts = (id, token) => {
+
+        fetch('http://localhost:3000/api/posts/findAll', {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            method: 'GET'
+        })
             .then(res => res.json())
             .then(data => {
                 const usersData = data.users;
@@ -231,16 +222,22 @@ const Home = () => {
             })
     };
 
+    /**
+     * add selected image
+     * 
+     * @param {*} imageList 
+     * @param {*} addUpdateIndex 
+     */
     const imgChange = (imageList, addUpdateIndex) => {
         setImage(imageList);
-    }
+    };
 
+    /**
+     * load post for infinite scroll
+     * 
+     * @returns 
+     */
     const loadPosts = () => {
-        
-        console.log('------------------------------------------------------');
-        console.log(postData);
-        console.log(toDisplayPostData);
-        console.log('------------------------------------------------------');
 
         const dispLength = toDisplayPostData.length;
         let toIndex = toDisplayPostData.length + 10;
@@ -258,16 +255,17 @@ const Home = () => {
             toDisplayPostData.push(postData[i])
         }
 
-        console.log("newArr", newArr);
         setToDisplayPostData(newArr);
         
         reloading();
-    }
+    };
 
+    /**
+     * simple reload state
+     */
     const reloading = () => {
-        console.log('reload');
         setReload(!reload);
-    }
+    };
 
     return (
         <>

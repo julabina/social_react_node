@@ -11,7 +11,7 @@ const CommentForm = (props) => {
      */
     const ctrlInput = (value) => {
         setComment(value);
-    }
+    };
 
     /**
      * add new comment for one post
@@ -38,7 +38,7 @@ const CommentForm = (props) => {
                     }
                 })
         }
-    }
+    };
 
     return (
         <div className="postArticle__comments__createForm">

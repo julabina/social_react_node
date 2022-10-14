@@ -8,10 +8,10 @@ const About = () => {
 
     const navigate = useNavigate();
 
-    const [logStatus, setLogStatus] = useState(false);
     const [user, setUser] = useState({token: "", id: ""});
     
     useEffect(() => {
+        
         if (localStorage.getItem('token') !== null) {
             let getToken = localStorage.getItem('token');
             let token = JSON.parse(getToken);
@@ -27,7 +27,6 @@ const About = () => {
                     token: token.version,
                     id: decodedToken.userId,
                 };
-                setLogStatus(true);
                 setUser(newUserObj);
             } else {
                 // DISCONNECT

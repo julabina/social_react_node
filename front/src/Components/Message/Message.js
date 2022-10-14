@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Message = (props) => {
-
-    const [loggedUser, setLoggedUser] = useState(false);
-
-    useEffect(() => {
-        if (props.isLoggedUser) {
-            setLoggedUser(true);
-        }
-    })
 
     return (
         <article className={props.isLoggedUser ? 'messenger__container__messages__msg messenger__container__messages__msg--logged' : 'messenger__container__messages__msg'}>

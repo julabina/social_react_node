@@ -58,7 +58,7 @@ exports.createPost = (req, res, next) => {
         if (JSON.parse(req.body.text) !== "") {  
             if(JSON.parse(req.body.text).length > 500) {
                 const message = "La longueur du contenu ne doit pas dépasser 500 caractères.";
-                return res.status(400).json({ error: message })
+                return res.status(400).json({ message })
             } else {
                 textWithoutTag = JSON.parse(req.body.text).replace(/<\/?[^>]+>/g,'');
             }
@@ -83,11 +83,11 @@ exports.createPost = (req, res, next) => {
                 if (error instanceof UniqueConstraintError) {
                     return res.status(400).json({message: error.message, data: error});
                 }
-                res.status(500).json({ error });
+                res.status(500).json({ message: "Une erreur est survenue, veuillez réessayer plus tard.", error });
             });
         
     } else {
-        return res.status(400).json({ error: 'Aucun contenu ajouté.' });
+        return res.status(400).json({ message : 'Aucun contenu ajouté.' });
     }
 };
 
