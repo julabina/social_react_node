@@ -17,7 +17,7 @@ exports.sign = (req, res, next) => {
 
     if(req.body.email === undefined || req.body.password === undefined || req.body.firstname === undefined || req.body.lastname === undefined) {
         const message = "Toutes les informations n'ont pas été envoyées.";
-        return res.status(401).json({ message });
+        return res.status(400).json({ message });
 
     } else if(
         req.body.password !== "" &&
@@ -52,7 +52,7 @@ exports.sign = (req, res, next) => {
                                 if (error instanceof UniqueConstraintError) {
                                     return res.status(400).json({message: error.message, data: error});
                                 }
-                                res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                                res.status(500).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
                             });
                     })
                     .catch(error => {
@@ -62,14 +62,14 @@ exports.sign = (req, res, next) => {
                         if (error instanceof UniqueConstraintError) {
                             return res.status(400).json({message: error.message, data: error});
                         }
-                        res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                        res.status(500).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
                     });
             })
             .catch(error => res.status(500).json({ error }));
 
     } else {
         const message = 'Les informations sont incorrectes ou incomplètes.';
-        return res.status(401).json({ message });
+        return res.status(400).json({ message });
     }
 };
 
@@ -113,7 +113,7 @@ exports.login = (req, res, next) => {
             .catch(error => res.status(500).json({ error }));
         } else {
             const message = 'Les informations sont incorrectes ou incomplètes.';
-            res.status(401).json({ message });
+            res.status(400).json({ message });
         }
 };
 
@@ -154,10 +154,10 @@ exports.changeBaneer = (req, res, next) => {
         })
         .then(userInfo => {
             if(!userInfo) {
-                return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+                return res.status(404).json({ error : 'Utilisateur non trouvée.' });
             }
             if(userInfo.userId !== req.auth.userId) {
-                return res.status(403).json({ error : new error('Requete non authorisée.') });
+                return res.status(403).json({ error : 'Requete non authorisée.' });
             }
 
             if (!userInfo.profilBaneer) {
@@ -169,7 +169,7 @@ exports.changeBaneer = (req, res, next) => {
                     const message = "Bannière bien modifiée.";
                     res.status(201).json({ message, success: true });
                 })
-                .catch(error => res.status(501).json({ error }));
+                .catch(error => res.status(500).json({ error }));
             } else {
                     
                 const filename = userInfo.profilBaneer.split('/images/')[1];
@@ -182,13 +182,13 @@ exports.changeBaneer = (req, res, next) => {
                         const message = "Bannière bien modifiée.";
                         res.status(201).json({ message, success: true });
                     })
-                    .catch(error => res.status(501).json({ error }));
+                    .catch(error => res.status(500).json({ error }));
                 })
                 
             }
             
         })
-        .catch(error => res.status(503).json({ error }));
+        .catch(error => res.status(500).json({ error }));
     } else {
         const message = 'Aucune image importée.';
         res.status(400).json({ message });
@@ -211,10 +211,10 @@ exports.editNames = (req, res, next) => {
         })
             .then(userInfo => {
                 if(!userInfo) {
-                    return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+                    return res.status(404).json({ error : 'Utilisateur non trouvée.' });
                 }
                 if(userInfo.userId !== req.auth.userId) {
-                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                    return res.status(403).json({ error : 'Requete non authorisée.' });
                 }
 
                 userInfo.update({
@@ -223,7 +223,7 @@ exports.editNames = (req, res, next) => {
                 })
                     .then(() => {
                         const message = "Informations bien modifiés.";
-                        res.status(200).json({ message, success: true })
+                        res.status(201).json({ message, success: true })
                     })
                     .catch(error => {
                         if (error instanceof ValidationError) {
@@ -232,7 +232,7 @@ exports.editNames = (req, res, next) => {
                         if (error instanceof UniqueConstraintError) {
                             return res.status(400).json({message: error.message, data: error});
                         }
-                        res.status(401).json({ error });
+                        res.status(500).json({ error });
                     });
 
             })
@@ -252,15 +252,15 @@ exports.editEmail = (req, res, next) => {
         User.findByPk(req.params.id)
             .then(user => {
                 if(!user) {
-                    return res.status(404).json({ error : new error('Utilisateur non trouvée.') });
+                    return res.status(404).json({ error: 'Utilisateur non trouvée.' });
                 }
                 if(user.id !== req.auth.userId) {
-                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                    return res.status(403).json({ error : 'Requete non authorisée.' });
                 }
 
                 if(user.email !== req.body.email) {
                     const message = "L'email ne correspond pas à celui du compte.";
-                    return res.status(401).json({ message, error: "email" });
+                    return res.status(403).json({ message, error: "email" });
                 }
 
                 bcrypt.compare(req.body.password, user.password)
@@ -284,7 +284,7 @@ exports.editEmail = (req, res, next) => {
                         if (error instanceof UniqueConstraintError) {
                             return res.status(400).json({message: error.message, data: error});
                         }
-                        res.status(401).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
+                        res.status(500).json({ message: "Une erreur est survenue lors de la création de l'utilisateur.", error });
                     });
 
                     })
@@ -295,7 +295,7 @@ exports.editEmail = (req, res, next) => {
                         if (error instanceof UniqueConstraintError) {
                             return res.status(400).json({message: error.message, data: error});
                         }
-                        res.status(401).json({ error });
+                        res.status(500).json({ error });
                     });
 
             })
@@ -346,7 +346,7 @@ exports.changeProfilImg = (req, res, next) => {
                 return res.status(404).json({ error :'Utilisateur non trouvé.' });
             }
             if(userInfo.userId !== req.auth.userId) {
-                return res.status(401).json({ error : 'Requete non authorisée.' });
+                return res.status(403).json({ error : 'Requete non authorisée.' });
             }
 
             if (!userInfo.profilImg) {
@@ -358,7 +358,7 @@ exports.changeProfilImg = (req, res, next) => {
                     const message = "Photo de profil bien modifiée.";
                     res.status(201).json({ message, success: true });
                 })
-                .catch(error => res.status(501).json({ error }));
+                .catch(error => res.status(500).json({ error }));
             } else {
 
                 const filename = userInfo.profilImg.split('/images/')[1];
@@ -371,12 +371,12 @@ exports.changeProfilImg = (req, res, next) => {
                         const message = "Photo de profil bien modifiée.";
                         res.status(201).json({ message, success: true });
                     })
-                    .catch(error => res.status(501).json({ error }));
+                    .catch(error => res.status(500).json({ error }));
                 })
                 
             }
         })
-        .catch(error => res.status(503).json({ error }));
+        .catch(error => res.status(500).json({ error }));
     } else {
         const message = 'Aucune image importée.';
         res.status(400).json({ message });

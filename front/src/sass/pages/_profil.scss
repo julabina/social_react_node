@@ -179,6 +179,7 @@
                         margin-right: 7px;
                         img {
                             height: 35px;width: 35px;
+                            object-fit: cover;
                         }
                     } 
                     h3 {
@@ -379,6 +380,7 @@
                         img {
                             height: 85px;
                             width: 85px;
+                            object-fit: cover;
                         }
                     }
                     &__name {

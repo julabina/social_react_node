@@ -981,6 +981,7 @@ body {
 .header__btns__btn--profil img {
   height: 35px;
   width: 35px;
+  object-fit: cover;
 }
 .header__btns__btn__user {
   height: 22px;
@@ -1545,6 +1546,7 @@ main {
 .profil__content__left__friend__infos__imgCont img {
   height: 35px;
   width: 35px;
+  object-fit: cover;
 }
 .profil__content__left__friend__infos h3 {
   font-size: 1.2em;
@@ -1778,6 +1780,7 @@ main {
 .profil__friendsList__list__friend__left__imgCont img {
   height: 85px;
   width: 85px;
+  object-fit: cover;
 }
 .profil__friendsList__list__friend__left__name {
   font-size: 1.2em;
@@ -1874,6 +1877,7 @@ main {
 .messenger__userSelected__user__imgCont img {
   height: 40px;
   width: 40px;
+  object-fit: cover;
 }
 .messenger__userSelected__user p {
   font-size: 1.2em;
@@ -2014,6 +2018,7 @@ main {
 .messenger__friendsList__friend__profil__imgCont img {
   height: 30px;
   width: 30px;
+  object-fit: cover;
 }
 .messenger__friendsList__friend__profil__fullname {
   font-size: 1.1em;

@@ -21,7 +21,7 @@ exports.createFriendQuery = (req, res, next) => {
             
             if(friend !== null) {
                 const message = "Une relation existe deja.";
-                return res.status(401).json({ message });
+                return res.status(403).json({ message });
             }
             
             const user1 = req.auth.userId;
@@ -143,7 +143,7 @@ exports.cancelFriendQuery = (req, res, next) => {
             }
             if(request.status !== "pending") {
                 const message = "Aucune requete en attente.";
-                return res.status(401).json({ message });
+                return res.status(403).json({ message });
             }
 
             chatId = request.dataValues.chatId;
@@ -212,7 +212,7 @@ exports.acceptFriendQuery = (req, res, next) => {
             }
             if (relation.status !== "received") {
                 const message = "Mauvais status de la relation.";
-                return res.status(401).json({ message });
+                return res.status(403).json({ message });
             }
 
             relation.update({
@@ -242,7 +242,7 @@ exports.acceptFriendQuery = (req, res, next) => {
                                 status: "friend"
                             }) 
                                 .then(() => {
-                                    const message_= "Relation mise à jour.";
+                                    const message = "Relation mise à jour.";
                                     res.status(201).json({ message, success: true });
                                 })
                                 .catch(error => {
@@ -307,13 +307,13 @@ exports.cancelRelation = (req, res, next) => {
                                     .then(chat => {
                                         if (!chat) {
                                             const message = "Aucune conversation trouvée.";
-                                            return res.status(201).json({ message });
+                                            return res.status(404).json({ message });
                                         }
 
                                         chat.destroy()
                                             .then(() => {
                                                 const message = "Relation bien supprimée.";
-                                                return res.status(201).json({ message, success: true });
+                                                return res.status(200).json({ message, success: true });
                                             })
                                             .catch(error => {
                                                 return res.status(500).json({ error })
@@ -335,13 +335,13 @@ exports.cancelRelation = (req, res, next) => {
                                     .then(chat => {
                                         if (!chat) {
                                             const message = "Aucune conversation trouvée.";
-                                            return res.status(201).json({ message });
+                                            return res.status(404).json({ message });
                                         }
 
                                         chat.destroy()
                                             .then(() => {
                                                 const message = "Relation bien supprimée.";
-                                                return res.status(201).json({ message, success: true });
+                                                return res.status(200).json({ message, success: true });
                                             })
                                             .catch(error => {
                                                 return res.status(500).json({ error })
@@ -365,13 +365,13 @@ exports.cancelRelation = (req, res, next) => {
                                             .then(chat => {
                                                 if (!chat) {
                                                     const message = "Aucune conversation trouvée.";
-                                                    return res.status(201).json({ message });
+                                                    return res.status(404).json({ message });
                                                 }
 
                                                 chat.destroy()
                                                     .then(() => {
                                                         const message = "Relations bien supprimée.";
-                                                        return res.status(201).json({ message, success: true });
+                                                        return res.status(200).json({ message, success: true });
                                                     })
                                                     .catch(error => {
                                                         return res.status(500).json({ error })
@@ -380,8 +380,8 @@ exports.cancelRelation = (req, res, next) => {
                                             .catch(error => {
                                                 return res.status(500).json({ error })
                                             });
-                                            })
-                                            .catch(error => res.status(500).json({ error }));
+                                    })
+                                    .catch(error => res.status(500).json({ error }));
                             })
                             .catch(error => res.status(500).json({ error }));
                 })

@@ -103,7 +103,7 @@ exports.findResponse = (req, res, next) => {
     })
         .then(({ count, rows }) => {
             if(count === 0) {
-                return res.status(404).json({ error : new error('aucune reponses trouvée.') });
+                return res.status(404).json({ error : 'aucune reponses trouvée.' });
             }
             const message = `${count} reponses bien trouvé.`;
             res.status(200).json({ message, data: rows, count });
@@ -124,10 +124,10 @@ exports.deleteComment = (req, res, next) => {
     Comment.findByPk(req.params.id)
         .then(comment => {
             if (!comment) {
-                return res.status(404).json({ error: new error('Aucun commentaire trouvé.') });
+                return res.status(404).json({ error: 'Aucun commentaire trouvé.' });
             }
             if ((comment.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                return res.status(403).json({ error: new error('Requete non authorisée.') });
+                return res.status(403).json({ error: 'Requete non authorisée.' });
             }
 
             Comment.destroy({
@@ -169,10 +169,10 @@ exports.modifyComment = (req, res, next) => {
         Comment.findByPk(req.params.id)
             .then(comment => {
                 if(!comment) {
-                    return res.status(404).json({ error : new error('Commentaire non trouvée.') });
+                    return res.status(404).json({ error : 'Commentaire non trouvée.' });
                 }
                 if((comment.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                    return res.status(403).json({ error : new error('Requete non authorisée.') });
+                    return res.status(403).json({ error : 'Requete non authorisée.' });
                 }
 
                 comment.update({
@@ -242,7 +242,7 @@ exports.handleLike = (req, res, next) => {
             }, {silent: true})
                 .then(() => {
                     const message = "Like pris en compte.";
-                    res.status(200).json({ message, success: true });
+                    res.status(201).json({ message, success: true });
                 })
                 .catch(error => res.status(500).json({ error }));
             

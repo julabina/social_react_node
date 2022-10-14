@@ -58,7 +58,7 @@ exports.createPost = (req, res, next) => {
         if (JSON.parse(req.body.text) !== "") {  
             if(JSON.parse(req.body.text).length > 500) {
                 const message = "La longueur du contenu ne doit pas dépasser 500 caractères.";
-                return res.status(401).json({ error: message })
+                return res.status(400).json({ error: message })
             } else {
                 textWithoutTag = JSON.parse(req.body.text).replace(/<\/?[^>]+>/g,'');
             }
@@ -83,11 +83,11 @@ exports.createPost = (req, res, next) => {
                 if (error instanceof UniqueConstraintError) {
                     return res.status(400).json({message: error.message, data: error});
                 }
-                res.status(401).json({ error });
+                res.status(500).json({ error });
             });
         
     } else {
-        return res.status(401).json({ error: new error('Aucun contenu ajouté.') });
+        return res.status(400).json({ error: 'Aucun contenu ajouté.' });
     }
 };
 
@@ -107,7 +107,7 @@ exports.createPost = (req, res, next) => {
             }
             
             if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                return res.status(401).json({ error: 'Requete non authorisée.' });
+                return res.status(403).json({ error: 'L\id ne correspond pas.' });
             } 
 
             if (post.picture) {
@@ -126,7 +126,7 @@ exports.createPost = (req, res, next) => {
                             })
                             .catch(error => res.status(500).json({ error }));
                     })
-                    .catch(error => res.status(400).json({ error }));
+                    .catch(error => res.status(500).json({ error }));
                 });
             } else {
                 Post.destroy({ where: {id: req.params.id} })
@@ -142,7 +142,7 @@ exports.createPost = (req, res, next) => {
                         })
                         .catch(error => res.status(500).json({ error }));
                 })
-                .catch(error => res.status(400).json({ error }));
+                .catch(error => res.status(500).json({ error }));
             }
         })
         .catch(error => res.status(500).json({ error }));
@@ -168,7 +168,7 @@ exports.modifyPost = (req, res, next) => {
                 }
                 
                 if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                    return res.status(401).json({ error: 'Requete non authorisée.' });
+                    return res.status(403).json({ error: 'L\id ne correspond pas.' });
                 } 
 
                 let textWithoutTag = ""
@@ -176,7 +176,7 @@ exports.modifyPost = (req, res, next) => {
                 if (JSON.parse(req.body.text) !== "") {  
                     if(JSON.parse(req.body.text).length > 500) {
                         const message = "La longueur du contenu ne doit pas dépasser 500 caractères.";
-                        return res.status(401).json({ error: message })
+                        return res.status(400).json({ error: message })
                     } else {
                         textWithoutTag = JSON.parse(req.body.text).replace(/<\/?[^>]+>/g,'');
                     }
@@ -193,7 +193,7 @@ exports.modifyPost = (req, res, next) => {
                     )
                         .then(() => {
                             const message = "Post mis à jour.";
-                            res.status(200).json({ message });   
+                            res.status(201).json({ message });   
                         })
                         .catch(error => {
                             if (error instanceof ValidationError) {
@@ -202,7 +202,7 @@ exports.modifyPost = (req, res, next) => {
                             if (error instanceof UniqueConstraintError) {
                                 return res.status(400).json({message: error.message, data: error});
                             }
-                            res.status(401).json({ error });
+                            res.status(500).json({ error });
                         });                       
                 } else {
                     post.update(
@@ -212,7 +212,7 @@ exports.modifyPost = (req, res, next) => {
                     )
                         .then(() => {
                             const message = "Post mis à jour.";
-                            res.status(200).json({ message });   
+                            res.status(201).json({ message });   
                         })
                         .catch(error => {
                             if (error instanceof ValidationError) {
@@ -221,13 +221,13 @@ exports.modifyPost = (req, res, next) => {
                             if (error instanceof UniqueConstraintError) {
                                 return res.status(400).json({message: error.message, data: error});
                             }
-                            res.status(401).json({ error });
+                            res.status(500).json({ error });
                         });
                 }
             })
             .catch(error => res.status(500).json({ error }));
     } else {
-        return res.status(401).json({ error: new error('Aucun contenu ajouté.') });
+        return res.status(400).json({ error: 'Aucun contenu ajouté.' });
     }
 };
 
@@ -246,7 +246,7 @@ exports.deleteCurrentImg = (req, res, next) => {
             }
             
             if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                return res.status(401).json({ error: 'Requete non authorisée.' });
+                return res.status(403).json({ error: 'L\id ne correspond pas.' });
             }   
 
             const filename = post.picture.split('/images/')[1];
@@ -260,7 +260,7 @@ exports.deleteCurrentImg = (req, res, next) => {
                         const message = "Image bien supprimée.";
                         res.status(200).json({ message });
                     })
-                    .catch(error => res.status(400).json({ error }));
+                    .catch(error => res.status(500).json({ error }));
             });
         })
         .catch(error => res.status(500).json({ error }));
@@ -281,7 +281,7 @@ exports.getPicture = (req, res, next) => {
             }
             
             if ((post.userId !== req.auth.userId) && (req.auth.isAdmin !== true)) {
-                return res.status(401).json({ error: 'Requete non authorisée.' });
+                return res.status(403).json({ error: 'L\id ne correspond pas.' });
             } 
 
             const image = post.picture;
@@ -306,7 +306,7 @@ exports.findAllPostForUser = (req, res, next) => {
     })
         .then(posts => {
             if(!posts) {
-                return res.status(404).json({ error : new error('Aucun post de trouvé.') });
+                return res.status(404).json({ error : 'Aucun post de trouvé.' });
             }
 
             const message = "Des posts ont bien été trouvé..";
@@ -360,7 +360,7 @@ exports.handleLike = (req, res, next) => {
             }, {silent: true})
                 .then(() => {
                     const message = "Like pris en compte.";
-                    res.status(200).json({ message, success: true });
+                    res.status(201).json({ message, success: true });
                 })
                 .catch(error => res.status(500).json({ error }));
             

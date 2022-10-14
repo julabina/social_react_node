@@ -20,6 +20,7 @@
                 overflow: hidden;
                 img {
                     height: 40px;width: 40px;
+                    object-fit: cover;
                 }
             }
             p {
@@ -141,6 +142,7 @@
                     overflow: hidden;
                     img {
                         height: 30px;width: 30px;
+                        object-fit: cover;
                     }
                 }
                 &__fullname {
