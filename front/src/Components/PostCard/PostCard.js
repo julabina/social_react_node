@@ -127,6 +127,7 @@ const PostCard = (props) => {
         })
             .then(res => {
                 if (res.status === 200) {
+                    console.log(props.user.id, props.user.token);
                     props.loadAfterFunc(props.user.id, props.user.token);
                 }
             })
@@ -168,8 +169,8 @@ const PostCard = (props) => {
         }
         
         if (textArticle !== "") {   
-            if (textArticle.length < 10 || textArticle.length > 500) {
-                errorP.textContent = '- La longueur du contenu doit être compris entre 10 et 500 caractères.'; 
+            if (textArticle.length > 500) {
+                errorP.textContent = '- La longueur du contenu ne doit pas dépasser 500 caractères.'; 
                 return errorCont.append(errorP);
             }
         }
@@ -479,7 +480,7 @@ const PostCard = (props) => {
             toggleDeleteModal &&
             <div className="postArticle__deleteModal">
                 <div className="postArticle__deleteModal__modal">
-                    <h2>Voulez vous vraiment supprimer ce post</h2>
+                    <h3>Voulez vous vraiment supprimer ce post</h3>
                     <p className='postArticle__deleteModal__modal__alert'>Cette action est définitive !</p>
                     <div className="postArticle__deleteModal__modal__btnCont">
                         <button onClick={tryToDeletePost}>Supprimer</button>

@@ -314,9 +314,10 @@ body {
   padding: 20px 30px;
   border-radius: 5px;
 }
-.postArticle__deleteModal__modal h2 {
+.postArticle__deleteModal__modal h3 {
   font-size: 1.4em;
   font-weight: 600;
+  color: #4e5166;
 }
 .postArticle__deleteModal__modal__alert {
   color: #dd0000;
@@ -356,7 +357,7 @@ body {
   width: 100%;
   margin-top: 25px;
 }
-.postArticle__comments__createForm textarea {
+.postArticle__comments__createForm input {
   background-color: #fff1f1;
   border: none;
   border-radius: 30px;
@@ -368,6 +369,7 @@ body {
   resize: none;
   width: 250px;
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
+  font-size: 0.95em;
 }
 .postArticle__comments__createForm button {
   background: #ffd7d7;
@@ -380,10 +382,11 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: all 150ms ease-in-out;
-  height: 39px;
+  height: 40px;
   border-radius: 0 30px 30px 0;
   padding-right: 15px;
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
+  margin-top: -1px;
 }
 .postArticle__comments__createForm button:hover {
   background: #ffbebe;
@@ -1447,6 +1450,11 @@ main {
 .profil__top__pictures__changeBaneer--valid {
   right: 120px;
 }
+@media screen and (max-width: 1050px) {
+  .profil__top__pictures {
+    width: 100%;
+  }
+}
 .profil__top__infos {
   display: flex;
   align-items: center;
@@ -1477,6 +1485,17 @@ main {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }
+@media screen and (max-width: 1050px) {
+  .profil__top__infos {
+    width: auto;
+    justify-content: flex-end;
+    width: 100%;
+    margin: initial;
+  }
+  .profil__top__infos__btnCont button {
+    margin-right: 20px;
+  }
+}
 .profil__top__menu {
   display: flex;
   align-items: center;
@@ -1498,6 +1517,11 @@ main {
 .profil__top__menu p:hover {
   color: #fd2d01;
   transition: all 120ms ease-in-out;
+}
+@media screen and (max-width: 1050px) {
+  .profil__top__menu {
+    width: 100%;
+  }
 }
 .profil__content {
   display: flex;
@@ -1571,6 +1595,20 @@ main {
 }
 .profil__content__articles article {
   margin-bottom: 20px;
+}
+@media screen and (max-width: 1050px) {
+  .profil__content {
+    width: 100%;
+    justify-content: center;
+  }
+  .profil__content__left {
+    display: none;
+  }
+}
+@media screen and (max-width: 750px) {
+  .profil__content__articles {
+    width: 95%;
+  }
 }
 .profil__edit {
   display: flex;
@@ -1677,6 +1715,14 @@ main {
   width: 800px;
   margin-bottom: 15px;
   color: #dd0000;
+}
+@media screen and (max-width: 1050px) {
+  .profil__edit {
+    width: 95%;
+  }
+  .profil__edit__form {
+    width: 90%;
+  }
 }
 .profil__changeProfilImg, .profil__confirmCancelRelation {
   z-index: 1000;
@@ -1851,6 +1897,18 @@ main {
   padding-top: 50px;
   border-top: 1px solid #cfcfcf;
 }
+@media screen and (max-width: 1050px) {
+  .profil__friendsList {
+    width: 95%;
+    padding: 25px 0px 70px;
+  }
+  .profil__friendsList__list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
 .messenger {
   position: fixed;
@@ -1902,7 +1960,7 @@ main {
   border-radius: 3px;
   width: 600px;
   height: 100%;
-  margin-bottom: 62px;
+  margin-bottom: 72px;
   padding: 25px;
   overflow-x: scroll;
   background: white;
@@ -1956,7 +2014,7 @@ main {
   margin-left: -25px;
   background: white;
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   height: 80px;
 }
 .messenger__container__form input {
@@ -2052,6 +2110,44 @@ main {
 .messenger__friendsList__friend:hover {
   background: #ffd7d7;
 }
+@media screen and (max-width: 1230px) {
+  .messenger__friendsList__friend {
+    width: 150px;
+  }
+}
+@media screen and (max-width: 1050px) {
+  .messenger__friendsList--hide {
+    display: none;
+  }
+}
+@media screen and (max-width: 1050px) {
+  .messenger__friendsList {
+    z-index: 1;
+  }
+}
+.messenger__friendToggleBtn {
+  display: none;
+  background: #ffd7d7;
+  border: none;
+  padding: 5px 10px;
+  color: #4e5166;
+  font-weight: 600;
+  text-transform: uppercase;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+  margin-top: 15px;
+}
+.messenger__friendToggleBtn:hover {
+  background: #ffbebe;
+  transition: all 150ms ease-in-out;
+}
+@media screen and (max-width: 1050px) {
+  .messenger__friendToggleBtn {
+    display: block;
+  }
+}
 
 .notFound {
   height: 100vh;
@@ -2124,6 +2220,17 @@ main {
   font-weight: 500;
   color: #080808;
 }
+@media screen and (max-width: 1050px) {
+  .about section {
+    width: 700px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .about section {
+    width: 85%;
+    padding: 10px 20px;
+  }
+}
 
 .legals {
   position: fixed;
@@ -2175,6 +2282,16 @@ main {
 }
 .legals__content__p2 {
   margin-top: 30px;
+}
+@media screen and (max-width: 1050px) {
+  .legals__content {
+    width: 700px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .legals__content {
+    width: 90%;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

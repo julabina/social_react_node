@@ -266,3 +266,21 @@
         }
     }
 }
+
+@mixin toLowDesktop {
+    @media screen and (max-width: map-get($queries, lowDesktop)) {
+        @content;
+    }
+}
+
+@mixin toTablet {
+    @media screen and (max-width: map-get($queries, tablet)) {
+        @content;
+    }
+}
+
+@mixin toMobile {
+    @media screen and (max-width: map-get($queries, mobile)) {
+        @content;
+    }
+}

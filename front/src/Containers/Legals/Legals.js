@@ -58,7 +58,7 @@ const Legals = () => {
 
                 <h2>Hébergement</h2>
                 <p>Groupomania est hébergé par Digital Ocean</p>
-                <p>Siège social: </p>
+                <p>Siège social: Digitalocean LLC, 101 Avenue of the Americas 10th Floor New York, NY 10013 United States.</p>
                 <p className='legals__content__p2'>Cet hébergeur détient à ce jour les informations personnelles concernant l'auteur de ce site.</p>
             </section>
         </main>

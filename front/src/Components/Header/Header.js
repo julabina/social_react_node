@@ -29,7 +29,6 @@ const Header = (props) => {
             })
             .then(res => res.json())
             .then(data => {
-
                 let item = {
                     userId: data.data.userId,
                     firstname: data.data.firstname,
@@ -49,7 +48,6 @@ const Header = (props) => {
                 <a href="/"><img className="header__menu__logo" src={logo} alt="logo de groupomania" /></a>
             </div>
             <div className="header__btns">
-                <div className="header__btns__btn"></div>
                     <a href={"/profil_=" + props.user.id}><div className="header__btns__btn header__btns__btn--profil">
                     {
                         userData.profilImg !== null ? <img src={userData.profilImg} alt="" /> : <FontAwesomeIcon icon={faUser} className="header__btns__btn__user" /> 

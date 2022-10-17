@@ -263,8 +263,11 @@ const Profil = () => {
             if(tabs[i].classList.contains('profil__edit__form__tabsCon__tab--active') && i !== ind) {
                 tabs[i].classList.remove('profil__edit__form__tabsCon__tab--active');
             }
-            if(!tabsContainer[i].classList.contains('profil__edit__form__container--hidden') && i !== ind)  {
-                tabsContainer[i].classList.add('profil__edit__form__container--hidden');
+            
+            if (i !== 3){
+                if(!tabsContainer[i].classList.contains('profil__edit__form__container--hidden') && i !== ind)  {
+                    tabsContainer[i].classList.add('profil__edit__form__container--hidden');
+                }
             }    
             
             if(i === ind) {

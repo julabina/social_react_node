@@ -25,6 +25,7 @@ const Messenger = () => {
     const [reload, setReload] = useState(false);
     const [paramsLoad, setParamsLoad] = useState(false);
     const [friendInfos, setFriendInfos] = useState({});
+    const [friendListBtn, setFriendListBtn] = useState('Afficher amis');
 
     /**
      * listen socket
@@ -413,6 +414,18 @@ const Messenger = () => {
                 setMessages(newArr);
             })
     };
+
+    const toggleFriendList = () => {
+        const friendList = document.querySelector('.messenger__friendsList');
+
+        if (friendList.classList.contains('messenger__friendsList--hide')) {
+            friendList.classList.remove('messenger__friendsList--hide');
+            setFriendListBtn('Cacher amis');
+        } else {
+            friendList.classList.add('messenger__friendsList--hide');
+            setFriendListBtn('Afficher amis');
+        }
+    }
     
     return (
         <>
@@ -426,9 +439,9 @@ const Messenger = () => {
         </Helmet>
         <Header user={user} />
         <main className='messenger'>
-            <section className="messenger__friendsList">
+            <button className='messenger__friendToggleBtn' onClick={toggleFriendList}>{friendListBtn}</button>
+            <section className="messenger__friendsList messenger__friendsList--hide">
                 {
-
                     friends.length === 0 ?
                     <p className='messenger__friendsList__noFriend'>Pas encore d'amis</p>
                     :

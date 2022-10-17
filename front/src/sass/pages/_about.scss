@@ -23,5 +23,12 @@
             font-weight: 500;
             color: map-get($map: $colors, $key:light-black );
         }
+        @include toTablet {
+            width: 700px;
+        }
+        @include toMobile {
+            width: 85%;
+            padding: 10px 20px;
+        }
     }
 }

@@ -42,7 +42,7 @@ const CommentForm = (props) => {
 
     return (
         <div className="postArticle__comments__createForm">
-            <textarea onInput={(e) => ctrlInput(e.target.value)} value={comment} placeholder="Ajouter un commentaire"></textarea>
+            <input type="text" onInput={(e) => ctrlInput(e.target.value)} value={comment} placeholder="Ajouter un commentaire" />
             <button onClick={sendComment}>Envoyer</button>
         </div>
     );

@@ -168,6 +168,7 @@ const Home = () => {
      * @param {*} token 
      */
     const getAllPosts = (id, token) => {
+        console.log(id, token);
 
         fetch('http://localhost:3000/api/posts/findAll', {
             headers: {
@@ -328,10 +329,11 @@ const Home = () => {
                         next={loadPosts}
                         scrollThreshold={0.9}
                         hasMore={true}
+                        style={{overflow: 'none'}}
                     >
                         {
                             toDisplayPostData.map(el => {
-                                return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={() => getAllPosts()} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
+                                return <PostCard content={el.content} id={el.id} key={el.id} picture={el.picture} created={el.created} updated={el.updated} userId={el.userId} firstname={el.firstname} lastname={el.lastname} profilImg={el.profilImg} user={user} loadAfterFunc={getAllPosts} isAdmin={isAdmin} likedByUser={el.likedByUser} likes={el.likes} />
                             })
                         }
                     </InfiniteScroll>

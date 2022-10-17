@@ -215,9 +215,10 @@
             background: map-get($colors, light-white);
             padding: 20px 30px;
             border-radius: 5px;
-            h2 {
+            h3 {
                 font-size: 1.4em;
                 font-weight: 600;
+                color: map-get($map: $colors, $key:tertiary );
             }
             &__alert {
                 color: map-get($map: $colors, $key:light-red );
@@ -248,20 +249,22 @@
             justify-content: center;
             width: 100%;
             margin-top: 25px;
-            textarea {
+            input {
                 @include inputField;
                 border-radius: 30px 0 0 30px;
                 height: 35px;
                 resize: none;
                 width: 250px;
                 box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
+                font-size: 0.95em; 
             }
             button {
                 @include btn;
-                height: 39px;
+                height: 40px;
                 border-radius: 0 30px 30px 0;
                 padding-right: 15px;
                 box-shadow: 1px 0 5px rgba(0, 0, 0, 0.19);
+                margin-top: -1px;
             }
         }
         &__commentsContainer {
