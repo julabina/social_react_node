@@ -415,6 +415,9 @@ const Messenger = () => {
             })
     };
 
+    /**
+     * toggle the friends list for tablet and low version
+     */
     const toggleFriendList = () => {
         const friendList = document.querySelector('.messenger__friendsList');
 
@@ -425,7 +428,7 @@ const Messenger = () => {
             friendList.classList.add('messenger__friendsList--hide');
             setFriendListBtn('Afficher amis');
         }
-    }
+    };
     
     return (
         <>

@@ -265,6 +265,9 @@
             transition: all 140ms ease-in-out;
         }
     }
+    @include toTablet {
+        right: -60px;
+    }
 }
 
 @mixin toLowDesktop {

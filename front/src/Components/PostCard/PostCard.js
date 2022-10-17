@@ -337,6 +337,14 @@ const PostCard = (props) => {
 
     };
 
+    /**
+     * simulate with alert event a post report
+     */
+    const reportPost = () => {
+        setToggleMenu(false);
+        alert('Publication signalé.');
+    };
+
     return (
         <>
         <article className="postArticle">
@@ -364,7 +372,7 @@ const PostCard = (props) => {
                                     <li className="postArticle__top__menu__cont__separator"></li>
                                 </>
                             }
-                            <li>Signaler la publication</li>
+                            <li onClick={reportPost}>Signaler la publication</li>
                         </ul>
                     </div>
                 }

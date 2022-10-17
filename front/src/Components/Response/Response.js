@@ -122,6 +122,14 @@ const Response = (props) => {
 
     };
 
+    /**
+     * simulate with alert event a response report
+     */
+     const reportResponse = () => {
+        setToggleResponseMenu(false);
+        alert('Commentaire signalé.');
+    };
+
     return (
         <>
         <article className='response'>
@@ -157,7 +165,7 @@ const Response = (props) => {
                                         <li className="response__top__menuCont__menu__separator"></li>
                                     </>
                                 }
-                                <li className='response__top__menuCont__menu__link'>Signaler le commentaire</li>
+                                <li onClick={reportResponse} className='response__top__menuCont__menu__link'>Signaler le commentaire</li>
                             </ul>
                         </div>
                     }

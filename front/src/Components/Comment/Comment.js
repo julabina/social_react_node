@@ -289,6 +289,14 @@ const Comment = (props) => {
                 }
             })
     };
+    
+    /**
+     * simulate with alert event a comment report
+     */
+     const reportComment = () => {
+        setToggleCommentMenu(false);
+        alert('Commentaire signalé.');
+    };
 
     return (
         <>
@@ -325,7 +333,7 @@ const Comment = (props) => {
                                         <li className="comment__top__menuCont__menu__separator"></li>
                                     </>
                                 }
-                                <li className='comment__top__menuCont__menu__link'>Signaler le commentaire</li>
+                                <li onClick={reportComment} className='comment__top__menuCont__menu__link'>Signaler le commentaire</li>
                             </ul>
                         </div>
                     }
