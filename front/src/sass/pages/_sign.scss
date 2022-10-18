@@ -1,3 +1,18 @@
 .sign {
     @include registUserForm;
+    @include toMobile {
+        &__section {
+            width: 95%;
+            &__form {
+                &__cont {
+                    flex-direction: column;
+                }
+            }
+            button {
+                width: 100%;
+                margin-top: 20px;
+                height: 40px;
+            }
+        }
+    }
 }

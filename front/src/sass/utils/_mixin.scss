@@ -81,6 +81,15 @@
                     width: 100px;
                 }
             }
+            @include toMobile {
+                h1 {
+                    text-align: center;
+                }
+                &__btnCont {
+                    width: 100%;
+                    margin-left: initial;
+                }
+            }
         }
         &__link {
             color: blue;

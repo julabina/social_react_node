@@ -1181,6 +1181,9 @@ body {
   color: #c8c8c8;
 }
 @media screen and (max-width: 750px) {
+  .header {
+    padding: 0 10px;
+  }
   .header__menu__nav {
     width: 50%;
   }
@@ -1190,6 +1193,9 @@ body {
   }
   .header__menu__nav__icon {
     height: 22px;
+  }
+  .header__btns__btn--profil {
+    margin-right: 0;
   }
 }
 
@@ -1417,6 +1423,15 @@ main {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }
+@media screen and (max-width: 750px) {
+  .sign__section__form h1 {
+    text-align: center;
+  }
+  .sign__section__form__btnCont {
+    width: 100%;
+    margin-left: initial;
+  }
+}
 .sign__section__link {
   color: blue;
   margin-left: 10px;
@@ -1428,6 +1443,19 @@ main {
 }
 .sign__section__link--noMarg {
   margin-left: 0;
+}
+@media screen and (max-width: 750px) {
+  .sign__section {
+    width: 95%;
+  }
+  .sign__section__form__cont {
+    flex-direction: column;
+  }
+  .sign__section button {
+    width: 100%;
+    margin-top: 20px;
+    height: 40px;
+  }
 }
 
 .login {
@@ -1509,6 +1537,15 @@ main {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
 }
+@media screen and (max-width: 750px) {
+  .login__section__form h1 {
+    text-align: center;
+  }
+  .login__section__form__btnCont {
+    width: 100%;
+    margin-left: initial;
+  }
+}
 .login__section__link {
   color: blue;
   margin-left: 10px;
@@ -1529,6 +1566,21 @@ main {
 }
 .login__section button {
   width: 170px;
+}
+@media screen and (max-width: 750px) {
+  .login__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  }
+  .login__section__form {
+    width: 92%;
+  }
+  .login__section button {
+    width: 100%;
+    height: 40px;
+  }
 }
 
 .profil__top {
@@ -1743,6 +1795,47 @@ main {
     width: 100%;
   }
 }
+@media screen and (max-width: 750px) {
+  .profil__top__pictures {
+    display: flex;
+    justify-content: center;
+  }
+  .profil__top__pictures__baneer {
+    height: 180px;
+  }
+  .profil__top__pictures__baneer img {
+    height: 180px;
+  }
+  .profil__top__pictures__baneer__new {
+    position: relative;
+    z-index: 10;
+    height: 180px;
+  }
+  .profil__top__pictures__baneer__new__btn {
+    margin-top: 40px;
+  }
+  .profil__top__pictures__profilImg {
+    z-index: 1;
+    bottom: -90px;
+    left: initial;
+  }
+  .profil__top__pictures__changeBaneer {
+    bottom: initial;
+    top: 10px;
+    z-index: 15;
+  }
+  .profil__top__infos {
+    margin-top: 95px;
+    flex-direction: column;
+    height: auto;
+  }
+  .profil__top__infos p {
+    margin-bottom: 25px;
+  }
+  .profil__top__menu {
+    justify-content: center;
+  }
+}
 .profil__content {
   display: flex;
   justify-content: space-between;
@@ -1944,6 +2037,15 @@ main {
     width: 90%;
   }
 }
+@media screen and (max-width: 750px) {
+  .profil__edit__form__tabsCon {
+    flex-direction: column;
+  }
+  .profil__edit__form__tabsCon__tab {
+    width: 100%;
+    border-right: solid 1px #c2c2c2;
+  }
+}
 .profil__changeProfilImg, .profil__confirmCancelRelation {
   z-index: 1000;
   position: fixed;
@@ -2143,6 +2245,26 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+}
+@media screen and (max-width: 750px) {
+  .profil__friendsList__list__friend {
+    width: 92%;
+  }
+  .profil__friendsList__list__friend__left__imgCont {
+    display: flex;
+    justify-content: center;
+    overflow: initial;
+  }
+  .profil__friendsList__list__friend__left__imgCont img {
+    border-radius: 10px;
+  }
+  .profil__friendsList__list__friend__right__menuCont {
+    width: 100%;
+  }
+  .profil__friendsList__list__friend__right__menuCont__menu {
+    right: 0;
+    width: 160px;
   }
 }
 
@@ -2382,6 +2504,26 @@ main {
 @media screen and (max-width: 1050px) {
   .messenger__friendToggleBtn {
     display: block;
+  }
+}
+@media screen and (max-width: 750px) {
+  .messenger__userSelected {
+    width: 95%;
+    margin-top: 60px;
+  }
+  .messenger__container {
+    width: 100%;
+  }
+  .messenger__container__form {
+    width: 100%;
+    margin-left: 0;
+  }
+  .messenger__container__form input {
+    width: initial;
+  }
+  .messenger__friendToggleBtn {
+    position: absolute;
+    left: 10px;
   }
 }
 

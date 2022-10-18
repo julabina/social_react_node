@@ -110,6 +110,7 @@
         }
     }
     @include toMobile {
+        padding: 0 10px;
         &__menu {
             &__nav {
                 width: 50%;
@@ -119,6 +120,13 @@
                 }
                 &__icon {
                     height: 22px;
+                }
+            }
+        }
+        &__btns {
+            &__btn {
+                &--profil {
+                    margin-right: 0;
                 }
             }
         }

@@ -193,4 +193,24 @@
             display: block;
         }
     }
+    @include toMobile {
+        &__userSelected {
+            width: 95%;
+            margin-top: 60px;
+        }
+        &__container {
+            width: 100%;
+            &__form {
+                width: 100%;
+                margin-left: 0;
+                input {
+                    width: initial;
+                }
+            }
+        }
+        &__friendToggleBtn{
+            position: absolute;
+            left: 10px;
+        }
+    }
 }
