@@ -4,16 +4,16 @@ Groupomania est un reseau social fictif réalisé avec React, sass pour le front
 
 ## Instruction
 
-[Briefing](https://github.com/julabina/social_react_node/blob/master/assets/instructions/instruction.pdf)
-[Cahier des charges](https://github.com/julabina/social_react_node/blob/master/assets/instructions/Cahier+des+charges.pdf)
+[Briefing](./assets/instructions/instruction.pdf)
+[Cahier des charges](./assets/instructions/Cahier+des+charges.pdf)
 
 ## Screenshot
 
-[](https://github.com/julabina/social_react_node/blob/master/assets/screenshot/1.png)
-[](https://github.com/julabina/social_react_node/blob/master/assets/screenshot/2.png)
-[](https://github.com/julabina/social_react_node/blob/master/assets/screenshot/3.png)
-[](https://github.com/julabina/social_react_node/blob/master/assets/screenshot/4.png)
-[](https://github.com/julabina/social_react_node/blob/master/assets/screenshot/5.png)
+![](./assets/screenshot/1.png)
+![](./assets/screenshot/2.png)
+![](./assets/screenshot/3.png)
+![](./assets/screenshot/4.png)
+![](./assets/screenshot/5.png)
 
 ## Lancer le projet
 
