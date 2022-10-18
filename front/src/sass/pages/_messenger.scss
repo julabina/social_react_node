@@ -200,6 +200,15 @@
         }
         &__container {
             width: 100%;
+            &__messages {
+                &__msg {
+                    margin-left: 8px;
+                    &--logged {
+                        margin-left: 0px;
+                        margin-right: 8px;
+                    }
+                }
+            }
             &__form {
                 width: 100%;
                 margin-left: 0;
