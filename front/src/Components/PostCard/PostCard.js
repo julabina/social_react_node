@@ -119,7 +119,7 @@ const PostCard = (props) => {
      */
     const tryToDeletePost = () => {
 
-        fetch('http://localhost:3000/api/posts/delete/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/delete/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -199,7 +199,7 @@ const PostCard = (props) => {
             formData.append('image', img, img.name);
         }
 
-        fetch('http://localhost:3000/api/posts/modify/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/modify/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -220,7 +220,7 @@ const PostCard = (props) => {
      */
     const deleteCurrentImg = () => {
             
-        fetch('http://localhost:3000/api/posts/deleteImg/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/deleteImg/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -237,7 +237,7 @@ const PostCard = (props) => {
      * get current image
      */
     const getCurrentImg = () => {
-        fetch('http://localhost:3000/api/posts/picture/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/picture/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -253,7 +253,7 @@ const PostCard = (props) => {
      * get all comments for one post
      */
     const getAllComments = () => {
-        fetch('http://localhost:3000/api/comments/findAll/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/comments/findAll/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -321,7 +321,7 @@ const PostCard = (props) => {
      */
     const handleLike = () => {
 
-        fetch('http://localhost:3000/api/posts/addLike/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/addLike/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },

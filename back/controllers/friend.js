@@ -110,7 +110,7 @@ exports.checkIfFriend = (req, res, next) => {
         .then(friendRelation => {
             if(!friendRelation) {
                 const message = "Aucune relation trouvé.";
-                return res.status(404).json({ message, status: "none" })
+                return res.status(200).json({ message, status: "none" })
             }
 
             const message = "Relation bien trouvé.";

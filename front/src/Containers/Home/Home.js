@@ -59,7 +59,7 @@ const Home = () => {
      * @param {*} token 
      */
     const getRole = (id, token) => {
-        fetch('http://localhost:3000/api/users/isAdmin/' + id ,{
+        fetch(process.env.REACT_APP_API_URL + '/api/users/isAdmin/' + id ,{
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -134,7 +134,7 @@ const Home = () => {
             formData.append('image', img, img.name);
         }
 
-        fetch('http://localhost:3000/api/posts/new', {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/new', {
             headers: {
                 "Authorization": "Bearer " + user.token
             },
@@ -168,9 +168,8 @@ const Home = () => {
      * @param {*} token 
      */
     const getAllPosts = (id, token) => {
-        console.log(id, token);
 
-        fetch('http://localhost:3000/api/posts/findAll', {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/findAll', {
             headers: {
                 "Authorization": "Bearer " + token
             },

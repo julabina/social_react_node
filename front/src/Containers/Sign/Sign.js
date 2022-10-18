@@ -116,7 +116,7 @@ const Sign = () => {
     const tryToSign = (email, pwd, firstname, lastname) => {
         const errorCont = document.querySelector('.sign__section__form__errorCont');
 
-        fetch('http://localhost:3000/api/users/sign', {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/sign', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

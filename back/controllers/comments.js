@@ -54,9 +54,10 @@ exports.createComment = (req, res, next) => {
             content: textWithoutTag,
             postId: req.body.postId,
             userId: req.auth.userId,
+            usersLiked: [],
             commentId: req.body.commentId ? req.body.commentId : null
         })
-
+        console.log(comment);
         comment.save()
             .then(() => {
                 const message = 'Commentaire bien créé.';

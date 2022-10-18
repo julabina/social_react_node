@@ -92,7 +92,7 @@ const Comment = (props) => {
      */
     const getAllResponse = () => {
 
-        fetch('http://localhost:3000/api/comments/findResponse/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/comments/findResponse/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -152,7 +152,7 @@ const Comment = (props) => {
         if (responseText !== "" && responseText.length < 300) {
             const responseWithoutTag = responseText.replace(/<\/?[^>]+>/g,'');
 
-            fetch('http://localhost:3000/api/comments/new', {
+            fetch(process.env.REACT_APP_API_URL + '/api/comments/new', {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ const Comment = (props) => {
      */
     const tryToDeleteComment = () => {
         
-        fetch('http://localhost:3000/api/comments/delete/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/comments/delete/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },
@@ -251,7 +251,7 @@ const Comment = (props) => {
         if (comment !== "" && comment.length < 300) {
             const commentWithoutTag = comment.replace(/<\/?[^>]+>/g,'');
 
-            fetch('http://localhost:3000/api/comments/edit/' + props.id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/comments/edit/' + props.id, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ const Comment = (props) => {
      */
     const handleLike = () => {
 
-        fetch('http://localhost:3000/api/comments/addLike/' + props.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/comments/addLike/' + props.id, {
             headers: {
                 "Authorization": "Bearer " + props.user.token
             },

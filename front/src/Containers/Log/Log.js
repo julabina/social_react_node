@@ -71,7 +71,7 @@ const Log = () => {
     const tryToLog = (email, pwd) => {
         const errorCont = document.querySelector(".login__section__form__errorCont");
 
-        fetch('http://localhost:3000/api/users/login', {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/login', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

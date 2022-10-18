@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const socket = io('localhost:3000');
+const socket = io(process.env.REACT_APP_API_URL);
 
 // for dev
 /* socket.onAny((event, ...args) => {

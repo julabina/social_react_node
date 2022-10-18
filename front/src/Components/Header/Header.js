@@ -21,7 +21,7 @@ const Header = (props) => {
     const getUserInfos = () => {
         if(props.user.id !== "" && props.user.id !== undefined) {
 
-            fetch('http://localhost:3000/api/users/getUserInfos/' + props.user.id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/getUserInfos/' + props.user.id, {
                 headers: {
                     "Authorization": "Bearer " + props.user.token
                 },

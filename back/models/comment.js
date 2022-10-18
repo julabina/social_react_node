@@ -50,14 +50,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         usersLiked: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: true,
             get() {
                 return this.getDataValue('usersLiked').split(',')
             },
             set(usersLiked) {
                 this.setDataValue('usersLiked', usersLiked.join())
             },
-            defaultValue: ""
         }
     }, {
         timestamps: true,

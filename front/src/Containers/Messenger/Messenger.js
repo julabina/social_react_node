@@ -188,7 +188,7 @@ const Messenger = () => {
     const getUserInfos = (id, token) => {
 
         if(id !== "" && id !== undefined) {
-            fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/getUserInfos/' + id, {
                 headers: {
                     "Authorization": "Bearer " + token
                 },
@@ -220,7 +220,7 @@ const Messenger = () => {
     const getFriendInfos = (id, token) => {
 
         if(id !== "" && id !== undefined) {
-            fetch('http://localhost:3000/api/users/getUserInfos/' + id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/getUserInfos/' + id, {
                 headers: {
                     "Authorization": "Bearer " + token
                 },
@@ -250,7 +250,7 @@ const Messenger = () => {
      */
     const getAllFriends = (userId, token) => {
 
-        fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/getFriends/' + userId, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -327,7 +327,7 @@ const Messenger = () => {
      */
     const saveMessage = (content, fullname) => {
 
-        fetch('http://localhost:3000/api/messages/create/' + selectedUser.chatId, {
+        fetch(process.env.REACT_APP_API_URL + '/api/messages/create/' + selectedUser.chatId, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -389,7 +389,7 @@ const Messenger = () => {
      */
     const getMessages = (chatId) => {
        
-        fetch('http://localhost:3000/api/messages/getMessages/' + chatId, {
+        fetch(process.env.REACT_APP_API_URL + '/api/messages/getMessages/' + chatId, {
             headers: {
                 "Authorization": "Bearer " + user.token
             },

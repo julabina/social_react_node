@@ -20,7 +20,7 @@ const CommentForm = (props) => {
         if (comment !== "" && comment.length < 300) {
             const commentWithoutTag = comment.replace(/<\/?[^>]+>/g,'');
 
-            fetch('http://localhost:3000/api/comments/new', {
+            fetch(process.env.REACT_APP_API_URL + '/api/comments/new', {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',

@@ -72,7 +72,7 @@ const Profil = () => {
      */
     const getUserInfo = (userObj) => {
 
-        fetch('http://localhost:3000/api/users/getUserInfos/' + params.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/getUserInfos/' + params.id, {
             headers: {
                 "Authorization": "Bearer " + userObj.token
             },
@@ -106,7 +106,7 @@ const Profil = () => {
      * @param {*} token 
      */
      const getRole = (id, token) => {
-        fetch('http://localhost:3000/api/users/isAdmin/' + id ,{
+        fetch(process.env.REACT_APP_API_URL + '/api/users/isAdmin/' + id ,{
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -128,7 +128,7 @@ const Profil = () => {
      */
     const getUserPost = (id, token) => {
 
-        fetch('http://localhost:3000/api/posts/findAllForUser/' + params.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/posts/findAllForUser/' + params.id, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -174,7 +174,7 @@ const Profil = () => {
      */
     const getIsFriend = (token) => {
 
-        fetch('http://localhost:3000/api/friends/isFriend/' + params.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/isFriend/' + params.id, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -226,7 +226,7 @@ const Profil = () => {
             const img = image[0].file;
             formData.append('image', img, img.name);
             
-            fetch('http://localhost:3000/api/users/changeBaneer/' + user.id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/changeBaneer/' + user.id, {
                 headers: {
                     "Authorization": "Bearer " + user.token
                 },
@@ -407,7 +407,7 @@ const Profil = () => {
     const modifyNames = () => {
         const successCont = document.querySelector('.profil__edit__successCont');
 
-        fetch('http://localhost:3000/api/users/edit/' + user.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/edit/' + user.id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -431,7 +431,7 @@ const Profil = () => {
         const errorCont = document.querySelector('.profil__edit__errorCont ');
         errorCont.innerHTML = '';   
 
-        fetch('http://localhost:3000/api/users/editEmail/' + user.id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/editEmail/' + user.id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -476,7 +476,7 @@ const Profil = () => {
             const img = imageProfil[0].file;
             formData.append('image', img, img.name);
             
-            fetch('http://localhost:3000/api/users/changeProfilImg/' + user.id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/changeProfilImg/' + user.id, {
                 headers: {
                     "Authorization": "Bearer " + user.token
                 },
@@ -499,7 +499,7 @@ const Profil = () => {
      * @param {*} id 
      */
     const sendingFriendQuery = (id) => {
-        fetch('http://localhost:3000/api/friends/query/' + id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/query/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -522,7 +522,7 @@ const Profil = () => {
      * @param {*} id 
      */
     const cancelFriendQuery = (id) => {
-        fetch('http://localhost:3000/api/friends/cancelQuery/' + id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/cancelQuery/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -546,7 +546,7 @@ const Profil = () => {
      */
     const cancelFriendRelation = (id) => {
 
-        fetch('http://localhost:3000/api/friends/cancelRelation/' + id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/cancelRelation/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -571,7 +571,7 @@ const Profil = () => {
      */
     const acceptFriendQuery = (id) => {
 
-        fetch('http://localhost:3000/api/friends/acceptQuery/' + id, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/acceptQuery/' + id, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -596,7 +596,7 @@ const Profil = () => {
      */
     const getAllFriends = (userId, token) => {
 
-        fetch('http://localhost:3000/api/friends/getFriends/' + userId, {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/getFriends/' + userId, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -631,7 +631,7 @@ const Profil = () => {
      */
     const getAllRelations = (id) => {
 
-        fetch('http://localhost:3000/api/friends/getRelations/' + id , {
+        fetch(process.env.REACT_APP_API_URL + '/api/friends/getRelations/' + id , {
             headers: {
                 "Authorization": "Bearer " + user.token
             },
@@ -728,7 +728,7 @@ const Profil = () => {
         handleToggleDeleteAccountModal();
 
         if (params.id === user.id) {   
-            fetch('http://localhost:3000/api/users/delete/' + params.id, {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/delete/' + params.id, {
                 headers: {
                     "Authorization": "Bearer " + user.token
                 },

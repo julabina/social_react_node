@@ -68,6 +68,7 @@ exports.createPost = (req, res, next) => {
             id: v4(),
             content: textWithoutTag,
             picture: req.file !== undefined ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
+            usersLiked: [],
             userId: JSON.parse(req.body.userId),
         });
         
