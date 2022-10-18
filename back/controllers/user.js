@@ -384,57 +384,98 @@ exports.changeProfilImg = (req, res, next) => {
 
 };
 
+/**
+ * delete user account
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.deleteAccount = (req, res, next) => {
+
+    User.hasOne(UserInfo);
+    UserInfo.belongsTo(User);
     
     if (req.params.id === req.auth.userId) { 
         
         let commentsByUser = [];
-        let chatsForUser = []
+        let chatsForUser = [];
         
-        User.findByPk(req.params.id)
+        User.findOne({
+            where: {id: req.params.id},
+            include: {
+                model: UserInfo
+            }  
+        })
             .then(user => {
                 if (!user) {
                     const message = "L'utilisateur n'a pas été trouvé.";
                     return res.status(404).json({ message });
                 }
-                // get comment create by user 
                 
-                Comment.findAll({where: {userId: req.params.id, commentId: null}})
-                    .then(comments => {
-                        if (comments) {  
-                            for (let i = 0; i < comments.length; i++) {
-                                commentsByUser.push(comments[i].id);
+                // get img link and remove posts pictures
+                
+                const profilImg = user.User_info.profilImg.split('/images/')[1];
+                const bannerImg = user.User_info.profilBaneer.split('/images/')[1];
+
+                Post.findAll({where: {userId: req.params.id}})
+                    .then(posts => {
+                        if (posts) {
+                            for (let i = 0; i < posts.length; i++) {
+                                if (posts[i].picture !== null) {
+                                    const pict = posts[i].picture.split('/images/')[1];
+                                    fs.unlinkSync(`images/${pict}`);
+                                }
                             }
                         }
-                        // get chat room used by user
-                        Friend.findAll({where: { mainId: req.params.id }})
-                            .then(friendRelations => {
-                                if (friendRelations) {  
-                                    for (let i = 0; i < friendRelations.length; i++) {
-                                        chatsForUser.push(friendRelations[i].chatId);
+                        // get comment create by user 
+                        
+                        Comment.findAll({where: {userId: req.params.id, commentId: null}})
+                            .then(comments => {
+                                if (comments) {  
+                                    for (let i = 0; i < comments.length; i++) {
+                                        commentsByUser.push(comments[i].id);
                                     }
                                 }
+                                // get chat room used by user
+                                Friend.findAll({where: { mainId: req.params.id }})
+                                    .then(friendRelations => {
+                                        if (friendRelations) {  
+                                            for (let i = 0; i < friendRelations.length; i++) {
+                                                chatsForUser.push(friendRelations[i].chatId);
+                                            }
+                                        }
 
-                                //start to destroy
+                                        //start to destroy
 
-                                Comment.destroy({where: { commentId: commentsByUser }})
-                                    .then(() => {
-                                        Comment.destroy({where: { userId: req.params.id }})
+                                        if (user.User_info.profilBaneer !== "") {
+                                            fs.unlinkSync(`images/${bannerImg}`);
+                                        }
+                                        
+                                        if (user.User_info.profilImg !== "") {
+                                            fs.unlinkSync(`images/${profilImg}`);
+                                        }
+
+                                        Comment.destroy({where: { commentId: commentsByUser }})
                                             .then(() => {
-                                                Message.destroy({where: { chatId: chatsForUser }})
+                                                Comment.destroy({where: { userId: req.params.id }})
                                                     .then(() => {
-                                                        Chat.destroy({ where: { id: chatsForUser } })
+                                                        Message.destroy({where: { chatId: chatsForUser }})
                                                             .then(() => {
-                                                                Post.destroy({ where: { userId: req.params.id } })
+                                                                Chat.destroy({ where: { id: chatsForUser } })
                                                                     .then(() => {
-                                                                        Friend.destroy({ where: { chatId: chatsForUser } })
+                                                                        Post.destroy({ where: { userId: req.params.id } })
                                                                             .then(() => {
-                                                                                UserInfo.destroy({where: { userId: req.params.id }})
+                                                                                Friend.destroy({ where: { chatId: chatsForUser } })
                                                                                     .then(() => {
-                                                                                        User.destroy({ where: { id: req.params.id } })
+                                                                                        UserInfo.destroy({where: { userId: req.params.id }})
                                                                                             .then(() => {
-                                                                                                const message = "Utilisateur bien supprimé";
-                                                                                                res.status(200).json({ message, success: true });
+                                                                                                User.destroy({ where: { id: req.params.id } })
+                                                                                                    .then(() => {
+                                                                                                        const message = "Utilisateur bien supprimé";
+                                                                                                        res.status(200).json({ message, success: true });
+                                                                                                    })
+                                                                                                    .catch(error =>  res.status(500).json({ error }));
                                                                                             })
                                                                                             .catch(error =>  res.status(500).json({ error }));
                                                                                     })
