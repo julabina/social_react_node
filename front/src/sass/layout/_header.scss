@@ -109,4 +109,18 @@
             }
         }
     }
+    @include toMobile {
+        &__menu {
+            &__nav {
+                width: 50%;
+                li {
+                    margin-bottom: 15px;
+                    width: 100px;
+                }
+                &__icon {
+                    height: 22px;
+                }
+            }
+        }
+    }
 }

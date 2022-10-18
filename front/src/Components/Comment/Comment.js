@@ -372,7 +372,7 @@ const Comment = (props) => {
             toggleDeleteCommentModal &&
             <div className="comment__deleteModal">
                 <div className="comment__deleteModal__modal">
-                    <h2>Voulez vous supprimer ce commentaire ?</h2>
+                    <h3>Voulez vous supprimer ce commentaire ?</h3>
                     <div className="comment__deleteModal__modal__btnCont">
                         <button onClick={tryToDeleteComment}>Supprimer</button>
                         <button onClick={deleteCommentModalToggle}>Annuler</button>

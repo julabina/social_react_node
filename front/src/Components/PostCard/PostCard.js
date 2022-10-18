@@ -446,17 +446,17 @@ const PostCard = (props) => {
                     </div>
                     <p>Like { props.likes !== 0 && "(" + props.likes + ")" }</p>
                 </div>
-                <div className="postArticle__btns__cont">
+                <div onClick={() => toggleCommentShow(false)} className="postArticle__btns__cont">
                     <div className="postArticle__btns__cont__icon">
                         <FontAwesomeIcon icon={faComments} className="postArticle__btns__cont__iconCont__icon" />
                     </div>
-                    <p onClick={() => toggleCommentShow(false)}>{commentCount} commentaires</p>
+                    <p>{commentCount} commentaires</p>
                 </div>
                 <div className="postArticle__btns__cont">
                     <div className="postArticle__btns__cont__icon">
                         <FontAwesomeIcon icon={faShare} className="postArticle__btns__cont__iconCont__icon" />
                     </div>
-                    <p>Partager</p>
+                    <p className='postArticle__btns__cont--hideShare'>Partager</p>
                 </div>
             </div>
             <div className="postArticle__likes"></div>

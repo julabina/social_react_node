@@ -277,4 +277,62 @@
             }
         }
     }
+    @include toTablet {
+        &__deleteModal {
+            text-align: center;
+        }
+    }
+    @include toMobile {
+        &__top {
+            &__infos {
+                &__imgCont {
+                    height: 40px;width: 40px;
+                    &__user {
+                        height: 25px;
+                    }
+                    img {
+                        height: 40px;width: 40px;
+                    }
+                }
+            }
+        }
+        &__content {
+            p {
+                width: 85%;
+            }
+            textarea {
+                width: 80%;
+            }
+        }
+        &__comments {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            &__createForm {
+                width: 90%;
+            }
+            &__commentsContainer {
+                width: 95%;
+            }
+        }
+        &__btns {
+            &__cont {
+                &--hideShare {
+                    display: none;
+                }
+            }
+        }
+        &__deleteModal {
+            &__modal {
+                width: 70%;
+                &__btnCont {
+                    display: flex;
+                    flex-direction: column;
+                    button {
+                        margin: 10px 0;
+                    }
+                }
+            }
+        }
+    }
 }

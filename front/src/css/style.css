@@ -104,6 +104,19 @@ body {
   width: 40px;
   object-fit: cover;
 }
+@media screen and (max-width: 750px) {
+  .postArticle__top__infos__imgCont {
+    height: 30px;
+    width: 30px;
+  }
+  .postArticle__top__infos__imgCont__user {
+    height: 18px;
+  }
+  .postArticle__top__infos__imgCont img {
+    height: 30px;
+    width: 30px;
+  }
+}
 .postArticle__top__infos__nameCont {
   line-height: 1.3;
 }
@@ -399,6 +412,54 @@ body {
   font-weight: 500;
   color: #4e5166;
 }
+@media screen and (max-width: 1050px) {
+  .postArticle__deleteModal {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 750px) {
+  .postArticle__top__infos__imgCont {
+    height: 40px;
+    width: 40px;
+  }
+  .postArticle__top__infos__imgCont__user {
+    height: 25px;
+  }
+  .postArticle__top__infos__imgCont img {
+    height: 40px;
+    width: 40px;
+  }
+  .postArticle__content p {
+    width: 85%;
+  }
+  .postArticle__content textarea {
+    width: 80%;
+  }
+  .postArticle__comments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .postArticle__comments__createForm {
+    width: 90%;
+  }
+  .postArticle__comments__commentsContainer {
+    width: 95%;
+  }
+  .postArticle__btns__cont--hideShare {
+    display: none;
+  }
+  .postArticle__deleteModal__modal {
+    width: 70%;
+  }
+  .postArticle__deleteModal__modal__btnCont {
+    display: flex;
+    flex-direction: column;
+  }
+  .postArticle__deleteModal__modal__btnCont button {
+    margin: 10px 0;
+  }
+}
 
 .comment {
   padding: 10px 25px;
@@ -427,6 +488,19 @@ body {
   height: 40px;
   width: 40px;
   object-fit: cover;
+}
+@media screen and (max-width: 750px) {
+  .comment__top__profilCont {
+    height: 30px;
+    width: 30px;
+  }
+  .comment__top__profilCont__user {
+    height: 18px;
+  }
+  .comment__top__profilCont img {
+    height: 30px;
+    width: 30px;
+  }
 }
 .comment__top__bubble {
   position: absolute;
@@ -528,6 +602,17 @@ body {
     right: -60px;
   }
 }
+@media screen and (max-width: 750px) {
+  .comment__top__menuCont__menu {
+    right: initial;
+    width: 80%;
+    margin-right: 30px;
+    /* position: fixed;
+    top: 0;bottom: 0;
+    left: 0;right: 0;
+    width: 100%; */
+  }
+}
 .comment__bot {
   display: flex;
   margin-top: 8px;
@@ -573,10 +658,12 @@ body {
   padding: 25px;
   border-radius: 5px;
 }
-.comment__deleteModal__modal h2 {
+.comment__deleteModal__modal h3 {
   font-size: 1.2em;
   font-weight: 600;
   margin-bottom: 50px;
+  text-align: center;
+  color: #4e5166;
 }
 .comment__deleteModal__modal__btnCont button {
   background: #ffd7d7;
@@ -594,6 +681,32 @@ body {
 .comment__deleteModal__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+@media screen and (max-width: 750px) {
+  .comment {
+    padding: 8px 10px;
+  }
+  .comment__top__bubble {
+    display: none;
+  }
+  .comment__top__content {
+    max-width: 67%;
+  }
+  .comment__top__content textarea {
+    height: 100px;
+  }
+  .comment__top__menuCont {
+    display: flex;
+    justify-content: end;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: initial;
+  }
+  .comment__deleteModal__modal {
+    width: 80%;
+  }
 }
 .comment__responseCount {
   color: #4e5166;
@@ -653,6 +766,15 @@ body {
   color: #fd2d01;
   transition: all 120ms ease-in-out;
 }
+@media screen and (max-width: 750px) {
+  .comment__top__modifyBtn button {
+    width: 100%;
+    margin-top: 15px;
+  }
+  .comment__form {
+    margin-left: initial;
+  }
+}
 
 .response {
   padding: 10px 25px;
@@ -682,6 +804,19 @@ body {
   height: 40px;
   width: 40px;
   object-fit: cover;
+}
+@media screen and (max-width: 750px) {
+  .response__top__profilCont {
+    height: 30px;
+    width: 30px;
+  }
+  .response__top__profilCont__user {
+    height: 18px;
+  }
+  .response__top__profilCont img {
+    height: 30px;
+    width: 30px;
+  }
 }
 .response__top__bubble {
   position: absolute;
@@ -783,6 +918,17 @@ body {
     right: -60px;
   }
 }
+@media screen and (max-width: 750px) {
+  .response__top__menuCont__menu {
+    right: initial;
+    width: 80%;
+    margin-right: 30px;
+    /* position: fixed;
+    top: 0;bottom: 0;
+    left: 0;right: 0;
+    width: 100%; */
+  }
+}
 .response__bot {
   display: flex;
   margin-top: 8px;
@@ -828,10 +974,12 @@ body {
   padding: 25px;
   border-radius: 5px;
 }
-.response__deleteModal__modal h2 {
+.response__deleteModal__modal h3 {
   font-size: 1.2em;
   font-weight: 600;
   margin-bottom: 50px;
+  text-align: center;
+  color: #4e5166;
 }
 .response__deleteModal__modal__btnCont button {
   background: #ffd7d7;
@@ -849,6 +997,38 @@ body {
 .response__deleteModal__modal__btnCont button:hover {
   background: #ffbebe;
   transition: all 150ms ease-in-out;
+}
+@media screen and (max-width: 750px) {
+  .response {
+    padding: 8px 10px;
+  }
+  .response__top__bubble {
+    display: none;
+  }
+  .response__top__content {
+    max-width: 67%;
+  }
+  .response__top__content textarea {
+    height: 100px;
+  }
+  .response__top__menuCont {
+    display: flex;
+    justify-content: end;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: initial;
+  }
+  .response__deleteModal__modal {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 750px) {
+  .response__top__modifyBtn button {
+    width: 100%;
+    margin-top: 15px;
+  }
 }
 
 .toTop {
@@ -1000,6 +1180,18 @@ body {
   height: 22px;
   color: #c8c8c8;
 }
+@media screen and (max-width: 750px) {
+  .header__menu__nav {
+    width: 50%;
+  }
+  .header__menu__nav li {
+    margin-bottom: 15px;
+    width: 100px;
+  }
+  .header__menu__nav__icon {
+    height: 22px;
+  }
+}
 
 main {
   display: flex;
@@ -1126,6 +1318,24 @@ main {
   color: #4e5166;
   text-align: center;
   margin-top: 120px;
+}
+@media screen and (max-width: 750px) {
+  .home__newContent {
+    width: 95%;
+  }
+  .home__newContent__new h1 {
+    text-align: center;
+  }
+  .home__newContent__new textarea {
+    min-height: 210px;
+  }
+  .home__newContent__new__addBtn {
+    width: 100%;
+    height: 50px;
+  }
+  .home__mainContent {
+    width: 95%;
+  }
 }
 
 .sign {
@@ -1905,6 +2115,17 @@ main {
 @media screen and (max-width: 1050px) {
   .profil__friendsList__list__friend__right__menuCont__menu {
     right: -60px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .profil__friendsList__list__friend__right__menuCont__menu {
+    right: initial;
+    width: 80%;
+    margin-right: 30px;
+    /* position: fixed;
+    top: 0;bottom: 0;
+    left: 0;right: 0;
+    width: 100%; */
   }
 }
 .profil__friendsList__list__pending {

@@ -180,7 +180,7 @@ const Response = (props) => {
             toggleDeleteResponseModal &&
             <div className="response__deleteModal">
                 <div className="response__deleteModal__modal">
-                    <h2>Voulez vous supprimer ce commentaire ?</h2>
+                    <h3>Voulez vous supprimer ce commentaire ?</h3>
                     <div className="response__deleteModal__modal__btnCont">
                         <button onClick={tryToDeleteResponse}>Supprimer</button>
                         <button onClick={deleteResponseModalToggle}>Annuler</button>
