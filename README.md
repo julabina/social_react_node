@@ -5,6 +5,7 @@ Groupomania est un reseau social fictif réalisé avec React, sass pour le front
 ## Instruction
 
 [Briefing](./assets/instructions/instruction.pdf)
+
 [Cahier des charges](./assets/instructions/Cahier+des+charges.pdf)
 
 ## Screenshot
@@ -12,8 +13,8 @@ Groupomania est un reseau social fictif réalisé avec React, sass pour le front
 ![](./assets/screenshot/1.png)
 ![](./assets/screenshot/2.png)
 ![](./assets/screenshot/3.png)
-![](./assets/screenshot/4.png)
-![](./assets/screenshot/5.png)
+![](./assets/screenshot/4.png)![](./assets/screenshot/5.png)
+
 
 ## Lancer le projet
 
