@@ -305,6 +305,63 @@ exports.editEmail = (req, res, next) => {
 };
 
 /**
+ * edit user password
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+exports.editPwd = (req, res, next) => {
+
+    User.findByPk(req.params.id)
+        .then(user => {
+            if (!user) {   
+                const message = 'Aucun utilisateur trouvé.';
+                return res.status(404).json({ message });
+            }
+
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if (!valid) {
+                        const message = 'Mot de passe incorrect.';
+                        return res.status(401).json({ message });
+                    }
+
+                    if(req.body.newPassword.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)) {
+                        let password = undefined;
+                        bcrypt.hash(req.body.newPassword, 10)
+                            .then(hash => {
+                                password = {password :hash};
+                                
+                                User.update(password, { where: { id : req.params.id }})
+                                    .then(() => {
+                                        const message = 'Mot de passe bien modifié.';
+                                        res.status(200).json({ message });
+                                    })
+                                    .catch(error => {
+                                        if (error instanceof ValidationError) {
+                                            return res.status(400).json({message: error.message, data: error});
+                                        }
+                                        if (error instanceof UniqueConstraintError) {
+                                            return res.status(400).json({message: error.message, data: error});
+                                        }
+                                        res.status(500).json({ message: "Une erreur est survenu.", data: error });
+                                    });
+                            })
+                            .catch(error => res.status(500).json({ error }));  
+                    } else {
+                        const message = "Le mot de passe doit contenir minimiun 1 lettre, 1 majuscule et 1 chiffre et etre composé de minimun 8 caratères.";
+                        res.status(400).json({ message });
+                    }
+
+                })
+                .catch(error => res.status(500).json({ error }));         
+
+        })
+        .catch(error => res.status(500).json({ error }));         
+};
+
+/**
  * check if user is an admin
  * 
  * @param {*} req 

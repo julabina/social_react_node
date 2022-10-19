@@ -429,7 +429,9 @@ const Profil = () => {
      */
     const modifyMail = () => {
         const errorCont = document.querySelector('.profil__edit__errorCont ');
+        const successCont = document.querySelector('.profil__edit__successCont');
         errorCont.innerHTML = '';   
+        successCont.innerHTML = '';   
 
         fetch(process.env.REACT_APP_API_URL + '/api/users/editEmail/' + user.id, {
             headers: {
@@ -443,7 +445,7 @@ const Profil = () => {
             .then(res => res.json())
             .then(data => {
                 if(data.success === true) {
-                    /* message success */
+                    successCont.innerHTML = `<p>Email bien modifié.</p>`;
                 } else if (data.error === "email" || data.error === "pwd") {
                     const error = "<p>- " + data.message + "</p>"
                     errorCont.innerHTML = error;
@@ -722,7 +724,7 @@ const Profil = () => {
     };
 
     /**
-     * delte account
+     * delete account
      */
     const deleteAccount = () => {
         handleToggleDeleteAccountModal();
@@ -742,6 +744,54 @@ const Profil = () => {
                     }
                 })
         }
+    };
+    
+    const checkEditPwd = () => {
+        const errorCont = document.querySelector(".profil__edit__errorCont");
+        errorCont.innerHTML = "";
+
+        if(editPassword.newPassword === "" || editPassword.currentPassword === "" || editPassword.confirmPassword === "") {
+            return errorCont.innerHTML = `<p>- Tous les champs sont requis.</p>`;
+        }
+        
+        if (!editPassword.newPassword.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)) {
+            return errorCont.innerHTML = `<p>- Le nouveau mot de passe doit contenir minimun 1 lettre 1 chiffre 1 lettre majuscule et 8 caractères.</p>`;
+        }
+        if(editPassword.newPassword !== editPassword.confirmPassword) {
+            return errorCont.innerHTML = `<p>- Le nouveau mot de passe doit etre identique au mot de passe de confirmation.</p>`;
+        }
+        if(editPassword.currentPassword === editPassword.newPassword) {
+            return errorCont.innerHTML = `<p>- Le nouveau mot de passe ne doit pas être identique à l'ancien.</p>`;
+        }
+
+        changePassword(editPassword.currentPassword, editPassword.newPassword);
+    };
+
+    const changePassword = (pwd, newPwd) => {
+        const successCont = document.querySelector('.profil__edit__successCont');
+        const errorCont = document.querySelector('.profil__edit__errorCont');
+        errorCont.innerHTML = ''; 
+        successCont.innerHTML = ''; 
+
+        fetch(process.env.REACT_APP_API_URL + '/api/users/editPwd/' + user.id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + user.token
+            },
+            method : 'PUT',
+            body: JSON.stringify( {password : pwd, newPassword: newPwd} )
+        })
+            .then(res => {
+                 if (res.status === 200) {
+                    successCont.innerHTML = `<p>Mot de passe bien modifié.</p>`;
+                    setEditPassword({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                } else if (res.status === 401) {
+                    errorCont.innerHTML = `<p>- Mot de passe incorrect.</p>`;
+                } else {
+                    errorCont.innerHTML = `<p>- Une erreur est survenue.</p>`;
+                }
+            })
     };
 
     return (
@@ -893,7 +943,7 @@ const Profil = () => {
                             <input onInput={(e) => ctrlEditInput('currentPassword', e.target.value)} value={editPassword.currentPassword} type="password" placeholder='Mot de passe actuel' />
                             <input onInput={(e) => ctrlEditInput('newPassword', e.target.value)} value={editPassword.newPassword} type="password" placeholder='Nouveau mot de passe' />
                             <input onInput={(e) => ctrlEditInput('confirmPassword', e.target.value)} value={editPassword.confirmPassword} type="password" placeholder='Confirmer mot de passe' />
-                            <button>Modifier</button>
+                            <button onClick={checkEditPwd}>Modifier</button>
                         </div>
                     </div>
                 </section>
