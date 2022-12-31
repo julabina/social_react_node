@@ -883,7 +883,10 @@ const Profil = () => {
                     <p>{userInfos.firstname} {userInfos.lastname}</p>
                     <div className="profil__top__infos__btnCont">
                         {
-                            user.id === params.id ?
+                            user.id === '53b990b6-1144-4c35-ad42-e7ef3421f698' && user.id === params.id ?
+                            <button>Modifier le profil</button> 
+                            :
+                            user.id === params.id && user.id !== '53b990b6-1144-4c35-ad42-e7ef3421f698' ?
                             <button onClick={editProfilToggle}>Modifier le profil</button>
                             :
                             <>
